@@ -41,12 +41,14 @@ for item in answer_options:
     print(item.text.strip())
 
 """ссылка на скачивание"""
-all_download_links = soup.find(class_="ce-uploads").find_all("href")
+
+
+all_download_links = soup.find_all(class_="ce-uploads")
 all_download_files_dict = {}
 
 for item in all_download_links:
-    item_text = item.text
-    item_href = item.get("href")
+    item_text = item.text.strip()
+    item_href = item.get("a")
 
     all_download_files_dict[item_text] = item_href
 
@@ -62,5 +64,23 @@ for file_name, file_href in all_download_files.items():
         if item in file_name:
             file_name = file_name.replace(item, "_")
 
-
-
+# all_download_links = soup.find(class_="ce-uploads").find_all("href")
+# all_download_files_dict = {}
+#
+# for item in all_download_links:
+#     item_text = item.text
+#     item_href = item.get("href")
+#
+#     all_download_files_dict[item_text] = item_href
+#
+# with open("all_download_files.json", "w") as file:
+#     json.dump(all_download_files_dict, file, indent=4, ensure_ascii=False)
+#
+# with open("all_download_files.json") as file:
+#     all_download_files = json.load(file)
+#
+# for file_name, file_href in all_download_files.items():
+#     rep = [",", " ", "-"]
+#     for item in rep:
+#         if item in file_name:
+#             file_name = file_name.replace(item, "_")
