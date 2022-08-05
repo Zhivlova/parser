@@ -3,6 +3,7 @@ import json
 from collections import ChainMap
 import requests
 from bs4 import BeautifulSoup
+import urllib.request
 
 
 def get_data(url):
@@ -78,11 +79,11 @@ def get_data(url):
             writer = csv.writer(file)
             writer.writerow(
                 (president,
-                    prime_minister,
-                    governments,
-                    duma,
-                    federation
-                )
+                 prime_minister,
+                 governments,
+                 duma,
+                 federation
+                 )
             )
 
         with open('all_data.csv', "a", encoding="utf-8") as file:
@@ -98,3 +99,7 @@ def get_data(url):
 print("Program started")
 print(get_data("https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov/"))
 print("Program finished")
+
+
+url = 'https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov/fileadmin/user_upload/ratings/state_institutions.xlsx'
+urllib.request.urlretrieve(url, 'cat.jpg')
