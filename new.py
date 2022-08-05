@@ -1,4 +1,6 @@
+import csv
 import json
+from collections import ChainMap
 import requests
 from bs4 import BeautifulSoup
 
@@ -28,42 +30,75 @@ def get_data(url):
         """название опроса"""
         name_of_survey = soup.find(class_="h2-main")
         for name in name_of_survey:
+
             all_data['name_of_survey'] = name_of_survey.text.strip()
 
         """описание опроса"""
         description_of_survey = soup.find(class_="frame frame-default frame-type-text frame-layout-0").find("p")
         for description in description_of_survey:
+            #title = description_of_survey.text.strip()
             all_data['description_of_survey'] = description_of_survey.text.strip()
 
         """варианты ответа"""
         answer_options = soup.find(class_="frame frame-default frame-type-text frame-layout-0").find_all("li")
+        president = answer_options[0].text
+        prime_minister = answer_options[1].text
+        governments = answer_options[2].text
+        duma = answer_options[3].text
+        federation = answer_options[4].text
+        print(answer_options)
+
         for answer in answer_options:
             all_data['answer_options'] = answer.text
+            print(all_data)
 
         """ссылки на скачивание"""
         all_download_links = soup.find_all(class_="ce-uploads")
-        length = len(answer_options)
-        n = 0
-        while n < length:
-            for link in all_download_links:
-                table_link = 'https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov' + link.find('a').get('href')
-                all_data['all_download_links'] = table_link
-                n += 1
-        print(all_data)
+        for link in all_download_links:
+            table_link = 'https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov' + link.find('a').get(
+                'href')
+            table_link_1 = table_link[0]
+            table_link_2 = table_link[1]
+
+            all_data['all_download_links'] = table_link_1
+            all_data['all_download_links'] = table_link_2
+            print(table_link)
+
     except TypeError as e:
         print(f" [TypeError]: {e.strerror}, filename: {e.filename}")
-
     else:
         print("Writing to file...")
-        iteration_count = int(len(all_data))
-        count = 0
-        while n < length:
-            with open("all_data.json", "r+") as file:
-                json.dump(all_data, file, indent=4, ensure_ascii=False)
 
-            with open("all_data.json") as file:
-                all_data = json.load(file)
-                n += 1
+        with open('all_data.csv', "w", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                name_of_survey
+            )
+        with open('all_data.csv', "a", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                all_data
+            )
+        with open('all_data.csv', "a", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                (
+                    answer_options
+                )
+            )
+        with open('all_data.csv', "a", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                (
+                    table_link_1,
+                    table_link_2
+                )
+            )
+        # with open("all_data.json", "a+", encoding='utf-8') as file:
+        #     json.dump(all_data, file, indent=4, ensure_ascii=False)
+        #
+        # with open("all_data.json") as file:
+        #     all_data = json.load(file)
 
 
 print("Program started")
