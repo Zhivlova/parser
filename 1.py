@@ -93,6 +93,7 @@ def get_all_download_links(url):
         for link in all_download_links:
             table_link = 'https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov' + link.find('a').get(
                 'href')
+            print(table_link)
 
     except AttributeError as e:
         return None
