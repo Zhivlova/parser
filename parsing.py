@@ -1,86 +1,100 @@
+import csv
 import json
+from collections import ChainMap
 import requests
 from bs4 import BeautifulSoup
 
 
-"""Получаем код странцицы"""
+def get_data(url):
+    """Получаем код странцицы"""
+    headers = {
+        "Accept": "*/*",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/103.0.0.0 Safari/537.36 "
+    }
 
-url = "https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov/"
+    req = requests.get(url, headers=headers)
+    src = req.text
 
-headers = {
-    "Accept": "*/*",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
-}
+    """Сохраняем код страницы"""
+    with open("dejatelnost-gosudarstvennykh-institutov.html", "w") as file:
+        file.write(src)
 
-req = requests.get(url, headers=headers)
-src = req.text
-#print(src)
+    with open("dejatelnost-gosudarstvennykh-institutov.html") as file:
+        src = file.read()
 
-"""Сохраняем код страницы"""
+    soup = BeautifulSoup(src, "lxml")
+    all_data = {}
 
-with open("dejatelnost-gosudarstvennykh-institutov.html", "w") as file:
-    file.write(src)
+    try:
+        """название опроса"""
+        name_of_survey = soup.find(class_="h2-main")
+        for name in name_of_survey:
+            all_data['name_of_survey'] = name_of_survey.text.strip()
 
-with open("dejatelnost-gosudarstvennykh-institutov.html") as file:
-    src = file.read()
+        """описание опроса"""
+        description_of_survey = soup.find(class_="frame frame-default frame-type-text frame-layout-0").find("p")
+        for desc in description_of_survey:
+            title = description_of_survey.text.strip()
+            all_data['description_of_survey'] = description_of_survey.text.strip()
 
-soup = BeautifulSoup(src, "lxml")
+        """варианты ответа"""
+        answer_options = soup.find(class_="frame frame-default frame-type-text frame-layout-0").find_all("li")
+        president = answer_options[0].text
+        prime_minister = answer_options[1].text
+        governments = answer_options[2].text
+        duma = answer_options[3].text
+        federation = answer_options[4].text
 
-"""название опроса"""
-name_of_survey = soup.find(class_="h2-main")
-print(name_of_survey.text.strip())
+        for answer in answer_options:
+            all_data['answer_options'] = answer.text
+            print(all_data)
 
-"""описание опроса"""
-description_of_survey = soup.find(class_="frame frame-default frame-type-text frame-layout-0").find("p")
-print(description_of_survey.text.strip())
+        """ссылки на скачивание"""
+        all_download_links = soup.find_all(class_="ce-uploads")
+        for link in all_download_links:
+            table_link = 'https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov' + link.find('a').get(
+                'href')
+            # table_link_1 = table_link[0]
+            # table_link_2 = table_link[1]
 
-"""варианты ответа"""
-answer_options = soup.find(class_="frame frame-default frame-type-text frame-layout-0").find_all("li")
-# print(answer_options)
-for item in answer_options:
-    print(item.text.strip())
+            all_data['all_download_links'] = table_link
+            all_data['all_download_links'] = table_link
 
-# """ссылка на скачивание"""
-#
-#
-# all_download_links = soup.find_all(class_="ce-uploads")
-# all_download_files_dict = {}
-#
-# for item in all_download_links:
-#     item_text = item.text.strip()
-#     item_href = item.get("a")
-#
-#     all_download_files_dict[item_text] = item_href
-#
-# with open("all_download_files.json", "w") as file:
-#     json.dump(all_download_files_dict, file, indent=4, ensure_ascii=False)
-#
-# with open("all_download_files.json") as file:
-#     all_download_files = json.load(file)
-#
-# for file_name, file_href in all_download_files.items():
-#     rep = [",", " ", "-"]
-#     for item in rep:
-#         if item in file_name:
-#             file_name = file_name.replace(item, "_")
+    except TypeError as e:
+        print(f" [TypeError]: {e.strerror}, filename: {e.filename}")
+    else:
+        print("Writing to file...")
 
-# all_download_links = soup.find(class_="ce-uploads").find_all("href")
-# all_download_files_dict = {}
-#
-# for item in all_download_links:
-#     item_text = item.text
-#     item_href = item.get("href")
-#
-#     all_download_files_dict[item_text] = item_href
-#
-# with open("all_download_files.json", "w") as file:
-#     json.dump(all_download_files_dict, file, indent=4, ensure_ascii=False)
-#
-# with open("all_download_files.json") as file:
-#     all_download_files = json.load(file)
-#
-# for file_name, file_href in all_download_files.items():
-#     rep = [",", " ", "-"]
-#     for item in rep:
-#         if item in file_name:
-#             file_name = file_name.replace(item, "_")
+        with open('all_data.csv', "w", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(name_of_survey)
+
+        with open('all_data.csv', "a", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(title)
+
+        with open('all_data.csv', "a", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                (president,
+                    prime_minister,
+                    governments,
+                    duma,
+                    federation
+                )
+            )
+
+        with open('all_data.csv', "a", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                (
+                    table_link,
+                    table_link
+                )
+            )
+
+
+print("Program started")
+print(get_data("https://wciom.ru/ratings/dejatelnost-gosudarstvennykh-institutov/"))
+print("Program finished")
