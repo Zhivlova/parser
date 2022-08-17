@@ -146,33 +146,86 @@ class Variable:
 
     """Нетто импорт P"""
 
-    # Базовое равновесие
+    # Базовое равновесие Цена (P), руб за кг
     def netto_import(self, P_MDI_0):
         P_PXM_0 = P_MDI_0
         return P_PXM_0
-    # Новое равновесие
+    # Базовое равновесие Количество (Q) тыс. тонн
+    def q_netto_import(self, Q_PDC_0, Q_PDP_0):
+        Q_PXM_0 = Q_PDC_0-Q_PDP_0
+        return Q_PXM_0
+
+    # Новое равновесие Цена (P), руб за кг
     P_PXM_1 = 15.6016971682569
+    # Новое равновесие Количество (Q) тыс. тонн
+    Q_PXM_1 = 150.833333333333
+
+    # Изменение (%) Цена (P)
+    def perc_change_price_netto_import(self, P_PXM_1, P_PXM_0):
+        return P_PXM_1/P_PXM_0-1
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_netto_import(self, Q_PXM_1, Q_PXM_0)
+        return Q_PXM_1/Q_PXM_0-1
 
     """Общее образование P"""
 
-    # Базовое равновесие
+    # Базовое равновесие Цена (P), руб за кг
     def general_education(self, P_MDI_0):
         P_PDC_0 = P_MDI_0
         return P_PDC_0
-    # Новое равновесие
+    # Базовое равновесие Количество (Q) тыс. тонн
+    Q_PDC_0 = 4186
+
+    # Новое равновесие Цена (P), руб за кг
     P_PDC_1 = 15.6016971682569
+    # Новое равновесие Количество (Q) тыс. тонн
+    Q_PDC_1 = 4091.12127980453
+
+    # Изменение (%) Цена (P)
+    def perc_change_price_general_education(self, P_PDC_1, P_PDC_0):
+        return P_PDC_1/P_PDC_0-1
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_general_education(self, Q_PDC_1, Q_PDC_0)
+        return Q_PDC_1/Q_PDC_0-1
 
     """Отечественное производство товара F"""
 
-    # Базовое равновесие
+    # Базовое равновесие Цена (P), руб за кг
     P_FDP_0 = 38
-    # Новое равновесие
+    # Базовое равновесие Количество (Q) тыс. тонн
+    Q_FDP_0 = 2125
+
+    # Новое равновесие Цена (P), руб за кг
     P_FDP_1 = 44.03846291456
+    # Новое равновесие Количество (Q) тыс. тонн
+    Q_FDP_1 = 2221,1275608247
+
+    # Изменение (%) Цена (P)
+    def perc_change_price_home_production(self, P_FDP_1, P_FDP_0):
+        return P_FDP_1/P_FDP_0-1
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_home_production(self, Q_FDP_1, Q_FDP_0)
+        return Q_FDP_1/Q_FDP_0-1
 
     """Экспорт товара F"""
 
-    # Базовое равновесие
+    # Базовое равновесие Цена (P), руб за кг
     P_FXP_0 = 42
-    # Новое равновесие
+    # Базовое равновесие Количество (Q) тыс. тонн
+    def export_goods(self, Q_FDP_0, Q_FDC_0):
+        Q_FXP_0 = Q_FDP_0-Q_FDC_0
+        return Q_FXP_0
+
+    # Новое равновесие Цена (P), руб за кг
     P_FXP_1 = 49.5402632412323
+    # Новое равновесие Количество (Q) тыс. тонн
+    Q_FXP_1 = 1329.08375993167
+
+    # Изменение (%) Цена (P)
+    def perc_change_price_export_goodsself (self, P_FXP_1, P_FXP_0):
+        return P_FXP_1/P_FXP_0-1
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_export_goods(self, Q_FXP_1, Q_FXP_0)
+        return Q_FXP_1/Q_FXP_0-1
+
 
