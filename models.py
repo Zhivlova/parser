@@ -120,7 +120,7 @@ class ModelControlActions:
 if __name__ == "__main__":
     calculation = ModelControlActions(72.14, 0.18, "{:.0%}".format(129/100), "{:.14%}".format(1.89061890628692/100),
                                       14.686756, "{:.2%}".format(85.55/100))
-    print(calculation.waste_paper_collection())
+    print(calculation.basic_total_fiber_decrease())
 
 
 
