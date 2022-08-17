@@ -3,12 +3,6 @@ import pandas as pd
 """Управляющие воздействия модели"""
 
 class ModelControlActions:
-    ER_0 = 72.14
-    P_MMI_USD_0 = 0.18
-    NMMI_0 = "{:.0%}".format(129 / 100)
-    TMMI_0 = "{:.14%}".format(1.89061890628692 / 100)
-    SVA_0 = 14.686756
-    SH_0 = "{:.2%}".format(85.55 / 100)
 
     def __init__(self, ER, P_MMI_USD, NMMI, TMMI, SVA, SH):
         # Курс RUB/USD
@@ -24,23 +18,37 @@ class ModelControlActions:
         # Доля собираемой макулатуры для производства картона
         self.SH = SH
 
+    """Курс RUB/USD"""
+
+    # Базовое равновесие
+    ER_0 = 72.14
     # Новое равновесие Курс RUB/USD
-    def ER_1(self,ER):
-        return ER*1.2
+    def course(self, ER_0):
+        ER_1 = ER_0 * 1.2
+        return ER_1
 
-    # Новое равновесие Импортный нетарифный барьер на товар M
-    def NMMI_1(self):
-        return "{:.0%}".format(0/100)
+    """Цена импорта товара M USD (без тарифа), долл. США за кг"""
 
-    # Новое равновесие Импортный тариф на товар M
-    def TMMI_1(self):
-        return "{:.0%}".format(0 / 100)
+    # Базовое равновесие
+    P_MMI_USD_0 = 0.18
 
-    # Новое равновесие Прочие переменные издержки производства макулатурного картона (руб./кг)
-    def SVA_1(self):
-        SVA_1 = SVA_0
-        return SVA_1
+    """Импортный нетарифный барьер на товар M"""
 
+    # Базовое равновесие
+    NMMI_0 = "{:.0%}".format(129 / 100)
+    # Новое равновесие
+    def import_non_tariff_barrier(self):
+        NMMI_1 = "{:.0%}".format(0 / 100)
+        return NMMI_1
+
+    """Импортный тариф на товар M"""
+
+    # Базовое равновесие
+    TMMI_0 = "{:.14%}".format(1.89061890628692 / 100)
+    # Новое равновесие
+    def import_tariff(self):
+        TMMI_1 = "{:.0%}".format(0 / 100)
+        return TMMI_1
 
     """Собираемость макулатуры"""
 
@@ -51,32 +59,51 @@ class ModelControlActions:
 
     # Новое равновесие
     def new_waste_paper_collection(self, -P_MDI_1, Λ_1):
-        K_1 = (1-EXP(-P_MDI_1/Λ_1))
+        K_1 = (1 - EXP(-P_MDI_1 / Λ_1))
         return K_1
 
     """Нормировочная цена для собираемости макулатуры"""
 
     # Базовое равновесие
     def basic_rationing_price(self, -P_MDI_0, K_0):
-        Λ_0 = -P_MDI_0/LN(1-K_0)
+        Λ_0 = -P_MDI_0 / LN(1 - K_0)
         return Λ_0
 
     # Новое равновесие
-    def new_rationing_price(self,Λ_0):
+    def new_rationing_price(self, Λ_0):
         Λ_1 = Λ_0
         return Λ_1
+
+    """Прочие переменные издержки производства макулатурного картона (руб./кг)"""
+
+    # Базовое равновесие
+    SVA_0 = 14.686756
+
+    # Новое равновесие
+    def SVA_1(self,SVA_0):
+        SVA_1 = SVA_0
+        return SVA_1
 
     """Выход продукции из макулатуры"""
 
     # Базовое равновесие
     def basic_output_of_waste(self, Q_SDP_0, Q_MIC_0, SH_0):
-        OUT_0 = Q_SDP_0/(Q_MIC_0*SH_0)
+        OUT_0 = Q_SDP_0 / (Q_MIC_0 * SH_0)
         return OUT_0
 
     # Новое равновесие
     def new_output_of_waste(self, OUT_0):
         OUT_1 = OUT_0
         return OUT_1
+
+    """Доля собираемой макулатуры для производства картона"""
+
+    # Базовое равновесие
+    SH_0 = "{:.2%}".format(85.55 / 100)
+    # Новое равновесие
+    def new_share_of_waste(self, SH_0):
+        SH_1 = SH_0
+        return SH_1
 
     """Общее убывание волокна"""
 
