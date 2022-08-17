@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
 import ssl
+import csv
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -67,6 +68,19 @@ def get_answer_options(url):
     for answer in answer_options:
         answers = answer.text.strip()
         print(answers)
+        return answers
 
 
 get_answer_options('https://wciom.ru/ratings/indeks-potrebitelskogo-doverija')
+
+def write_to_csv():
+    with open('1_wciom_indeks-potrebitelskogo-doverija', 'w') as file:
+        file_csv = csv.writer(file)
+        file_csv.writerows(title)
+        file_csv.writerows(description)
+        file_csv.writerows(answers)
+
+
+
+
+
