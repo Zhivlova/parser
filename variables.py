@@ -1,5 +1,3 @@
-x = "{:.0%}".format(0 / 100)
-print(x)
 
 """Переменные"""
 
@@ -227,5 +225,75 @@ class Variable:
     # Изменение (%) Количество (Q)
     def perc_change_quantity_export_goods(self, Q_FXP_1, Q_FXP_0)
         return Q_FXP_1/Q_FXP_0-1
+
+
+"""Уравнения"""
+
+class Equations:
+    MMI_SUPPLY = Q_MMI_1-Z_MMI*(P_MMI_1/((1+NMMI_1)*(1+TMMI_1)*ER_1))^ε_MMI
+    MIC_BUD_CES = P_MIC_1*Q_MIC_1-P_MDI_1*Q_MDI_1-P_MMI_1*Q_MMI_1
+    MIC_CES = Q_MMI_1/Q_MDI_1-((P_MMI_1/(P_MDI_1))*(K_MDI/K_MMI))^(1/(r_σ_MIC-1))
+    MIC_BAL_CES = =Q_MIC_1-Q_MDI_1-Q_MMI_1
+    SDP_P = P_SDP_1 - P_MIC_1 / OUT_1 - SVA_1
+    SDP_Q = Q_SDP_1 - Q_MIC_1 * OUT_1 * SH_1
+    FDP_SUPPLY  = Q_FDP_1 - Z_FDP * (P_FDP_1) ^ ε_FDP
+    FDP_BUD_CET = P_FDP_1 * Q_FDP_1 - P_FDC_1 * Q_FDC_1 - P_FXP_1 * Q_FXP_1
+    FDP_CET = Q_FXP_1 / Q_FDC_1 - ((P_FXP_1 / (P_FDC_1)) * (K_FDC / K_FXP)) ^ (1 / (r_Ω_FDP - 1))
+    FDP_BAL_CET = Q_FDP_1 - Q_FDC_1 - Q_FXP_1
+    FXP_DEMAND = Q_FXP_1 - Z_FXP * (P_FXP_1 / ER_1) ^ ε_FXP
+    PDP_BUD_CES  = P_PDP_1 * Q_PDP_1 - P_SDP_1 * Q_SDP_1 - P_FDC_1 * Q_FDC_1
+    PDP_CES = Q_SDP_1 / Q_FDC_1 - ((P_SDP_1 / (P_FDC_1)) * (K_FDC / K_SDP)) ^ (1 / (r_σ_PDP - 1))
+    PDP_BAL_CES = Q_PDP_1 - Q_SDP_1 - Q_FDC_1
+    PDP_DEMAND = Q_PDP_1 - Z_PDP * (P_PDP_1) ^ ε_PDP
+    PXM_SUPPLY = Q_PXM_1 - Z_PXM * (1 / ER_1) ^ ε_PXM
+    PDC_BAL = Q_PDC_1 - Q_PXM_1 - Q_PDP_1
+    PDC_P = P_PDC_1 - P_MDI_1
+    MDI_BAL = Q_MDI_1 - Q_PDC_1 * (1 - EXP(-P_MDI_1 / Λ_1))
+    PXM_P = P_PXM_1 - P_MDI_1
+
+"""Внешние значения"""
+
+class External_values:
+    # Доля ЕС в импорте
+    def EU_share_of_imports(self):
+        EU =  "{:.13%}".format(33.3172943617359/100)
+        return EU
+    # Доля ЕАЭС в импорте
+    def share_of_EAEU_in_imports(self):
+        EAEU = "{:.13%}".format(62.1876218742617/100)
+        return EAEU
+    # Затраты на труд (руб./кг)
+    Lab = 0.544
+    # Норма прибыли в отрасли
+    def rate_of_profit(self):
+        profit = 'Рентабельность (Росстат)!K6/100'
+        return profit
+    # Прочие затраты SVA исключая труд
+    def other_SVA_costs_ex_labor(self, SVA_0, N4):
+        NoL = SVA_0- N4
+        return NoL
+    # Налоговая нагрузка в отрасли бумаги и бумажных изделий
+    def tax_burden(self):
+        Tax = 'Налоговая нагрузка (ФНС)!B19/100'
+        return Tax
+    # Налог на прибыль
+    def income_tax(self):
+        VAT = "{:.0%}".format(20/100)
+        return VAT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

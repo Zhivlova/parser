@@ -138,25 +138,69 @@ class Behavioral_parameters:
     ε_FXP = -10
 
     def rho_r_σ_MIC(self, σ_MIC):
-        return ((σ_MIC-1)/σ_MIC)
+        r_σ_MIC = (σ_MIC-1)/σ_MIC
+        return r_σ_MIC
 
     def rho_r_σ_PDP(self, σ_PDP):
-        return ((σ_PDP-1)/σ_PDP)
+        r_σ_PDP = (σ_PDP-1)/σ_PDP
+        return r_σ_PDP
 
     def rho_r_Ω_FDP(self, Ω_FDP):
-        return ((Ω_FDP+1)/Ω_FDP)
+        r_Ω_FDP = (Ω_FDP+1)/Ω_FDP
+        return r_Ω_FDP
 
-    def SS_DS_Z_MMI(self, ε_MMI):
-        return (Q_MMI_0/((P_MMI_0/(ER_0*(1+TMMI_0)*(1+NMMI_0)))^ε_MMI))
+    def SS_DS_Z_MMI(self, Q_MMI_0, P_MMI_0, ER_0, TMMI_0, NMMI_0, ε_MMI):
+        Z_MMI = Q_MMI_0/((P_MMI_0/(ER_0*(1+TMMI_0)*(1+NMMI_0)))^ε_MMI)
+        return Z_MMI
 
-    def SS_DS_Z_FDP(self, ε_FDP):
-        return (Q_FDP_0/(P_FDP_0)^ε_FDP)
+    def SS_DS_Z_FDP(self, Q_FDP_0, P_FDP_0, ε_FDP):
+        Z_FDP = Q_FDP_0/(P_FDP_0)^ε_FDP
+        return Z_FDP
 
-    def SS_DS_Z_PDP(self, ε_PDP):
-        return (Q_PDP_0/(P_PDP_0)^ε_PDP)
+    def SS_DS_Z_PDP(self, Q_PDP_0, P_PDP_0, ε_PDP):
+        Z_PDP = Q_PDP_0/(P_PDP_0)^ε_PDP
+        return Z_PDP
 
-    def SS_DS_Z_PXM(self, ε_PXM):
-        return (Q_PXM_0/(1/ER_0)^ε_PXM)
+    def SS_DS_Z_PXM(self, Q_PXM_0, ER_0, ε_PXM):
+        Z_PXM = Q_PXM_0/(1/ER_0)^ε_PXM
+        return Z_PXM
 
-    def SS_DS_Z_FXP(self, ε_FXP):
-        return (Q_FXP_0/(P_FXP_0/ER_0)^ε_FXP)
+    def SS_DS_Z_FXP(self, Q_FXP_0, P_FXP_0, ER_0, ε_FXP):
+        Z_FXP = Q_FXP_0/(P_FXP_0/ER_0)^ε_FXP
+        return Z_FXP
+
+
+    """Налоги и благосостояние"""
+    class Taxes_welfare:
+
+        """Импортный тариф"""
+        # Базовое рановесие
+        def base_import_tariff(self, P_MMI_0, Q_MMI_0, TMMI_0):
+            base = (P_MMI_0*Q_MMI_0)*TMMI_0
+            return base
+        # Новое равновесие
+        def new_import_tariff(self, P_MMI_1, Q_MMI_1, TMMI_1):
+            new = (P_MMI_1*Q_MMI_1)*TMMI_1
+            return new
+        # Изменение млн. руб
+        def change_import_tariff(self, new, base):
+            return  new - base
+        # Изменение % к начальному
+        def change_pr_import_tariff(self, new, base):
+            return  new / base - 1
+
+        """Производство макулатурных тарных картонов"""
+        # Базовое рановесие
+
+        # Новое равновесие
+        # Изменение млн. руб
+        # Изменение % к начальному
+
+
+
+
+        # Базовое рановесие
+        # Новое равновесие
+        # Изменение млн. руб
+        # Изменение % к начальному
+
