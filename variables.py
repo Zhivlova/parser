@@ -1,7 +1,6 @@
 
 """Переменные"""
 
-
 class Variable:
     def __init__(self, MDI, FDP, FXP):
         # Потребление отечественной макулатуры

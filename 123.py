@@ -26,8 +26,7 @@ xl = pd.ExcelFile(file)
 # rows = ['1', '2', '3']
 # excel_data_df.iloc[rows][columns]
 
-x = "{:.0%}".format(20/100)
-print(x)
+
 
 
 
