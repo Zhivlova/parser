@@ -1,23 +1,36 @@
 from models import ModelControlActions
+import math
 
+# создаем экземпляр класса
 table = ModelControlActions()
 
-input_data_base = {'ER_0': 72.14,
-                   'P_MMI_USD_0': 0.18,
-                   'NMMI_0': "{:.0%}".format(129 / 100),
-                   'TMMI_0': "{:.14%}".format(1.89061890628692 / 100),
-                   'SVA_0': 14.686756,
-                   'SH_0': "{:.2%}".format(85.55 / 100),
-                   'P_MDI_0': 15.139,
-                   'P_FDP_0': 38,
-                   'P_FXP_0': 42}
 
-input_data_new = {'ER_1': table.course(72.14),
-                  'NMMI_1': table.import_non_tariff_barrier(),
-                  'TMMI_1': table.import_tariff()
-                  }
+# получаем данные от пользователя - Базовое равновесие
+class Input_data_base:
+    def __init__(self, ER_0, P_MMI_USD_0, NMMI_0, TMMI_0, SVA_0, SH_0, P_MDI_0, P_FDP_0, P_FXP_0):
+        self.ER_0 = ER_0,
+        self.P_MMI_USD_0 = P_MMI_USD_0,
+        self.NMMI_0 = NMMI_0,
+        self.TMMI_0 = TMMI_0,
+        self.SVA_0 = SVA_0,
+        self.SH_0 = SH_0,
+        self.P_MDI_0 = P_MDI_0,
+        self.P_FDP_0 = P_FDP_0,
+        self.P_FXP_0 = P_FXP_0
 
+input_base = Input_data_base(72.14, 0.18, "{:.0%}".format(129 / 100), "{:.14%}".format(1.89061890628692 / 100),
+                             14.686756, "{:.2%}".format(85.55 / 100), 15.139, 38, 42)
 
+# получаем данные от пользователя - Новое равновесие
+class Input_data_new:
+    def __init__(self, ER_1, NMMI_1, TMMI_1):
+        self.ER_1 = ER_1,
+        self.NMMI_1 = NMMI_1,
+        self.TMMI_1 = TMMI_1
+
+input_new = Input_data_new(table.course(72.14), table.import_non_tariff_barrier(), table.import_tariff())
+
+# получаем данные от пользователя - Количество
 class Input_data_quantity:
     def __init__(self, Q_MMI_0, Q_MDI_0, Q_SDP_0, Q_FDC_0, Q_PDC_0, Q_FDP_0):
         self.Q_MMI_0 = Q_MMI_0
@@ -26,7 +39,6 @@ class Input_data_quantity:
         self.Q_FDC_0 = Q_FDC_0
         self.Q_PDC_0 = Q_PDC_0
         self.Q_FDP_0 = Q_FDP_0
-
 
 input_quantity = Input_data_quantity(42, 3876 - 54, 2999, 1006, 4186, 2125)
 
@@ -37,9 +49,14 @@ def calc_basic_waste_paper_collection(Q_MDI_0, Q_PDC_0):
     K_0 = Q_MDI_0 / Q_PDC_0
     return K_0
 
-K_0 = (calc_basic_waste_paper_collection(input_quantity.Q_MDI_0, input_quantity.Q_PDC_0))
+K_0 = calc_basic_waste_paper_collection(input_quantity.Q_MDI_0, input_quantity.Q_PDC_0)
 print(K_0)
-# Новое равновесие
-def new_waste_paper_collection(self, -P_MDI_1, Λ_1):
-    K_1 = (1 - EXP(-P_MDI_1 / Λ_1))
-    return K_1
+
+"""Нормировочная цена для собираемости макулатуры"""
+
+
+# Базовое равновесие
+def basic_rationing_price(self, P_MDI_0, K_0):
+    Λ_0 = -P_MDI_0 / math.log(1 - K_0)
+    return Λ_0
+
