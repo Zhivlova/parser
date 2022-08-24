@@ -102,8 +102,15 @@ print(f'OUT_0 = {OUT_0}')
 OUT_1 = OUT_0
 print(f'OUT_1 = {OUT_1}')
 
-# """Общее убывание волокна"""
-#
-# # Базовое равновесие
-# def basic_total_fiber_decrease(K_0, OUT_0, SH_0):
-#     return K_0*OUT_0*SH_0
+"""Общее убывание волокна"""
+
+# Базовое равновесие
+def basic_total_fiber_decrease(K_0, OUT_0, SH_0):
+    return K_0*OUT_0*SH_0
+basic_total_fiber_decrease = basic_total_fiber_decrease(K_0, OUT_0, input_base.SH_0)
+print(f'Общее убывание волокна  {basic_total_fiber_decrease}')
+
+"""Потребление отечественного товара M"""
+# Новое равновесие
+P_MDI_1 = 15.6016971682569
+print(f'P_MDI_1 = {P_MDI_1}')
