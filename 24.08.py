@@ -114,3 +114,18 @@ print(f'Общее убывание волокна  {basic_total_fiber_decrease}
 # Новое равновесие
 P_MDI_1 = 15.6016971682569
 print(f'P_MDI_1 = {P_MDI_1}')
+
+"""Собираемость макулатуры"""
+# Новое равновесие
+def K_1(P_MDI_1, Λ_1):
+    K_1 = (1-math.exp(-P_MDI_1/Λ_1))
+    return K_1
+K_1 = K_1(P_MDI_1, Λ_1)
+print(f'K_1 = {K_1}')
+
+"""Общее убывание волокна"""
+# Новое равновесие
+def new_total_fiber_decrease(K_1, OUT_1, SH_1):
+    return K_1*OUT_1*SH_1
+new_total_fiber_decrease = new_total_fiber_decrease(K_1, OUT_1, SH_1)
+print(f'Общее убывание волокна {new_total_fiber_decrease}')
