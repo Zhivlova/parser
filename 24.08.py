@@ -31,7 +31,7 @@ class Input_data_new:
         self.TMMI_1 = TMMI_1
 
 
-input_new = Input_data_new(table.course(72.14), table.import_non_tariff_barrier(), table.import_tariff())
+input_new = Input_data_new(table.ER_1(72.14), 0, 0)
 
 
 # получаем данные от пользователя - Количество

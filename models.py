@@ -1,6 +1,4 @@
 
-
-
 """Управляющие воздействия модели"""
 
 class ModelControlActions:
@@ -24,7 +22,7 @@ class ModelControlActions:
     # Базовое равновесие
     ER_0 = 72.14
     # Новое равновесие Курс RUB/USD
-    def course(self, ER_0):
+    def ER_1(self, ER_0):
         ER_1 = ER_0 * 1.2
         return ER_1
 
@@ -38,11 +36,10 @@ class ModelControlActions:
     """Импортный нетарифный барьер на товар M"""
 
     # Базовое равновесие
-    NMMI_0 = "{:.0%}".format(129 / 100)
+    NMMI_0 = 0
     # Новое равновесие
-    def import_non_tariff_barrier(self):
-        NMMI_1 = "{:.0%}".format(0 / 100)
-        return NMMI_1
+    NMMI_1 = 0
+
 
 
 
