@@ -176,6 +176,9 @@ def calc(user_values):
     print(f' от пользователя получено значение SH_0  {SH_0}')
     result['SH_0'] = SH_0
 
+    SH_1 = SH_0
+    result['SH_1'] = SH_1
+
     P_MDI_0 = user_values[6]
     print(f' от пользователя получено значение P_MDI_0  {P_MDI_0}')
     result['P_MDI_0'] = P_MDI_0
@@ -216,6 +219,27 @@ def calc(user_values):
 
     Λ_1 = Λ_0
     result['Λ_1'] = Λ_1
+
+    OUT_0 = Q_SDP_0 / (Q_MIC_0 * SH_0)
+    result['OUT_0'] = OUT_0
+
+    OUT_1 = OUT_0
+    result['OUT_1'] = OUT_1
+
+    def basic_total_fiber_decrease(K_0, OUT_0, SH_0):
+        return K_0 * OUT_0 * SH_0
+
+    basic_total_fiber_decrease = basic_total_fiber_decrease(K_0, OUT_0, SH_0)
+    result['basic_total_fiber_decrease'] = basic_total_fiber_decrease
+
+    K_1 = (1 - math.exp(-P_MDI_1 / Λ_1))
+    result['K_1'] = K_1
+
+    def new_total_fiber_decrease(K_1, OUT_1, SH_1):
+        return K_1 * OUT_1 * SH_1
+
+    new_total_fiber_decrease = new_total_fiber_decrease(K_1, OUT_1, SH_1)
+    result['new_total_fiber_decrease'] = new_total_fiber_decrease
 
     print(result)
 user_values = [72.14, 0.18, 1.29, 0.0189061890628692, 14.686756, 0.8555, 15.139, 38, 42, 42, 3822, 2999, 1006,
