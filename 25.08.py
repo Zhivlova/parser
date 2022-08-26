@@ -445,9 +445,17 @@ def calc(user_values):
 
     def MMI_SUPPLY(Q_MMI_1, Z_MMI, P_MMI_1, NMMI_1, TMMI_1, ER_1, ε_MMI):
         return Q_MMI_1-Z_MMI*(P_MMI_1/((1+NMMI_1)*(1+TMMI_1)*ER_1))**ε_MMI
-
     MMI_SUPPLY = MMI_SUPPLY(Q_MMI_1, Z_MMI, P_MMI_1, NMMI_1, TMMI_1, ER_1, ε_MMI)
     print(f'MMI_SUPPLY = {MMI_SUPPLY}')
+
+    def MIC_BUD_CES(P_MIC_1, Q_MIC_1, P_MDI_1, Q_MDI_1, P_MMI_1, Q_MMI_1):
+        return P_MIC_1*Q_MIC_1-P_MDI_1*Q_MDI_1-P_MMI_1*Q_MMI_1
+    MIC_BUD_CES = MIC_BUD_CES(P_MIC_1, Q_MIC_1, P_MDI_1, Q_MDI_1, P_MMI_1, Q_MMI_1)
+    print(f'MIC_BUD_CES = {MIC_BUD_CES}')
+
+
+
+
 
     # result_to_front = {
     #     'Базовое равновесие': [
