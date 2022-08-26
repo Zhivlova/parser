@@ -453,6 +453,67 @@ def calc(user_values):
     MIC_BUD_CES = MIC_BUD_CES(P_MIC_1, Q_MIC_1, P_MDI_1, Q_MDI_1, P_MMI_1, Q_MMI_1)
     print(f'MIC_BUD_CES = {MIC_BUD_CES}')
 
+    def MIC_CES(Q_MMI_1, Q_MDI_1, P_MMI_1, P_MDI_1, K_MDI, K_MMI, r_σ_MIC):
+        return Q_MMI_1/Q_MDI_1-((P_MMI_1/(P_MDI_1))*(K_MDI/K_MMI))**(1/(r_σ_MIC-1))
+    MIC_CES = MIC_CES(Q_MMI_1, Q_MDI_1, P_MMI_1, P_MDI_1, K_MDI, K_MMI, r_σ_MIC)
+    print(f'MIC_CES = {MIC_CES}')
+
+    def MIC_BAL_CES(Q_MIC_1, Q_MDI_1, Q_MMI_1):
+        return Q_MIC_1-Q_MDI_1-Q_MMI_1
+    MIC_BAL_CES = MIC_BAL_CES(Q_MIC_1, Q_MDI_1, Q_MMI_1)
+    print(f'MIC_BAL_CES = {MIC_BAL_CES}')
+
+    def SDP_P(P_SDP_1, P_MIC_1, OUT_1, SVA_1):
+        return P_SDP_1-P_MIC_1/OUT_1-SVA_1
+    SDP_P = SDP_P(P_SDP_1, P_MIC_1, OUT_1, SVA_1)
+    print(f'SDP_P = {SDP_P}')
+
+    def SDP_Q(Q_SDP_1, Q_MIC_1, OUT_1, SH_1):
+        return Q_SDP_1-Q_MIC_1*OUT_1*SH_1
+    SDP_Q = SDP_Q(Q_SDP_1, Q_MIC_1, OUT_1, SH_1)
+    print(f'SDP_Q = {SDP_Q}')
+
+    def FDP_SUPPLY(Q_FDP_1, Z_FDP, P_FDP_1, ε_FDP):
+        return Q_FDP_1-Z_FDP*(P_FDP_1)**ε_FDP
+    FDP_SUPPLY = FDP_SUPPLY(Q_FDP_1, Z_FDP, P_FDP_1, ε_FDP)
+    print(f'FDP_SUPPLY = {FDP_SUPPLY}')
+
+    def FDP_BUD_CET(P_FDP_1, Q_FDP_1, P_FDC_1, Q_FDC_1, P_FXP_1, Q_FXP_1):
+        return P_FDP_1*Q_FDP_1-P_FDC_1*Q_FDC_1-P_FXP_1*Q_FXP_1
+    FDP_BUD_CET = FDP_BUD_CET(P_FDP_1, Q_FDP_1, P_FDC_1, Q_FDC_1, P_FXP_1, Q_FXP_1)
+    print(f'FDP_BUD_CET = {FDP_BUD_CET}')
+
+    def FDP_CET(Q_FXP_1, Q_FDC_1, P_FXP_1, P_FDC_1, K_FDC, K_FXP, r_Ω_FDP):
+        return Q_FXP_1/Q_FDC_1-((P_FXP_1/(P_FDC_1))*(K_FDC/K_FXP))**(1/(r_Ω_FDP-1))
+    FDP_CET = FDP_CET(Q_FXP_1, Q_FDC_1, P_FXP_1, P_FDC_1, K_FDC, K_FXP, r_Ω_FDP)
+    print(f'FDP_CET = {FDP_CET}')
+
+    def FDP_BAL_CET(Q_FDP_1, Q_FDC_1, Q_FXP_1):
+        return Q_FDP_1-Q_FDC_1-Q_FXP_1
+    FDP_BAL_CET = FDP_BAL_CET(Q_FDP_1, Q_FDC_1, Q_FXP_1)
+    print(f'FDP_BAL_CET = {FDP_BAL_CET}')
+
+    def FXP_DEMAND(Q_FXP_1, Z_FXP, P_FXP_1, ER_1, ε_FXP):
+        return Q_FXP_1-Z_FXP*(P_FXP_1/ER_1)**ε_FXP
+    FXP_DEMAND = FXP_DEMAND(Q_FXP_1, Z_FXP, P_FXP_1, ER_1, ε_FXP)
+    print(f'FXP_DEMAND = {FXP_DEMAND}')
+
+    def PDP_BUD_CES(P_PDP_1, Q_PDP_1, P_SDP_1, Q_SDP_1, P_FDC_1, Q_FDC_1):
+        return P_PDP_1*Q_PDP_1-P_SDP_1*Q_SDP_1-P_FDC_1*Q_FDC_1
+    PDP_BUD_CES = PDP_BUD_CES(P_PDP_1, Q_PDP_1, P_SDP_1, Q_SDP_1, P_FDC_1, Q_FDC_1)
+    print(f'PDP_BUD_CES = {PDP_BUD_CES}')
+
+    def PDP_CES(Q_SDP_1, Q_FDC_1, P_SDP_1, P_FDC_1, K_FDC, K_SDP, r_σ_PDP):
+        return Q_SDP_1/Q_FDC_1-((P_SDP_1/(P_FDC_1))*(K_FDC/K_SDP))**(1/(r_σ_PDP-1))
+    PDP_CES = PDP_CES(Q_SDP_1, Q_FDC_1, P_SDP_1, P_FDC_1, K_FDC, K_SDP, r_σ_PDP)
+    print(f'PDP_CES = {PDP_CES}')
+
+    def PDP_BAL_CES(Q_PDP_1, Q_SDP_1, Q_FDC_1):
+        return Q_PDP_1-Q_SDP_1-Q_FDC_1
+    PDP_BAL_CES = PDP_BAL_CES(Q_PDP_1, Q_SDP_1, Q_FDC_1)
+    print(f'PDP_BAL_CES = {PDP_BAL_CES}')
+
+
 
 
 
