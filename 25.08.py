@@ -208,7 +208,140 @@ def calc(user_values):
     Q_FXP_1 = 1329.0837599316676
     result['Q_FXP_1'] = Q_FXP_1
 
-    print(result)
+    """Импорт товара M"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_good_import(P_MMI_1, P_MMI_0):
+        return P_MMI_1/P_MMI_0-1
+    perc_change_price_good_import = perc_change_price_good_import(P_MMI_1, P_MMI_0)
+    result['perc_change_price_good_import'] = perc_change_price_good_import
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_good_import(Q_MMI_1, Q_MMI_0):
+        return Q_MMI_1/Q_MMI_0-1
+    perc_change_quantity_good_import = perc_change_quantity_good_import(Q_MMI_1, Q_MMI_0)
+    result['perc_change_quantity_good_import'] = perc_change_quantity_good_import
+
+    """Потребление отечественного товара M"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_consumption_home_goods(P_MDI_1, P_MDI_0):
+        return P_MDI_1/P_MDI_0-1
+    perc_change_price_consumption_home_goods = perc_change_price_consumption_home_goods(P_MDI_1, P_MDI_0)
+    result['perc_change_price_consumption_home_goods'] = perc_change_price_consumption_home_goods
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_good_import_consumption_home_goods(Q_MDI_1, Q_MDI_0):
+        return Q_MDI_1/Q_MDI_0-1
+    perc_change_quantity_good_import_consumption_home_goods = perc_change_quantity_good_import_consumption_home_goods(Q_MDI_1, Q_MDI_0)
+    result['perc_change_quantity_good_import_consumption_home_goods'] = perc_change_quantity_good_import_consumption_home_goods
+
+    """Потребление отраслью S товара M"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_good_consumption(P_MIC_1, P_MIC_0):
+        return P_MIC_1/P_MIC_0-1
+    perc_change_price_good_consumption = perc_change_price_good_consumption(P_MIC_1, P_MIC_0)
+    result['perc_change_price_good_consumption'] = perc_change_price_good_consumption
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_good_consumption(Q_MIC_1, Q_MIC_0):
+        return Q_MIC_1/Q_MIC_0-1
+    perc_change_quantity_good_consumption = perc_change_quantity_good_consumption(Q_MIC_1, Q_MIC_0)
+    result['perc_change_quantity_good_consumption'] = perc_change_quantity_good_consumption
+
+    """Отечественное производство S"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_home_production(P_SDP_1, P_SDP_0):
+        return P_SDP_1/P_SDP_0-1
+    perc_change_price_home_production = perc_change_price_home_production(P_SDP_1, P_SDP_0)
+    result['perc_change_price_home_production'] = perc_change_price_home_production
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_home_production(Q_SDP_1, Q_SDP_0):
+        return Q_SDP_1/Q_SDP_0-1
+    perc_change_quantity_home_production = perc_change_quantity_home_production(Q_SDP_1, Q_SDP_0)
+    result['perc_change_quantity_home_production'] = perc_change_quantity_home_production
+
+    """Отечественное потребление F"""
+
+    # Изменение (%) Цена (P)
+    def perc_change_price_home_consumption_f(P_FDC_1, P_FDC_0):
+        return P_FDC_1/P_FDC_0-1
+    perc_change_price_home_consumption_f = perc_change_price_home_consumption_f(P_FDC_1, P_FDC_0)
+    result['perc_change_price_home_consumption_f'] = perc_change_price_home_consumption_f
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_home_consumption_f(Q_FDC_1, Q_FDC_0):
+        return Q_FDC_1/Q_FDC_0-1
+    perc_change_quantity_home_consumption_f = perc_change_quantity_home_consumption_f(Q_FDC_1, Q_FDC_0)
+    result['perc_change_quantity_home_consumption_f'] = perc_change_quantity_home_consumption_f
+
+    """Отечественное потребление P"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_home_consumption_p(P_PDP_1,P_PDP_0):
+        return P_PDP_1/P_PDP_0-1
+
+    perc_change_price_home_consumption_p = perc_change_price_home_consumption_p(P_PDP_1,P_PDP_0)
+    result['perc_change_price_home_consumption_p'] = perc_change_price_home_consumption_p
+
+    #     # Изменение (%) Количество (Q)
+    def perc_change_quantity_home_consumption_p(Q_PDP_1, Q_PDP_0):
+        return Q_PDP_1/Q_PDP_0-1
+    perc_change_quantity_home_consumption_p = perc_change_quantity_home_consumption_p(Q_PDP_1, Q_PDP_0)
+    result['perc_change_quantity_home_consumption_p'] = perc_change_quantity_home_consumption_p
+
+    """Нетто импорт P"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_netto_import(P_PXM_1, P_PXM_0):
+        return P_PXM_1/P_PXM_0-1
+    perc_change_price_netto_import = perc_change_price_netto_import(P_PXM_1, P_PXM_0)
+    result['perc_change_price_netto_import'] = perc_change_price_netto_import
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_netto_import(Q_PXM_1, Q_PXM_0):
+        return Q_PXM_1/Q_PXM_0-1
+    perc_change_quantity_netto_import = perc_change_quantity_netto_import(Q_PXM_1, Q_PXM_0)
+    result['perc_change_quantity_netto_import'] = perc_change_quantity_netto_import
+
+    """Общее образование P"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_general_education(P_PDC_1, P_PDC_0):
+        return P_PDC_1/P_PDC_0-1
+    perc_change_price_general_education = perc_change_price_general_education(P_PDC_1, P_PDC_0)
+    result['perc_change_price_general_education'] = perc_change_price_general_education
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_general_education(Q_PDC_1, Q_PDC_0):
+        return Q_PDC_1/Q_PDC_0-1
+
+    perc_change_quantity_general_education = perc_change_quantity_general_education(Q_PDC_1, Q_PDC_0)
+    result['perc_change_quantity_general_education'] = perc_change_quantity_general_education
+
+    """Отечественное производство товара F"""
+    # Изменение (%) Цена (P)
+    def perc_change_price_home_production_f(P_FDP_1, P_FDP_0):
+        return P_FDP_1/P_FDP_0-1
+    perc_change_price_home_production_f = perc_change_price_home_production_f(P_FDP_1, P_FDP_0)
+    result['perc_change_price_home_production_f'] = perc_change_price_home_production_f
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_home_production_f(Q_FDP_1, Q_FDP_0):
+        return Q_FDP_1/Q_FDP_0-1
+    perc_change_quantity_home_production_f = perc_change_quantity_home_production_f(Q_FDP_1, Q_FDP_0)
+    result['perc_change_quantity_home_production_f'] = perc_change_quantity_home_production_f
+
+    """Экспорт товара F"""
+
+    # Изменение (%) Цена (P)
+    def perc_change_price_export_goodsself (P_FXP_1, P_FXP_0):
+        return P_FXP_1/P_FXP_0-1
+    perc_change_price_export_goodsself = perc_change_price_export_goodsself(P_FXP_1, P_FXP_0)
+    result['perc_change_price_export_goodsself'] = perc_change_price_export_goodsself
+
+    # Изменение (%) Количество (Q)
+    def perc_change_quantity_export_goods(Q_FXP_1, Q_FXP_0):
+        return Q_FXP_1/Q_FXP_0-1
+    perc_change_quantity_export_goods = perc_change_quantity_export_goods(Q_FXP_1, Q_FXP_0)
+    result['perc_change_quantity_export_goods'] = perc_change_quantity_export_goods
+
     # result_to_front = {
     #     'Базовое равновесие': [
     #         ER_0,
