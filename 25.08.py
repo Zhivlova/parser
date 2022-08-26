@@ -342,6 +342,113 @@ def calc(user_values):
     perc_change_quantity_export_goods = perc_change_quantity_export_goods(Q_FXP_1, Q_FXP_0)
     result['perc_change_quantity_export_goods'] = perc_change_quantity_export_goods
 
+    """Поведенческие параметры"""
+
+    σ_MIC = 2.5
+    print(f'σ_MIC = {σ_MIC}')
+
+    def r_σ_MIC(σ_MIC):
+        return (σ_MIC-1)/σ_MIC
+    r_σ_MIC = r_σ_MIC(σ_MIC)
+    print(f'r_σ_MIC = {r_σ_MIC}')
+
+    σ_PDP = 2.25
+    print(f'σ_PDP = {σ_PDP}')
+
+    def r_σ_PDP(σ_PDP):
+        return (σ_PDP-1)/σ_PDP
+    r_σ_PDP = r_σ_PDP(σ_PDP)
+    print(f'r_σ_PDP = {r_σ_PDP}')
+
+    Ω_FDP = 2.95
+    print(f'Ω_FDP = {Ω_FDP}')
+
+    def r_Ω_FDP(Ω_FDP):
+        return (Ω_FDP + 1) / Ω_FDP
+    r_Ω_FDP = r_Ω_FDP(Ω_FDP)
+    print(f'r_Ω_FDP = {r_Ω_FDP}')
+
+    ε_MMI = 10
+    ε_FDP = 0.3
+    ε_PDP = -0.8822222222222221
+    ε_PXM = 1
+    ε_FXP = -10
+
+
+    def Z_MMI(Q_MMI_0, P_MMI_0, ER_0, TMMI_0, NMMI_0, ε_MMI):
+        return Q_MMI_0/((P_MMI_0/(ER_0*(1+TMMI_0)*(1+NMMI_0)))**ε_MMI)
+    Z_MMI = Z_MMI(Q_MMI_0, P_MMI_0, ER_0, TMMI_0, NMMI_0, ε_MMI)
+    print(f'Z_MMI = {Z_MMI}')
+
+    def Z_FDP(Q_FDP_0, P_FDP_0, ε_FDP):
+        return Q_FDP_0/(P_FDP_0)**ε_FDP
+    Z_FDP = Z_FDP(Q_FDP_0, P_FDP_0, ε_FDP)
+    print(f'Z_FDP = {Z_FDP}')
+
+    def Z_PDP(Q_PDP_0, P_PDP_0, ε_PDP):
+        return Q_PDP_0/(P_PDP_0)**ε_PDP
+    Z_PDP = Z_PDP(Q_PDP_0, P_PDP_0, ε_PDP)
+    print(f'Z_PDP = {Z_PDP}')
+
+    def Z_PXM(Q_PXM_0, ER_0, ε_PXM):
+        return Q_PXM_0/(1/ER_0)**ε_PXM
+    Z_PXM = Z_PXM(Q_PXM_0, ER_0, ε_PXM)
+    print(f'Z_PXM = {Z_PXM}')
+
+    def Z_FXP(Q_FXP_0, P_FXP_0, ER_0, ε_FXP):
+        return  Q_FXP_0/(P_FXP_0/ER_0)**ε_FXP
+    Z_FXP = Z_FXP(Q_FXP_0, P_FXP_0, ER_0, ε_FXP)
+    print(f'Z_FXP = {Z_FXP}')
+
+    """Внешние значения"""
+
+    EU = 0.3331729436173592
+    EAEU = 0.6218762187426168
+    Lab = 0.544
+    profit = 0.098
+    NoL = 14.142756
+    Tax = 0.03374120043652237
+    VAT = 0.2
+
+    """Относительное качество"""
+
+    def K_MMI(Q_MMI_0, Q_MDI_0, r_σ_MIC, P_MMI_0, P_MDI_0):
+        return (Q_MMI_0/Q_MDI_0)**(1-r_σ_MIC)*(P_MMI_0/P_MDI_0)
+    K_MMI = K_MMI(Q_MMI_0, Q_MDI_0, r_σ_MIC, P_MMI_0, P_MDI_0)
+    print(f'K_MMI = {K_MMI}')
+
+    K_MDI = 1
+
+    def E20(Q_MIC_0, K_MMI, Q_MMI_0, r_σ_MIC, K_MDI, Q_MDI_0):
+        return Q_MIC_0/(K_MMI*Q_MMI_0**r_σ_MIC+K_MDI*Q_MDI_0**r_σ_MIC)**(1/r_σ_MIC)
+    E20 = E20(Q_MIC_0, K_MMI, Q_MMI_0, r_σ_MIC, K_MDI, Q_MDI_0)
+    print(f'E20 = {E20}')
+
+    K_SDP = 1
+
+    def K_FDC(Q_FDC_0, Q_SDP_0, r_σ_PDP, P_FDC_0, P_SDP_0):
+        return (Q_FDC_0/Q_SDP_0)**(1-r_σ_PDP)*(P_FDC_0/P_SDP_0)
+    K_FDC = K_FDC(Q_FDC_0, Q_SDP_0, r_σ_PDP, P_FDC_0, P_SDP_0)
+    print(f'K_FDC = {K_FDC}')
+
+    def E23(Q_PDP_0, K_SDP, Q_SDP_0, r_σ_PDP, K_FDC, Q_FDC_0):
+        return Q_PDP_0/(K_SDP*Q_SDP_0**r_σ_PDP+K_FDC*Q_FDC_0**r_σ_PDP)**(1/r_σ_PDP)
+    E23 = E23(Q_PDP_0, K_SDP, Q_SDP_0, r_σ_PDP, K_FDC, Q_FDC_0)
+    print(f'E23 = {E23}')
+
+    def K_FXP(Q_FXP_0, Q_FDC_0, r_Ω_FDP, P_FXP_0, K_FDC, P_FDC_0):
+        return ((Q_FXP_0/Q_FDC_0)**(1-r_Ω_FDP))*(P_FXP_0*K_FDC/P_FDC_0)
+    K_FXP = K_FXP(Q_FXP_0, Q_FDC_0, r_Ω_FDP, P_FXP_0, K_FDC, P_FDC_0)
+    print(f'K_FXP = {K_FXP}')
+
+    """Уравнения"""
+
+    def MMI_SUPPLY(Q_MMI_1, Z_MMI, P_MMI_1, NMMI_1, TMMI_1, ER_1, ε_MMI):
+        return Q_MMI_1-Z_MMI*(P_MMI_1/((1+NMMI_1)*(1+TMMI_1)*ER_1))**ε_MMI
+
+    MMI_SUPPLY = MMI_SUPPLY(Q_MMI_1, Z_MMI, P_MMI_1, NMMI_1, TMMI_1, ER_1, ε_MMI)
+    print(f'MMI_SUPPLY = {MMI_SUPPLY}')
+
     # result_to_front = {
     #     'Базовое равновесие': [
     #         ER_0,
@@ -365,6 +472,6 @@ def calc(user_values):
     # }
     # return result_to_front
 
-user_values = [72.14, 0.18, 1.29, 0.0189061890628692, 14.686756, 0.8555, 15.139, 38, 42, 42, 3822, 2999, 1006,
+user_values = [72.14, 0.18, 1.29, 0.01890618906286916, 14.686756, 0.8555, 15.139, 38, 42, 42, 3822, 2999, 1006,
                4186, 2125]
 print(calc(user_values))
