@@ -513,10 +513,35 @@ def calc(user_values):
     PDP_BAL_CES = PDP_BAL_CES(Q_PDP_1, Q_SDP_1, Q_FDC_1)
     print(f'PDP_BAL_CES = {PDP_BAL_CES}')
 
+    def PDP_DEMAND(Q_PDP_1, Z_PDP, P_PDP_1, ε_PDP):
+        return Q_PDP_1-Z_PDP*(P_PDP_1)**ε_PDP
+    PDP_DEMAND = PDP_DEMAND(Q_PDP_1, Z_PDP, P_PDP_1, ε_PDP)
+    print(f'PDP_DEMAND = {PDP_DEMAND}')
 
+    def PXM_SUPPLY(Q_PXM_1, Z_PXM, ER_1, ε_PXM):
+        return Q_PXM_1-Z_PXM*(1/ER_1)**ε_PXM
+    PXM_SUPPLY = PXM_SUPPLY(Q_PXM_1, Z_PXM, ER_1, ε_PXM)
+    print(f'PXM_SUPPLY = {PXM_SUPPLY}')
 
+    def PDC_BAL(Q_PDC_1, Q_PXM_1, Q_PDP_1):
+        return Q_PDC_1-Q_PXM_1-Q_PDP_1
+    PDC_BAL = PDC_BAL(Q_PDC_1, Q_PXM_1, Q_PDP_1)
+    print(f'PDC_BAL = {PDC_BAL}')
 
+    def PDC_P(P_PDC_1, P_MDI_1):
+        return P_PDC_1-P_MDI_1
+    PDC_P = PDC_P(P_PDC_1, P_MDI_1)
+    print(f'PDC_P = {PDC_P}')
 
+    def MDI_BAL(Q_MDI_1, Q_PDC_1, P_MDI_1,Λ_1):
+        return Q_MDI_1-Q_PDC_1*(1-math.exp(-P_MDI_1/Λ_1))
+    MDI_BAL = MDI_BAL(Q_MDI_1, Q_PDC_1, P_MDI_1, Λ_1)
+    print(f'MDI_BAL = {MDI_BAL}')
+
+    def PXM_P(P_PXM_1, P_MDI_1):
+        return P_PXM_1-P_MDI_1
+    PXM_P = PXM_P(P_PXM_1, P_MDI_1)
+    print(f'PXM_P = {PXM_P}')
 
     # result_to_front = {
     #     'Базовое равновесие': [
