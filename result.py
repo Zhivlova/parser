@@ -271,15 +271,6 @@ def calc(user_values):
     z0 = [Q_MMI_0, P_MMI_0, P_MIC_0, Q_MIC_0, P_MDI_0, Q_MDI_0, P_SDP_0, Q_SDP_0, Q_FDP_0, P_FDP_0,
           P_FDC_0, Q_FDC_0, P_FXP_0, Q_FXP_0, P_PDP_0, Q_PDP_0, Q_PXM_0, Q_PDC_0, P_PDC_0, P_PXM_0]
 
-    eq_result = fsum(func(z0))
-
-    if eq_result < 0.000001:
-        solution = 'Решение найдено'
-        print(f'{eq_result} {solution}')
-    else:
-        solution = 'Решение не найдено'
-        print(f'{eq_result} {solution}')
-
     solved_value = fsolve(func, z0)
 
     Q_MMI_1 = solved_value[0]
@@ -341,6 +332,58 @@ def calc(user_values):
 
     P_PXM_1 = solved_value[19]
     result['P_PXM_1'] = P_PXM_1
+
+    eqs = []
+    MMI_SUPPLY = Q_MMI_1 - Z_MMI * (P_MMI_1 / ((1 + NMMI_1) * (1 + TMMI_1) * ER_1)) ** ε_MMI
+    eqs.append(MMI_SUPPLY)
+    MIC_BUD_CES = P_MIC_1 * Q_MIC_1 - P_MDI_1 * Q_MDI_1 - P_MMI_1 * Q_MMI_1
+    eqs.append(MIC_BUD_CES)
+    MIC_CES = Q_MMI_1 / Q_MDI_1 - ((P_MMI_1 / (P_MDI_1)) * (K_MDI / K_MMI)) ** (1 / (r_σ_MIC - 1))
+    eqs.append(MIC_CES)
+    MIC_BAL_CES = Q_MIC_1 - Q_MDI_1 - Q_MMI_1
+    eqs.append(MIC_BAL_CES)
+    SDP_P = P_SDP_1 - P_MIC_1 / OUT_1 - SVA_1
+    eqs.append(SDP_P)
+    SDP_Q = Q_SDP_1 - Q_MIC_1 * OUT_1 * SH_1
+    eqs.append(SDP_Q)
+    FDP_SUPPLY = Q_FDP_1 - Z_FDP * (P_FDP_1) ** ε_FDP
+    eqs.append(FDP_SUPPLY)
+    FDP_BUD_CET = P_FDP_1 * Q_FDP_1 - P_FDC_1 * Q_FDC_1 - P_FXP_1 * Q_FXP_1
+    eqs.append(FDP_BUD_CET)
+    FDP_CET = Q_FXP_1 / Q_FDC_1 - ((P_FXP_1 / (P_FDC_1)) * (K_FDC / K_FXP)) ** (1 / (r_Ω_FDP - 1))
+    eqs.append(FDP_CET)
+    FDP_BAL_CET = Q_FDP_1 - Q_FDC_1 - Q_FXP_1
+    eqs.append(FDP_BAL_CET)
+    FXP_DEMAND = Q_FXP_1 - Z_FXP * (P_FXP_1 / ER_1) ** ε_FXP
+    eqs.append(FXP_DEMAND)
+    PDP_BUD_CES = P_PDP_1 * Q_PDP_1 - P_SDP_1 * Q_SDP_1 - P_FDC_1 * Q_FDC_1
+    eqs.append(PDP_BUD_CES)
+    PDP_CES = Q_SDP_1 / Q_FDC_1 - ((P_SDP_1 / (P_FDC_1)) * (K_FDC / K_SDP)) ** (1 / (r_σ_PDP - 1))
+    eqs.append(PDP_CES)
+    PDP_BAL_CES = Q_PDP_1 - Q_SDP_1 - Q_FDC_1
+    eqs.append(PDP_BAL_CES)
+    PDP_DEMAND = Q_PDP_1 - Z_PDP * (P_PDP_1) ** ε_PDP
+    eqs.append(PDP_DEMAND)
+    PXM_SUPPLY = Q_PXM_1 - Z_PXM * (1 / ER_1) ** ε_PXM
+    eqs.append(PXM_SUPPLY)
+    PDC_BAL = Q_PDC_1 - Q_PXM_1 - Q_PDP_1
+    eqs.append(PDC_BAL)
+    PDC_P = P_PDC_1 - P_MDI_1
+    eqs.append(PDC_P)
+    MDI_BAL = Q_MDI_1 - Q_PDC_1 * (1 - exp(-P_MDI_1 / Λ_1))
+    eqs.append(MDI_BAL)
+    PXM_P = P_PXM_1 - P_MDI_1
+    eqs.append(PXM_P)
+
+    print(eqs)
+    eq_result = fsum(eqs)
+
+    if eq_result < 0.000001:
+        solution = 'Решение найдено'
+        print(f'{eq_result} {solution}')
+    else:
+        solution = 'Решение не найдено'
+        print(f'{eq_result} {solution}')
 
     K_1 = (1 - exp(-P_MDI_1 / Λ_1))
     result['K_1'] = K_1
