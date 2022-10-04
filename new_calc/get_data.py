@@ -372,6 +372,152 @@ def oil_export(input_data):
                 'before': domestic_market_of_group_b_products.iloc[1].before,
                 'after': domestic_market_of_group_b_products.iloc[1].after
             },
+            {
+                'id': '17',
+                'title': 'Стоимость продуктов переработки 1 единицы товара А',
+                'measure': internal_market_of_product_a.iloc[0].measure,
+                'params': internal_market_of_product_a.iloc[0].designation,
+                'before': internal_market_of_product_a.iloc[0].before,
+                'after': internal_market_of_product_a.iloc[0].after
+            },
+            {
+                'id': '18',
+                'title': 'Стоимость переработки 1 единицы товара А',
+                'measure': internal_market_of_product_a.iloc[1].measure,
+                'params': internal_market_of_product_a.iloc[1].designation,
+                'before': internal_market_of_product_a.iloc[1].before,
+                'after': internal_market_of_product_a.iloc[1].after
+            },
+            {
+                'id': '19',
+                'title': 'Внутренняя цена товара А',
+                'measure': internal_market_of_product_a.iloc[2].measure,
+                'params': internal_market_of_product_a.iloc[2].designation,
+                'before': internal_market_of_product_a.iloc[2].before,
+                'after': internal_market_of_product_a.iloc[2].after
+            },
+            {
+                'id': '20',
+                'title': 'Объем внутреннего производства товара А',
+                'measure': internal_production_and_balance_of_goods_a.iloc[0].measure,
+                'params': internal_production_and_balance_of_goods_a.iloc[0].designation,
+                'before': internal_production_and_balance_of_goods_a.iloc[0].before,
+                'after': internal_production_and_balance_of_goods_a.iloc[0].after
+            },
+            {
+                'id': '21',
+                'title': 'Экспорт товара А (экзогенно)',
+                'measure': internal_production_and_balance_of_goods_a.iloc[1].measure,
+                'params': internal_production_and_balance_of_goods_a.iloc[1].designation,
+                'before': internal_production_and_balance_of_goods_a.iloc[1].before,
+                'after': internal_production_and_balance_of_goods_a.iloc[1].after
+            },
+            {
+                'id': '22',
+                'title': 'Индекс превышения затрат на производство над ценами',
+                'measure': internal_production_and_balance_of_goods_a.iloc[2].measure,
+                'params': internal_production_and_balance_of_goods_a.iloc[2].designation,
+                'before': internal_production_and_balance_of_goods_a.iloc[2].before,
+                'after': internal_production_and_balance_of_goods_a.iloc[2].after,
+                'status': internal_production_and_balance_of_goods_a.iloc[2].status
+            },
+            {
+                'id': '23',
+                'title': 'Экзогенный сдвиг во внутреннем предложении товара А',
+                'measure': internal_production_and_balance_of_goods_a.iloc[3].measure,
+                'params': internal_production_and_balance_of_goods_a.iloc[3].designation,
+                'before': internal_production_and_balance_of_goods_a.iloc[3].before,
+                'after': internal_production_and_balance_of_goods_a.iloc[3].after,
+                'status': internal_production_and_balance_of_goods_a.iloc[3].status
+            },
+            {
+                'id': '24',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': internal_production_and_balance_of_goods_a.iloc[4].measure,
+                'params': internal_production_and_balance_of_goods_a.iloc[4].designation,
+                'before': internal_production_and_balance_of_goods_a.iloc[4].before,
+                'after': internal_production_and_balance_of_goods_a.iloc[4].after
+            },
+            {
+                'id': '25',
+                'title': 'Внутренняя цена товара С',
+                'measure': internal_production_of_goods_c.iloc[0].measure,
+                'params': internal_production_of_goods_c.iloc[0].designation,
+                'before': internal_production_of_goods_c.iloc[0].before,
+                'after': internal_production_of_goods_c.iloc[0].after
+            },
+            {
+                'id': '26',
+                'title': 'Затраты на производство и обращение товара С (без учета стоимости В)',
+                'measure': internal_production_of_goods_c.iloc[1].measure,
+                'params': internal_production_of_goods_c.iloc[1].designation,
+                'before': internal_production_of_goods_c.iloc[1].before,
+                'after': internal_production_of_goods_c.iloc[1].after
+            },
+            {
+                'id': '27',
+                'title': 'Внутренний спрос на товар С',
+                'measure': internal_production_of_goods_c.iloc[2].measure,
+                'params': internal_production_of_goods_c.iloc[2].designation,
+                'before': internal_production_of_goods_c.iloc[2].before,
+                'after': internal_production_of_goods_c.iloc[2].after
+            },
+            {
+                'id': '28',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': internal_production_of_goods_c.iloc[3].measure,
+                'params': internal_production_of_goods_c.iloc[3].designation,
+                'before': internal_production_of_goods_c.iloc[3].before,
+                'after': internal_production_of_goods_c.iloc[3].after
+            },
+            {
+                'id': '29',
+                'title': 'Объем внутреннего производства товара B1',
+                'measure': production_and_balance_of_group_b_goods.iloc[0].measure,
+                'params': production_and_balance_of_group_b_goods.iloc[0].designation,
+                'before': production_and_balance_of_group_b_goods.iloc[0].before,
+                'after': production_and_balance_of_group_b_goods.iloc[0].after
+            },
+            {
+                'id': '30',
+                'title': 'Внутренний спрос на товар B1',
+                'measure': production_and_balance_of_group_b_goods.iloc[1].measure,
+                'params': production_and_balance_of_group_b_goods.iloc[1].designation,
+                'before': production_and_balance_of_group_b_goods.iloc[1].before,
+                'after': production_and_balance_of_group_b_goods.iloc[1].after
+            },
+            {
+                'id': '31',
+                'title': 'Экспорт товара B1',
+                'measure': production_and_balance_of_group_b_goods.iloc[2].measure,
+                'params': production_and_balance_of_group_b_goods.iloc[2].designation,
+                'before': production_and_balance_of_group_b_goods.iloc[2].before,
+                'after': production_and_balance_of_group_b_goods.iloc[2].after
+            },
+            {
+                'id': '32',
+                'title': 'Объем внутреннего производства товара B2',
+                'measure': production_and_balance_of_group_b_goods.iloc[3].measure,
+                'params': production_and_balance_of_group_b_goods.iloc[3].designation,
+                'before': production_and_balance_of_group_b_goods.iloc[3].before,
+                'after': production_and_balance_of_group_b_goods.iloc[3].after
+            },
+            {
+                'id': '33',
+                'title': 'Внутренний спрос на товар B2',
+                'measure': production_and_balance_of_group_b_goods.iloc[4].measure,
+                'params': production_and_balance_of_group_b_goods.iloc[4].designation,
+                'before': production_and_balance_of_group_b_goods.iloc[4].before,
+                'after': production_and_balance_of_group_b_goods.iloc[4].after
+            },
+            {
+                'id': '34',
+                'title': 'Экспорт товара B2',
+                'measure': production_and_balance_of_group_b_goods.iloc[5].measure,
+                'params': production_and_balance_of_group_b_goods.iloc[5].designation,
+                'before': production_and_balance_of_group_b_goods.iloc[5].before,
+                'after': production_and_balance_of_group_b_goods.iloc[5].after
+            },
 
         ]
     }
