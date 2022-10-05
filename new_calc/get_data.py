@@ -1,25 +1,24 @@
-from collections import OrderedDict
 from pprint import pprint
 
 import numpy as np
 import pandas as pd
 import os
 
-# example_data = {'PW_B1_before': 1500.0, 'PW_B1_after': 1500.0, 'PW_B2_before': 300.0, 'PW_B2_after': 300.0,
-#                 'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
-#                 'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
-#                 'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
-#                 'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
-#                 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
-#                 'QDI_С': 3.0, 'QDI_B2': 2.0}
+example_data = {'PW_B1_before': 1500.0, 'PW_B1_after': 1500.0, 'PW_B2_before': 300.0, 'PW_B2_after': 300.0,
+                'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+                'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
+                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
+                'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
+                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
+                'QDI_С': 3.0, 'QDI_B2': 2.0}
 
 user_data = {'PW_B1_before': 1500.0, 'PW_B1_after': 1500.0, 'PW_B2_before': 300.0, 'PW_B2_after': 300.0,
-            'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 85500.0,
-            'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
-            'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
-            'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
-            'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
-            'QDI_С': 3.0, 'QDI_B2': 2.0}
+                'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+                'Pb_B1_after': 89500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
+                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
+                'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
+                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
+                'QDI_С': 3.0, 'QDI_B2': 2.0}
 
 
 class InputDataBase:
@@ -223,10 +222,7 @@ def oil_export(input_data):
     calculation_of_amount_of_export_customs_duty.at[4, 'after'] = input_data.Pb_B2_after
     calculation_of_amount_of_export_customs_duty.at[5, 'before'] = input_data.tb_B2_before
     calculation_of_amount_of_export_customs_duty.at[5, 'after'] = input_data.tb_B2_after
-    # print(calculation_of_amount_of_export_customs_duty['before'].apply(lambda x: '%.2f' % x))
-    # print(calculation_of_amount_of_export_customs_duty['after'].apply(lambda x: '%.2f' % x))
-    calculation_of_amount_of_export_customs_duty.loc[4,'before'] = 19875
-    print(calculation_of_amount_of_export_customs_duty.to_markdown())
+    # print(calculation_of_amount_of_export_customs_duty.to_markdown())
 
     # Внутренний рынок товаров группы B
     domestic_market_of_group_b_products.at[0, 'before'] = input_data.PI_B1
@@ -255,7 +251,6 @@ def oil_export(input_data):
     # Производство и баланс товаров группы B
     production_and_balance_of_group_b_goods.at[4, 'before'] = input_data.QDI_B2
     # print(production_and_balance_of_group_b_goods.to_markdown())
-
 
 
     result_to_front = {}
