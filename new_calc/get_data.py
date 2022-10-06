@@ -16,8 +16,8 @@ user_data = {'PW_B1_before': 1500.0, 'PW_B1_after': 1500.0, 'PW_B2_before': 300.
                 'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
                 'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
                 'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
-                'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 2.0,
-                'i_cost_after': 1.0, 'shift_QSI_A_before': 2.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
+                'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
+                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
                 'QDI_С': 3.0, 'QDI_B2': 2.0}
 
 
@@ -138,9 +138,9 @@ def oil_export(input_data):
     })
 
     # Внутреннее производство товара С
-    internal_production_of_goods_c = df.iloc[35:39, 3:8]
-    internal_production_of_goods_c.index = np.arange(0, len(internal_production_of_goods_c))
-    internal_production_of_goods_c = internal_production_of_goods_c.rename(columns={
+    int_prod_of_goods_c = df.iloc[35:39, 3:8]
+    int_prod_of_goods_c.index = np.arange(0, len(int_prod_of_goods_c))
+    int_prod_of_goods_c = int_prod_of_goods_c.rename(columns={
         'Unnamed: 4': 'title',
         'Unnamed: 5': 'measure',
         'Unnamed: 6': 'designation',
@@ -150,9 +150,9 @@ def oil_export(input_data):
     })
 
     # Производство и баланс товаров группы B
-    production_and_balance_of_group_b_goods = df.iloc[41:47, 3:8]
-    production_and_balance_of_group_b_goods.index = np.arange(0, len(production_and_balance_of_group_b_goods))
-    production_and_balance_of_group_b_goods = production_and_balance_of_group_b_goods.rename(columns={
+    prod_bal_of_group_b_goods = df.iloc[41:47, 3:8]
+    prod_bal_of_group_b_goods.index = np.arange(0, len(prod_bal_of_group_b_goods))
+    prod_bal_of_group_b_goods = prod_bal_of_group_b_goods.rename(columns={
         'Unnamed: 4': 'title',
         'Unnamed: 5': 'measure',
         'Unnamed: 6': 'designation',
@@ -227,7 +227,7 @@ def oil_export(input_data):
         lambda x: 'Параметр изменен' if prices_group_b_products.at[5, 'before']
                                         != prices_group_b_products.at[5, 'after'] else 'Параметр не изменен')
 
-    # print(prices_group_b_products.to_markdown())
+    print(prices_group_b_products.to_markdown())
 
     # Расчет суммы вывозной таможенной пошлины
     calc_export_customs_duty.at[0, 'before'] = input_data.Pb_B1_before
@@ -253,7 +253,7 @@ def oil_export(input_data):
     calc_export_customs_duty.at[5, 'status'] = calc_export_customs_duty['status'].pipe(
         lambda x: 'Параметр изменен' if calc_export_customs_duty.at[5, 'before']
                                         != calc_export_customs_duty.at[5, 'after'] else 'Параметр не изменен')
-    # print(calc_export_customs_duty.to_markdown())
+    print(calc_export_customs_duty.to_markdown())
 
     # Внутренний рынок товаров группы B
     domestic_market_of_group_b_products.at[0, 'before'] = input_data.PI_B1
@@ -281,13 +281,134 @@ def oil_export(input_data):
     print(int_prod_balance_of_goods_a.to_markdown())
 
     # Внутреннее производство товара С
-    internal_production_of_goods_c.at[0, 'before'] = input_data.PI_С
-    internal_production_of_goods_c.at[2, 'before'] = input_data.QDI_С
+    int_prod_of_goods_c.at[0, 'before'] = input_data.PI_С
+    int_prod_of_goods_c.at[2, 'before'] = input_data.QDI_С
     # print(internal_production_of_goods_c.to_markdown())
 
     # Производство и баланс товаров группы B
-    production_and_balance_of_group_b_goods.at[4, 'before'] = input_data.QDI_B2
+    prod_bal_of_group_b_goods.at[4, 'before'] = input_data.QDI_B2
     # print(production_and_balance_of_group_b_goods.to_markdown())
+
+    # перерасчет
+
+    # H13
+    def func_h13(df, H3, H7, H11, H12):
+        return (H3*H7-H11)*H12
+
+    calc_export_customs_duty.at[2, 'before'] = calc_export_customs_duty['before'].pipe(func_h13,
+        prices_group_b_products.at[0, 'before'], prices_group_b_products.at[4, 'before'],
+        calc_export_customs_duty.at[0, 'before'], calc_export_customs_duty.at[1, 'before'])
+    print(f"H13 {calc_export_customs_duty.at[2, 'before']} ")
+
+    # H5
+    def func_h5(df, H3, H21, H8, H13, H7):
+        return H3-((H21/(1-H8)+H13)/H7)
+
+    prices_group_b_products.at[2, 'before'] = prices_group_b_products['before'].pipe(func_h5,
+        prices_group_b_products.at[0, 'before'], domestic_market_of_group_b_products.at[0, 'before'],
+        prices_group_b_products.at[5, 'before'], calc_export_customs_duty.at[2, 'before'],
+        prices_group_b_products.at[4, 'before'])
+
+    print(f"H5 {prices_group_b_products.at[2, 'before']} ")
+
+    # I5
+    prices_group_b_products.at[2, 'after'] = prices_group_b_products.at[2, 'before']
+    print(f"I5 {prices_group_b_products.at[2, 'after']} ")
+
+    # H17
+    def func_h17(df, H4, H7, H15, H16):
+        return (H4*H7-H15)*H16
+
+    calc_export_customs_duty.at[6, 'before'] = calc_export_customs_duty['before'].pipe(func_h17,
+        prices_group_b_products.at[1, 'before'], prices_group_b_products.at[4, 'before'],
+        calc_export_customs_duty.at[4, 'before'], calc_export_customs_duty.at[5, 'before'])
+    print(f"H17 {calc_export_customs_duty.at[6, 'before']} ")
+
+    # H6
+    def func_h6(df, H4, H22, H8, H17, H7):
+        return H4 - ((H22 / (1 - H8) + H17) / H7)
+    prices_group_b_products.at[3, 'before'] = prices_group_b_products['before'].pipe(func_h6,
+        prices_group_b_products.at[1, 'before'], domestic_market_of_group_b_products.at[1, 'before'],
+        prices_group_b_products.at[5, 'before'], calc_export_customs_duty.at[6, 'before'],
+        prices_group_b_products.at[4, 'before'])
+    print(f"H6 {prices_group_b_products.at[3, 'before']} ")
+
+    # I6
+    prices_group_b_products.at[3, 'after'] = prices_group_b_products.at[3, 'before']
+    print(f"I5 {prices_group_b_products.at[3, 'after']} ")
+
+    # H13
+    def func_h13(df, H3, H7, H11, H12):
+        return (H3*H7-H11)*H12
+
+    calc_export_customs_duty.at[2, 'before'] = calc_export_customs_duty['before'].pipe(func_h13,
+        prices_group_b_products.at[0, 'before'], prices_group_b_products.at[4, 'before'],
+        calc_export_customs_duty.at[0, 'before'], calc_export_customs_duty.at[1, 'before'])
+    print(f"H13 {calc_export_customs_duty.at[2, 'before']} ")
+
+    # I13
+    def func_i13(df, I3, I7, I11, I12):
+        return (I3*I7-I11)*I12
+
+    calc_export_customs_duty.at[2, 'after'] = calc_export_customs_duty['after'].pipe(func_i13,
+        prices_group_b_products.at[0, 'after'], prices_group_b_products.at[4, 'after'],
+        calc_export_customs_duty.at[0, 'after'], calc_export_customs_duty.at[1, 'after'])
+    print(f"I13 {calc_export_customs_duty.at[2, 'after']} ")
+
+    # H14
+    def func_h14(df, H13, H3, H7):
+        return H13/(H3*H7)
+
+    calc_export_customs_duty.at[3, 'before'] = calc_export_customs_duty['before'].pipe(func_h14,
+        calc_export_customs_duty.at[2, 'before'], prices_group_b_products.at[0, 'before'],
+        prices_group_b_products.at[4, 'before'])
+    print(f"H14 {calc_export_customs_duty.at[3, 'before']} ")
+
+    # I14
+    def func_i14(df, I13, I3, I7):
+        return I13/(I3*I7)
+
+    calc_export_customs_duty.at[3, 'after'] = calc_export_customs_duty['after'].pipe(func_i14,
+        calc_export_customs_duty.at[2, 'after'], prices_group_b_products.at[0, 'after'],
+        prices_group_b_products.at[4, 'after'])
+    print(f"I14 {calc_export_customs_duty.at[3, 'after']} ")
+
+    # H17
+    def func_h17(df, H4, H7, H15, H16):
+        return (H4*H7-H15)*H16
+
+    calc_export_customs_duty.at[6, 'before'] = calc_export_customs_duty['before'].pipe(func_h17,
+        prices_group_b_products.at[1, 'before'], prices_group_b_products.at[4, 'before'],
+        calc_export_customs_duty.at[4, 'before'], calc_export_customs_duty.at[5, 'before'])
+    print(f"H17 {calc_export_customs_duty.at[6, 'before']} ")
+
+    # I17
+    def func_i17(df, I4, I7, I15, I16):
+        return (I4*I7-I15)*I16
+
+    calc_export_customs_duty.at[6, 'after'] = calc_export_customs_duty['after'].pipe(func_i17,
+        prices_group_b_products.at[1, 'after'], prices_group_b_products.at[4, 'after'],
+        calc_export_customs_duty.at[4, 'after'], calc_export_customs_duty.at[5, 'after'])
+    print(f"I17 {calc_export_customs_duty.at[6, 'after']} ")
+
+    # H18
+    def func_h18(df, H17, H4, H7):
+        return H17/(H4*H7)
+
+    calc_export_customs_duty.at[7, 'before'] = calc_export_customs_duty['before'].pipe(func_h18,
+        calc_export_customs_duty.at[6, 'before'], prices_group_b_products.at[1, 'before'],
+        prices_group_b_products.at[4, 'before'])
+    print(f"H18 {calc_export_customs_duty.at[7, 'before']} ")
+
+    # I18
+    def func_i18(df, I17, I4, I7):
+        return I17/(I4*I7)
+
+    calc_export_customs_duty.at[7, 'after'] = calc_export_customs_duty['after'].pipe(func_i18,
+        calc_export_customs_duty.at[6, 'after'], prices_group_b_products.at[1, 'after'],
+        prices_group_b_products.at[4, 'after'])
+    print(f"I18 {calc_export_customs_duty.at[7, 'after']} ")
+
 
     result_to_front = {}
 
@@ -301,8 +422,8 @@ def oil_export(input_data):
     result_to_front['internal_market_of_product_a'] = internal_market_of_product_a.to_dict('index')
     result_to_front['internal_production_and_balance_of_goods_a'] = int_prod_balance_of_goods_a.to_dict(
         'index')
-    result_to_front['internal_production_of_goods_c'] = internal_production_of_goods_c.to_dict('index')
-    result_to_front['production_and_balance_of_group_b_goods'] = production_and_balance_of_group_b_goods.to_dict(
+    result_to_front['internal_production_of_goods_c'] = int_prod_of_goods_c.to_dict('index')
+    result_to_front['production_and_balance_of_group_b_goods'] = prod_bal_of_group_b_goods.to_dict(
         'index')
     result_to_front['prices'] = prices.to_dict('index')
     result_to_front['production_and_consumption'] = production_and_consumption.to_dict('index')
@@ -311,5 +432,5 @@ def oil_export(input_data):
 
 
 input_data = InputDataBase(user_data)
-x = oil_export(input_data)
-# pprint(x)
+result = oil_export(input_data)
+# pprint(result)
