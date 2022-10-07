@@ -69,7 +69,7 @@ def oil_export(input_data):
     elasticity_at_its_own_price = df.iloc[6:12, 0:1]
     elasticity_at_its_own_price = elasticity_at_its_own_price.rename(columns={
         'Список товаров': 'Эластичности по собственной цене'})
-    # print(elasticity_at_its_own_price.to_markdown())
+    print(elasticity_at_its_own_price.to_markdown())
 
     # Коэффициенты выхода продукции
     output_coefficients = df.iloc[14:16, 0:1]
@@ -409,26 +409,216 @@ def oil_export(input_data):
         prices_group_b_products.at[4, 'after'])
     print(f"I18 {calc_export_customs_duty.at[7, 'after']} ")
 
+    # I21
+    def func_i21(df, I3, I5, I7, I13, I8):
+        return ((I3-I5)*I7-I13)*(1-I8)
 
-    result_to_front = {}
+    domestic_market_of_group_b_products.at[0, 'after'] = domestic_market_of_group_b_products['after'].pipe(func_i21,
+        prices_group_b_products.at[0, 'after'], prices_group_b_products.at[2, 'after'],
+        prices_group_b_products.at[4, 'after'], calc_export_customs_duty.at[2, 'after'],
+        prices_group_b_products.at[5, 'after'])
+    print(f"I21 {domestic_market_of_group_b_products.at[0, 'after']} ")
 
-    result_to_front[
-        'prices_on_world_market_of_group_b_products'] = prices_group_b_products.to_dict(
-        'index')
-    result_to_front[
-        'calculation_of_amount_of_export_customs_duty'] = calc_export_customs_duty.to_dict(
-        'index')
-    result_to_front['domestic_market_of_group_b_products'] = domestic_market_of_group_b_products.to_dict('index')
-    result_to_front['internal_market_of_product_a'] = internal_market_of_product_a.to_dict('index')
-    result_to_front['internal_production_and_balance_of_goods_a'] = int_prod_balance_of_goods_a.to_dict(
-        'index')
-    result_to_front['internal_production_of_goods_c'] = int_prod_of_goods_c.to_dict('index')
-    result_to_front['production_and_balance_of_group_b_goods'] = prod_bal_of_group_b_goods.to_dict(
-        'index')
-    result_to_front['prices'] = prices.to_dict('index')
-    result_to_front['production_and_consumption'] = production_and_consumption.to_dict('index')
-    result_to_front['cost_effects'] = cost_effects.to_dict('index')
-    return result_to_front
+    # I22
+    def func_i22(df, I4, I6, I7, I17, I8):
+        return ((I4-I6)*I7-I17)*(1-I8)
+
+    domestic_market_of_group_b_products.at[1, 'after'] = domestic_market_of_group_b_products['after'].pipe(func_i22,
+        prices_group_b_products.at[1, 'after'], prices_group_b_products.at[3, 'after'],
+        prices_group_b_products.at[4, 'after'], calc_export_customs_duty.at[6, 'after'],
+        prices_group_b_products.at[5, 'after'])
+    print(f"I22 {domestic_market_of_group_b_products.at[1, 'after']} ")
+
+    # H25
+    def func_h25(df, H21, B16, H22, B17):
+        return H21*B16+H22*B17
+
+    internal_market_of_product_a.at[0, 'before'] = internal_market_of_product_a['before'].pipe(func_h25,
+        domestic_market_of_group_b_products.at[0, 'before'],
+        output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'],
+        domestic_market_of_group_b_products.at[1, 'before'],
+        output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+    print(f"H25 {internal_market_of_product_a.at[0, 'before']} ")
+
+    # I25
+    def func_i25(df, I21, B16, I22, B17):
+        return I21*B16+I22*B17
+
+    internal_market_of_product_a.at[0, 'after'] = internal_market_of_product_a['after'].pipe(func_i25,
+        domestic_market_of_group_b_products.at[0, 'after'],
+        output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'],
+        domestic_market_of_group_b_products.at[1, 'after'],
+        output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+    print(f"I25 {internal_market_of_product_a.at[0, 'after']} ")
+
+    # H26
+    def func_h26(df, H25, H27):
+        return H25-H27
+
+    internal_market_of_product_a.at[1, 'before'] = internal_market_of_product_a['before'].pipe(func_h26,
+        internal_market_of_product_a.at[0, 'before'], internal_market_of_product_a.at[2, 'before'])
+    print(f"H26 {internal_market_of_product_a.at[1, 'before']} ")
+
+    # I26
+    internal_market_of_product_a.at[1, 'after'] = internal_market_of_product_a.at[1, 'before']
+    print(f"I26 {internal_market_of_product_a.at[1, 'after']} ")
+
+    # I27
+    def func_i27(df, I25, I26):
+        return I25-I26
+    internal_market_of_product_a.at[2, 'after'] = internal_market_of_product_a['after'].pipe(func_i27,
+        internal_market_of_product_a.at[0, 'after'], internal_market_of_product_a.at[1, 'after'])
+    print(f"I27 {internal_market_of_product_a.at[2, 'after']} ")
+
+    # H34
+    def func_h34(df, H30, H33, H27, H32, B8):
+        return H30/(1+H33)/(H27/H32)**B8
+    int_prod_balance_of_goods_a.at[4, 'before'] = int_prod_balance_of_goods_a['before'].pipe(func_h34,
+        int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[3, 'before'],
+        internal_market_of_product_a.at[2, 'before'], int_prod_balance_of_goods_a.at[2, 'before'],
+        elasticity_at_its_own_price.loc['e_SI_A', 'Эластичности по собственной цене'])
+    print(f"H34 {int_prod_balance_of_goods_a.at[4, 'before']} ")
+
+    # I30
+    def func_i30(df, H34, I33, I27, I32, B8):
+        return H34*(1+I33)*(I27/I32)**B8
+    int_prod_balance_of_goods_a.at[0, 'after'] = int_prod_balance_of_goods_a['after'].pipe(func_i30,
+        int_prod_balance_of_goods_a.at[4, 'before'], int_prod_balance_of_goods_a.at[3, 'after'],
+        internal_market_of_product_a.at[2, 'after'], int_prod_balance_of_goods_a.at[2, 'after'],
+        elasticity_at_its_own_price.loc['e_SI_A', 'Эластичности по собственной цене'])
+    print(f"I30 {int_prod_balance_of_goods_a.at[0, 'after']} ")
+
+    # H38
+    def func_h38(df, H37, H21):
+        return H37-H21
+    int_prod_of_goods_c.at[1, 'before'] = int_prod_of_goods_c['before']. pipe(func_h38,
+        int_prod_of_goods_c.at[0, 'before'], domestic_market_of_group_b_products.at[0, 'before'])
+    print(f"H38 {int_prod_of_goods_c.at[1, 'before']} ")
+
+    # I38
+    int_prod_of_goods_c.at[1, 'after'] = int_prod_of_goods_c.at[1, 'before']
+    print(f"I38 {int_prod_of_goods_c.at[1, 'after']} ")
+
+    # I37
+    def func_i37(df, I21, I38):
+        return I21+I38
+    int_prod_of_goods_c.at[0, 'after'] = int_prod_of_goods_c['after'].pipe(func_i37,
+        domestic_market_of_group_b_products.at[0, 'after'], int_prod_of_goods_c.at[1, 'after'])
+    print(f"I37 {int_prod_of_goods_c.at[0, 'after']} ")
+
+    # H40
+    def func_h40(df, H39, H37, B9):
+        return H39/(H37**B9)
+    int_prod_of_goods_c.at[3, 'before'] = int_prod_of_goods_c['before'].pipe(func_h40,
+        int_prod_of_goods_c.at[2, 'before'], int_prod_of_goods_c.at[0, 'before'],
+        elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
+    print(f"H40 {int_prod_of_goods_c.at[3, 'before']} ")
+
+    # I39
+    def func_i39(df, H40, I37, B9):
+        return H40*(I37)**B9
+    int_prod_of_goods_c.at[2, 'after'] = int_prod_of_goods_c['after'].pipe(func_i39,
+        int_prod_of_goods_c.at[3, 'before'], int_prod_of_goods_c.at[0, 'after'],
+        elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
+    print(f"I39 {int_prod_of_goods_c.at[2, 'after']} ")
+
+    # H43
+    def func_h43(df, H30, H31, B16):
+        return (H30-H31)*B16
+    prod_bal_of_group_b_goods.at[0, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h43,
+        int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[1, 'before'],
+        output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'])
+    print(f"H43 {prod_bal_of_group_b_goods.at[0, 'before']} ")
+
+    # I43
+    def func_i43(df, I30, I31, B16):
+        return (I30-I31)*B16
+    prod_bal_of_group_b_goods.at[0, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i43,
+        int_prod_balance_of_goods_a.at[0, 'after'], int_prod_balance_of_goods_a.at[1, 'after'],
+        output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'])
+    print(f"I43 {prod_bal_of_group_b_goods.at[0, 'after']} ")
+
+    # H44
+    prod_bal_of_group_b_goods.at[1, 'before'] = int_prod_of_goods_c.at[2, 'before']
+    print(f"H44 {prod_bal_of_group_b_goods.at[1, 'before']} ")
+
+    # I44
+    prod_bal_of_group_b_goods.at[1, 'after'] = int_prod_of_goods_c.at[2, 'after']
+    print(f"I44 {prod_bal_of_group_b_goods.at[1, 'after']} ")
+
+    # H45
+    def func_h45(df, H43, H44):
+        return H43-H44
+    prod_bal_of_group_b_goods.at[2, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h45,
+        prod_bal_of_group_b_goods.at[0, 'before'], prod_bal_of_group_b_goods.at[1, 'before'])
+    print(f"H45 {prod_bal_of_group_b_goods.at[2, 'before']} ")
+
+    # I45
+    def func_i45(df, I43, I44):
+        return I43-I44
+    prod_bal_of_group_b_goods.at[2, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i45,
+        prod_bal_of_group_b_goods.at[0, 'after'], prod_bal_of_group_b_goods.at[1, 'after'])
+    print(f"I45 {prod_bal_of_group_b_goods.at[2, 'after']} ")
+
+    # H46
+    def func_h46(df, H30, H31, B17):
+        return (H30-H31)*B17
+    prod_bal_of_group_b_goods.at[3, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h46,
+        int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[1, 'before'],
+        output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+    print(f"H46 {prod_bal_of_group_b_goods.at[3, 'before']} ")
+
+    # I46
+    def func_i46(df, I30, I31, B17):
+        return (I30-I31)*B17
+    prod_bal_of_group_b_goods.at[3, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i46,
+        int_prod_balance_of_goods_a.at[0, 'after'], int_prod_balance_of_goods_a.at[1, 'after'],
+        output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+    print(f"I46 {prod_bal_of_group_b_goods.at[3, 'after']} ")
+
+    # I47
+    def func_i47(df, H47, I44, H44):
+        return H47*I44/H44
+    prod_bal_of_group_b_goods.at[4, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i47,
+        prod_bal_of_group_b_goods.at[4, 'before'], prod_bal_of_group_b_goods.at[1, 'after'],
+        prod_bal_of_group_b_goods.at[1, 'before'])
+    print(f"I47 {prod_bal_of_group_b_goods.at[4, 'after']} ")
+
+    # H48
+    def func_h48(df, H46, H47):
+        return H46-H47
+    prod_bal_of_group_b_goods.at[5, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h48,
+        prod_bal_of_group_b_goods.at[3, 'before'], prod_bal_of_group_b_goods.at[4, 'before'])
+    print(f"H48 {prod_bal_of_group_b_goods.at[5, 'before']} ")
+
+    # I48
+    def func_i48(df, I46, I47):
+        return I46-I47
+    prod_bal_of_group_b_goods.at[5, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i48,
+        prod_bal_of_group_b_goods.at[3, 'after'], prod_bal_of_group_b_goods.at[4, 'after'])
+    print(f"I48 {prod_bal_of_group_b_goods.at[5, 'after']} ")
+
+
+
+    # result_to_front = {}
+    #
+    # result_to_front[
+    #     'prices_on_world_market_of_group_b_products'] = prices_group_b_products.to_dict(
+    #     'index')
+    # result_to_front[
+    #     'calculation_of_amount_of_export_customs_duty'] = calc_export_customs_duty.to_dict(
+    #     'index')
+    # result_to_front['domestic_market_of_group_b_products'] = domestic_market_of_group_b_products.to_dict('index')
+    # result_to_front['internal_market_of_product_a'] = internal_market_of_product_a.to_dict('index')
+    # result_to_front['internal_production_and_balance_of_goods_a'] = int_prod_balance_of_goods_a.to_dict(
+    #     'index')
+    # result_to_front['internal_production_of_goods_c'] = int_prod_of_goods_c.to_dict('index')
+    # result_to_front['production_and_balance_of_group_b_goods'] = prod_bal_of_group_b_goods.to_dict(
+    #     'index')
+    # result_to_front['prices'] = prices.to_dict('index')
+    # result_to_front['production_and_consumption'] = production_and_consumption.to_dict('index')
+    # result_to_front['cost_effects'] = cost_effects.to_dict('index')
+    # return result_to_front
 
 
 input_data = InputDataBase(user_data)
