@@ -816,6 +816,196 @@ def oil_export(input_data):
     cost_effects.at[1, 'increment_pr'] = cost_effects.at[1, 'after'] / cost_effects.at[1, 'before'] - 1
     print(f"Q23 {cost_effects.at[1, 'increment_pr']} ")
 
+    # N26
+    def func_n26(df, N11, N4, O4, O11):
+        return -(N11*(N4-O4)-0.5*(N4-O4)*(N11-O11))
+    cost_effects.at[4, 'before'] = cost_effects['before'].pipe(func_n26, production_and_consumption.at[0, 'before'],
+        prices.at[0, 'before'], prices.at[0, 'after'], production_and_consumption.at[0, 'after'])
+    print(f"N26 {cost_effects.at[4, 'before']} ")
+
+    # N28
+    def func_n28(df, N5, O5, N13, O13):
+        return (N5-O5)*N13+0.5*(N5-O5)*(O13-N13)
+    cost_effects.at[6, 'before'] = cost_effects['before'].pipe(func_n28, prices.at[1, 'before'],
+        prices.at[1, 'after'], production_and_consumption.at[2, 'before'], production_and_consumption.at[2, 'after'])
+    print(f"N28 {cost_effects.at[6, 'before']} ")
+
+    # N29
+    def func_n29(df, N6, O6, N16, O16):
+        return (N6-O6)*N16+0.5*(N6-O6)*(O16-N16)
+    cost_effects.at[7, 'before'] = cost_effects['before'].pipe(func_n29, prices.at[2, 'before'],
+        prices.at[2, 'after'], production_and_consumption.at[5, 'before'], production_and_consumption.at[5, 'after'])
+    print(f"N29 {cost_effects.at[7, 'before']} ")
+
+    # N27
+    def func_n27(df, N28, N29):
+        return N28+N29
+    cost_effects.at[5, 'before'] = cost_effects['before'].pipe(func_n27, cost_effects.at[6, 'before'],
+        cost_effects.at[7, 'before'])
+    print(f"N26 {cost_effects.at[5, 'before']} ")
+
+    # N30
+    def func_n30(df, N26, N27, P23):
+        return N26+N27+P23
+    cost_effects.at[8, 'before'] = cost_effects['before'].pipe(func_n30, cost_effects.at[4, 'before'],
+        cost_effects.at[5, 'before'], cost_effects.at[1, 'increment'])
+    print(f"N30 {cost_effects.at[8, 'before']} ")
+
+    # N33
+    def func_n33(df, N11, O4, N4, O11):
+        return N11*(O4-N4)+0.5*(O4-N4)*(O11-N11)
+    cost_effects.at[11, 'before'] = cost_effects['before'].pipe(func_n33, production_and_consumption.at[0, 'before'],
+        prices.at[0, 'after'], prices.at[0, 'before'], production_and_consumption.at[0, 'after'])
+    print(f"N33 {cost_effects.at[11, 'before']} ")
+
+    # N34
+    def func_n34(df, N4, O11, N11, O4):
+        return N4*(O11-N11)+0.5*(O4-N4)*(O11-N11)
+    cost_effects.at[12, 'before'] = cost_effects['before'].pipe(func_n34, prices.at[0, 'before'],
+        production_and_consumption.at[0, 'after'], production_and_consumption.at[0, 'before'], prices.at[0, 'after'])
+    print(f"N34 {cost_effects.at[12, 'before']} ")
+
+    # N32
+    def func_n32(df, N33, N34):
+        return N33+N34
+    cost_effects.at[10, 'before'] = cost_effects['before'].pipe(func_n32, cost_effects.at[11, 'before'],
+        cost_effects.at[12, 'before'])
+    print(f"N32 {cost_effects.at[10, 'before']} ")
+
+    # N37
+    def func_n37(df, N12, O5, N5, O12):
+        return N12*(O5-N5)+0.5*(O5-N5)*(O12-N12)
+    cost_effects.at[15, 'before'] = cost_effects['before'].pipe(func_n37, production_and_consumption.at[1, 'before'],
+        prices.at[1, 'after'], prices.at[1, 'before'], production_and_consumption.at[1, 'after'])
+    print(f"N37 {cost_effects.at[15, 'before']} ")
+
+    # N38
+    def func_n38(df, N5, O15, N15, O5):
+        return N5*(O15-N15)+0.5*(O5-N5)*(O15-N15)
+    cost_effects.at[16, 'before'] = cost_effects['before'].pipe(func_n38, prices.at[1, 'before'],
+        production_and_consumption.at[4, 'after'], production_and_consumption.at[4, 'before'], prices.at[1, 'after'])
+    print(f"N38 {cost_effects.at[16, 'before']} ")
+
+    # N36
+    def func_n36(df, N37, N38):
+        return N37+N38
+    cost_effects.at[14, 'before'] = cost_effects['before'].pipe(func_n36, cost_effects.at[15, 'before'],
+        cost_effects.at[16, 'before'])
+    print(f"N36 {cost_effects.at[14, 'before']} ")
+
+    # N41
+    def func_n41(df, N13, O5, N5, O13):
+        return N13*(O5-N5)+0.5*(O5-N5)*(O13-N13)
+    cost_effects.at[19, 'before'] = cost_effects['before'].pipe(func_n41, production_and_consumption.at[2, 'before'],
+        prices.at[1, 'after'], prices.at[1, 'before'], production_and_consumption.at[2, 'after'])
+    print(f"N41 {cost_effects.at[19, 'before']} ")
+
+    # N42
+    def func_n42(df, N5, O13, N13, O5):
+        return N5*(O13-N13)+0.5*(O13-N13)*(O5-N5)
+    cost_effects.at[20, 'before'] = cost_effects['before'].pipe(func_n42, prices.at[1, 'before'],
+    production_and_consumption.at[2, 'after'], production_and_consumption.at[2, 'before'], prices.at[1, 'after'])
+    print(f"N42 {cost_effects.at[20, 'before']} ")
+
+    # N40
+    def func_n40(df, N41, N42):
+        return N41+N42
+    cost_effects.at[18, 'before'] = cost_effects['before'].pipe(func_n40, cost_effects.at[19, 'before'],
+        cost_effects.at[20, 'before'])
+    print(f"N40 {cost_effects.at[18, 'before']} ")
+
+    # N45
+    def func_n45(df, N15, O6, N6, O15):
+        return N15*(O6-N6)+0.5*(O6-N6)*(O15-N15)
+    cost_effects.at[23, 'before'] = cost_effects['before'].pipe(func_n45, production_and_consumption.at[4, 'before'],
+        prices.at[2, 'after'],  prices.at[2, 'before'], production_and_consumption.at[4, 'after'])
+    print(f"N45 {cost_effects.at[23, 'before']} ")
+
+    # N46
+    def func_n46(df, N6, O15, N15, O6):
+        return N6*(O15-N15)+0.5*(O6-N6)*(O15-N15)
+    cost_effects.at[24, 'before'] = cost_effects['before'].pipe(func_n46, prices.at[2, 'before'],
+        production_and_consumption.at[4, 'after'], production_and_consumption.at[4, 'before'], prices.at[2, 'after'])
+    print(f"N46 {cost_effects.at[24, 'before']} ")
+
+    # N44
+    def func_n44(df, N45, N46):
+         return N45+N46
+    cost_effects.at[22, 'before'] = cost_effects['before'].pipe(func_n44, cost_effects.at[23, 'before'],
+        cost_effects.at[24, 'before'])
+    print(f"N44 {cost_effects.at[22, 'before']} ")
+
+    # N49
+    def func_n49(df, N16, O6, N6, O16):
+        return N16*(O6-N6)+0.5*(O6-N6)*(O16-N16)
+    cost_effects.at[27, 'before'] = cost_effects['before'].pipe(func_n49, production_and_consumption.at[5, 'before'],
+        prices.at[2, 'after'], prices.at[2, 'before'], production_and_consumption.at[5, 'after'])
+    print(f"N49 {cost_effects.at[27, 'before']} ")
+
+    # N50
+    def func_n50(df, N6, O16, N16, O6):
+        return N6*(O16-N16)+0.5*(O16-N16)*(O6-N6)
+
+    cost_effects.at[28, 'before'] = cost_effects['before'].pipe(func_n50, prices.at[2, 'before'],
+        production_and_consumption.at[5, 'after'], production_and_consumption.at[5, 'before'], prices.at[2, 'after'])
+    print(f"N50 {cost_effects.at[28, 'before']} ")
+
+    # N48
+    def func_n48(df, N49, N50):
+        return N49+N50
+    cost_effects.at[26, 'before'] = cost_effects['before'].pipe(func_n48, cost_effects.at[27, 'before'],
+        cost_effects.at[28, 'before'])
+    print(f"N48 {cost_effects.at[26, 'before']} ")
+
+    # N53
+    def func_n53(df, N18, O7, N7, O18):
+        return N18*(O7-N7)+0.5*(O7-N7)*(O18-N18)
+    cost_effects.at[31, 'before'] = cost_effects['before'].pipe(func_n53, production_and_consumption.at[7, 'before'],
+        prices.at[3, 'after'], prices.at[3, 'before'], production_and_consumption.at[7, 'after'])
+    print(f"N53 {cost_effects.at[31, 'before']} ")
+
+    # N54
+    def func_n54(df, N7, O18, N18, O7):
+        return N7*(O18-N18)+0.5*(O7-N7)*(O18-N18)
+    cost_effects.at[32, 'before'] = cost_effects['before'].pipe(func_n54, prices.at[3, 'before'],
+        production_and_consumption.at[7, 'after'], production_and_consumption.at[7, 'before'], prices.at[3, 'after'])
+    print(f"N54 {cost_effects.at[32, 'before']} ")
+
+    # N52
+    def func_n52(df, N53, N54):
+        return N53+N54
+    cost_effects.at[30, 'before'] = cost_effects['before'].pipe(func_n52, cost_effects.at[31, 'before'],
+        cost_effects.at[32, 'before'])
+    print(f"N52 {cost_effects.at[30, 'before']} ")
+
+    # N57
+    def func_n57(df, N18, O7, N7, O18):
+        return N18*(O7-N7)+0.5*(O7-N7)*(O18-N18)
+    cost_effects.at[35, 'before'] = cost_effects['before'].pipe(func_n57, production_and_consumption.at[7, 'before'],
+        prices.at[3, 'after'], prices.at[3, 'before'], production_and_consumption.at[7, 'after'])
+    print(f"N57 {cost_effects.at[35, 'before']} ")
+
+    # N58
+    def func_n58(df, N7, O18, N18, O7):
+        return N7*(O18-N18)+0.5*(O18-N18)*(O7-N7)
+    cost_effects.at[36, 'before'] = cost_effects['before'].pipe(func_n58, prices.at[3, 'before'],
+        production_and_consumption.at[7, 'after'], production_and_consumption.at[7, 'before'], prices.at[3, 'after'])
+    print(f"N58 {cost_effects.at[36, 'before']} ")
+
+    # N56
+    def func_n56(df, N57, N58):
+        return N57+N58
+
+    cost_effects.at[34, 'before'] = cost_effects['before'].pipe(func_n56, cost_effects.at[35, 'before'],
+        cost_effects.at[36, 'before'])
+    print(f"N56 {cost_effects.at[34, 'before']} ")
+
+
+
+
+
+
+
     print(cost_effects.to_markdown())
     # result_to_front = {}
     #
