@@ -263,50 +263,32 @@ def oil_export(input_data):
 
     # I6
     prices_group_b_products.at[3, 'after'] = prices_group_b_products.at[3, 'before']
-    print(f"I5 {prices_group_b_products.at[3, 'after']} ")
 
     # H13
     def func_h13(df, H3, H7, H11, H12):
         return (H3 * H7 - H11) * H12
 
     calc_export_customs_duty.at[2, 'before'] = calc_export_customs_duty['before'].pipe(func_h13,
-                                                                                       prices_group_b_products.at[
-                                                                                           0, 'before'],
-                                                                                       prices_group_b_products.at[
-                                                                                           4, 'before'],
-                                                                                       calc_export_customs_duty.at[
-                                                                                           0, 'before'],
-                                                                                       calc_export_customs_duty.at[
-                                                                                           1, 'before'])
-    print(f"H13 {calc_export_customs_duty.at[2, 'before']} ")
+                   prices_group_b_products.at[0, 'before'], prices_group_b_products.at[4, 'before'],
+                   calc_export_customs_duty.at[0, 'before'], calc_export_customs_duty.at[1, 'before'])
 
     # I13
     def func_i13(df, I3, I7, I11, I12):
         return (I3 * I7 - I11) * I12
 
     calc_export_customs_duty.at[2, 'after'] = calc_export_customs_duty['after'].pipe(func_i13,
-                                                                                     prices_group_b_products.at[
-                                                                                         0, 'after'],
-                                                                                     prices_group_b_products.at[
-                                                                                         4, 'after'],
-                                                                                     calc_export_customs_duty.at[
-                                                                                         0, 'after'],
-                                                                                     calc_export_customs_duty.at[
-                                                                                         1, 'after'])
-    print(f"I13 {calc_export_customs_duty.at[2, 'after']} ")
+                 prices_group_b_products.at[0, 'after'], prices_group_b_products.at[4, 'after'],
+                 calc_export_customs_duty.at[0, 'after'], calc_export_customs_duty.at[1, 'after'])
+
 
     # H14
     def func_h14(df, H13, H3, H7):
         return H13 / (H3 * H7)
 
     calc_export_customs_duty.at[3, 'before'] = calc_export_customs_duty['before'].pipe(func_h14,
-                                                                                       calc_export_customs_duty.at[
-                                                                                           2, 'before'],
-                                                                                       prices_group_b_products.at[
-                                                                                           0, 'before'],
-                                                                                       prices_group_b_products.at[
-                                                                                           4, 'before'])
-    print(f"H14 {calc_export_customs_duty.at[3, 'before']} ")
+                   calc_export_customs_duty.at[2, 'before'], prices_group_b_products.at[0, 'before'],
+                   prices_group_b_products.at[4, 'before'])
+
 
     # I14
     def func_i14(df, I13, I3, I7):
