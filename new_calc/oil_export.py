@@ -280,7 +280,6 @@ def oil_export(input_data):
                  prices_group_b_products.at[0, 'after'], prices_group_b_products.at[4, 'after'],
                  calc_export_customs_duty.at[0, 'after'], calc_export_customs_duty.at[1, 'after'])
 
-
     # H14
     def func_h14(df, H13, H3, H7):
         return H13 / (H3 * H7)
@@ -289,538 +288,355 @@ def oil_export(input_data):
                    calc_export_customs_duty.at[2, 'before'], prices_group_b_products.at[0, 'before'],
                    prices_group_b_products.at[4, 'before'])
 
-
     # I14
     def func_i14(df, I13, I3, I7):
         return I13 / (I3 * I7)
 
     calc_export_customs_duty.at[3, 'after'] = calc_export_customs_duty['after'].pipe(func_i14,
-                                                                                     calc_export_customs_duty.at[
-                                                                                         2, 'after'],
-                                                                                     prices_group_b_products.at[
-                                                                                         0, 'after'],
-                                                                                     prices_group_b_products.at[
-                                                                                         4, 'after'])
-    print(f"I14 {calc_export_customs_duty.at[3, 'after']} ")
+                 calc_export_customs_duty.at[2, 'after'], prices_group_b_products.at[0, 'after'],
+                 prices_group_b_products.at[4, 'after'])
 
     # H17
     def func_h17(df, H4, H7, H15, H16):
         return (H4 * H7 - H15) * H16
 
     calc_export_customs_duty.at[6, 'before'] = calc_export_customs_duty['before'].pipe(func_h17,
-                                                                                       prices_group_b_products.at[
-                                                                                           1, 'before'],
-                                                                                       prices_group_b_products.at[
-                                                                                           4, 'before'],
-                                                                                       calc_export_customs_duty.at[
-                                                                                           4, 'before'],
-                                                                                       calc_export_customs_duty.at[
-                                                                                           5, 'before'])
-    print(f"H17 {calc_export_customs_duty.at[6, 'before']} ")
+               prices_group_b_products.at[1, 'before'], prices_group_b_products.at[4, 'before'],
+               calc_export_customs_duty.at[4, 'before'], calc_export_customs_duty.at[5, 'before'])
 
     # I17
     def func_i17(df, I4, I7, I15, I16):
         return (I4 * I7 - I15) * I16
 
     calc_export_customs_duty.at[6, 'after'] = calc_export_customs_duty['after'].pipe(func_i17,
-                                                                                     prices_group_b_products.at[
-                                                                                         1, 'after'],
-                                                                                     prices_group_b_products.at[
-                                                                                         4, 'after'],
-                                                                                     calc_export_customs_duty.at[
-                                                                                         4, 'after'],
-                                                                                     calc_export_customs_duty.at[
-                                                                                         5, 'after'])
-    print(f"I17 {calc_export_customs_duty.at[6, 'after']} ")
-
+                prices_group_b_products.at[1, 'after'], prices_group_b_products.at[4, 'after'],
+                calc_export_customs_duty.at[4, 'after'], calc_export_customs_duty.at[5, 'after'])
     # H18
     def func_h18(df, H17, H4, H7):
         return H17 / (H4 * H7)
 
     calc_export_customs_duty.at[7, 'before'] = calc_export_customs_duty['before'].pipe(func_h18,
-                                                                                       calc_export_customs_duty.at[
-                                                                                           6, 'before'],
-                                                                                       prices_group_b_products.at[
-                                                                                           1, 'before'],
-                                                                                       prices_group_b_products.at[
-                                                                                           4, 'before'])
-    print(f"H18 {calc_export_customs_duty.at[7, 'before']} ")
+               calc_export_customs_duty.at[6, 'before'], prices_group_b_products.at[1, 'before'],
+               prices_group_b_products.at[4, 'before'])
 
     # I18
     def func_i18(df, I17, I4, I7):
         return I17 / (I4 * I7)
 
     calc_export_customs_duty.at[7, 'after'] = calc_export_customs_duty['after'].pipe(func_i18,
-                                                                                     calc_export_customs_duty.at[
-                                                                                         6, 'after'],
-                                                                                     prices_group_b_products.at[
-                                                                                         1, 'after'],
-                                                                                     prices_group_b_products.at[
-                                                                                         4, 'after'])
-    print(f"I18 {calc_export_customs_duty.at[7, 'after']} ")
-
+             calc_export_customs_duty.at[6, 'after'], prices_group_b_products.at[1, 'after'],
+             prices_group_b_products.at[4, 'after'])
+    
     # I21
     def func_i21(df, I3, I5, I7, I13, I8):
         return ((I3 - I5) * I7 - I13) * (1 - I8)
 
     domestic_market_of_group_b_products.at[0, 'after'] = domestic_market_of_group_b_products['after'].pipe(func_i21,
-                                                                                                           prices_group_b_products.at[
-                                                                                                               0, 'after'],
-                                                                                                           prices_group_b_products.at[
-                                                                                                               2, 'after'],
-                                                                                                           prices_group_b_products.at[
-                                                                                                               4, 'after'],
-                                                                                                           calc_export_customs_duty.at[
-                                                                                                               2, 'after'],
-                                                                                                           prices_group_b_products.at[
-                                                                                                               5, 'after'])
-    print(f"I21 {domestic_market_of_group_b_products.at[0, 'after']} ")
+           prices_group_b_products.at[0, 'after'], prices_group_b_products.at[2, 'after'],
+           prices_group_b_products.at[4, 'after'],calc_export_customs_duty.at[2, 'after'],
+           prices_group_b_products.at[5, 'after'])
 
     # I22
     def func_i22(df, I4, I6, I7, I17, I8):
         return ((I4 - I6) * I7 - I17) * (1 - I8)
 
     domestic_market_of_group_b_products.at[1, 'after'] = domestic_market_of_group_b_products['after'].pipe(func_i22,
-                                                                                                           prices_group_b_products.at[
-                                                                                                               1, 'after'],
-                                                                                                           prices_group_b_products.at[
-                                                                                                               3, 'after'],
-                                                                                                           prices_group_b_products.at[
-                                                                                                               4, 'after'],
-                                                                                                           calc_export_customs_duty.at[
-                                                                                                               6, 'after'],
-                                                                                                           prices_group_b_products.at[
-                                                                                                               5, 'after'])
-    print(f"I22 {domestic_market_of_group_b_products.at[1, 'after']} ")
+           prices_group_b_products.at[1, 'after'], prices_group_b_products.at[3, 'after'],
+           prices_group_b_products.at[4, 'after'], calc_export_customs_duty.at[6, 'after'],
+           prices_group_b_products.at[5, 'after'])
 
     # H25
     def func_h25(df, H21, B16, H22, B17):
         return H21 * B16 + H22 * B17
 
     internal_market_of_product_a.at[0, 'before'] = internal_market_of_product_a['before'].pipe(func_h25,
-                                                                                               domestic_market_of_group_b_products.at[
-                                                                                                   0, 'before'],
-                                                                                               output_coefficients.loc[
-                                                                                                   'T_A_to_B1', 'Коэффициенты выхода продукции'],
-                                                                                               domestic_market_of_group_b_products.at[
-                                                                                                   1, 'before'],
-                                                                                               output_coefficients.loc[
-                                                                                                   'T_A_to_B2', 'Коэффициенты выхода продукции'])
-    print(f"H25 {internal_market_of_product_a.at[0, 'before']} ")
+           domestic_market_of_group_b_products.at[0, 'before'],
+           output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'],
+           domestic_market_of_group_b_products.at[1, 'before'],
+           output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I25
     def func_i25(df, I21, B16, I22, B17):
         return I21 * B16 + I22 * B17
 
     internal_market_of_product_a.at[0, 'after'] = internal_market_of_product_a['after'].pipe(func_i25,
-                                                                                             domestic_market_of_group_b_products.at[
-                                                                                                 0, 'after'],
-                                                                                             output_coefficients.loc[
-                                                                                                 'T_A_to_B1', 'Коэффициенты выхода продукции'],
-                                                                                             domestic_market_of_group_b_products.at[
-                                                                                                 1, 'after'],
-                                                                                             output_coefficients.loc[
-                                                                                                 'T_A_to_B2', 'Коэффициенты выхода продукции'])
-    print(f"I25 {internal_market_of_product_a.at[0, 'after']} ")
+             domestic_market_of_group_b_products.at[0, 'after'],
+             output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'],
+             domestic_market_of_group_b_products.at[1, 'after'],
+             output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # H26
     def func_h26(df, H25, H27):
         return H25 - H27
 
     internal_market_of_product_a.at[1, 'before'] = internal_market_of_product_a['before'].pipe(func_h26,
-                                                                                               internal_market_of_product_a.at[
-                                                                                                   0, 'before'],
-                                                                                               internal_market_of_product_a.at[
-                                                                                                   2, 'before'])
-    print(f"H26 {internal_market_of_product_a.at[1, 'before']} ")
+           internal_market_of_product_a.at[0, 'before'],
+           internal_market_of_product_a.at[2, 'before'])
 
     # I26
     internal_market_of_product_a.at[1, 'after'] = internal_market_of_product_a.at[1, 'before']
-    print(f"I26 {internal_market_of_product_a.at[1, 'after']} ")
 
     # I27
     def func_i27(df, I25, I26):
         return I25 - I26
 
     internal_market_of_product_a.at[2, 'after'] = internal_market_of_product_a['after'].pipe(func_i27,
-                                                                                             internal_market_of_product_a.at[
-                                                                                                 0, 'after'],
-                                                                                             internal_market_of_product_a.at[
-                                                                                                 1, 'after'])
-    print(f"I27 {internal_market_of_product_a.at[2, 'after']} ")
+             internal_market_of_product_a.at[0, 'after'], internal_market_of_product_a.at[1, 'after'])
 
     # H34
     def func_h34(df, H30, H33, H27, H32, B8):
         return H30 / (1 + H33) / (H27 / H32) ** B8
 
     int_prod_balance_of_goods_a.at[4, 'before'] = int_prod_balance_of_goods_a['before'].pipe(func_h34,
-                                                                                             int_prod_balance_of_goods_a.at[
-                                                                                                 0, 'before'],
-                                                                                             int_prod_balance_of_goods_a.at[
-                                                                                                 3, 'before'],
-                                                                                             internal_market_of_product_a.at[
-                                                                                                 2, 'before'],
-                                                                                             int_prod_balance_of_goods_a.at[
-                                                                                                 2, 'before'],
-                                                                                             elasticity_at_its_own_price.loc[
-                                                                                                 'e_SI_A', 'Эластичности по собственной цене'])
-    print(f"H34 {int_prod_balance_of_goods_a.at[4, 'before']} ")
+             int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[3, 'before'],
+             internal_market_of_product_a.at[2, 'before'], int_prod_balance_of_goods_a.at[2, 'before'],
+             elasticity_at_its_own_price.loc['e_SI_A', 'Эластичности по собственной цене'])
 
     # I30
     def func_i30(df, H34, I33, I27, I32, B8):
         return H34 * (1 + I33) * (I27 / I32) ** B8
 
     int_prod_balance_of_goods_a.at[0, 'after'] = int_prod_balance_of_goods_a['after'].pipe(func_i30,
-                                                                                           int_prod_balance_of_goods_a.at[
-                                                                                               4, 'before'],
-                                                                                           int_prod_balance_of_goods_a.at[
-                                                                                               3, 'after'],
-                                                                                           internal_market_of_product_a.at[
-                                                                                               2, 'after'],
-                                                                                           int_prod_balance_of_goods_a.at[
-                                                                                               2, 'after'],
-                                                                                           elasticity_at_its_own_price.loc[
-                                                                                               'e_SI_A', 'Эластичности по собственной цене'])
-    print(f"I30 {int_prod_balance_of_goods_a.at[0, 'after']} ")
+            int_prod_balance_of_goods_a.at[4, 'before'], int_prod_balance_of_goods_a.at[3, 'after'],
+            internal_market_of_product_a.at[2, 'after'], int_prod_balance_of_goods_a.at[2, 'after'],
+            elasticity_at_its_own_price.loc['e_SI_A', 'Эластичности по собственной цене'])
 
     # H38
     def func_h38(df, H37, H21):
         return H37 - H21
 
     int_prod_of_goods_c.at[1, 'before'] = int_prod_of_goods_c['before'].pipe(func_h38,
-                                                                             int_prod_of_goods_c.at[0, 'before'],
-                                                                             domestic_market_of_group_b_products.at[
-                                                                                 0, 'before'])
-    print(f"H38 {int_prod_of_goods_c.at[1, 'before']} ")
+             int_prod_of_goods_c.at[0, 'before'], domestic_market_of_group_b_products.at[0, 'before'])
 
     # I38
     int_prod_of_goods_c.at[1, 'after'] = int_prod_of_goods_c.at[1, 'before']
-    print(f"I38 {int_prod_of_goods_c.at[1, 'after']} ")
 
     # I37
     def func_i37(df, I21, I38):
         return I21 + I38
 
     int_prod_of_goods_c.at[0, 'after'] = int_prod_of_goods_c['after'].pipe(func_i37,
-                                                                           domestic_market_of_group_b_products.at[
-                                                                               0, 'after'],
-                                                                           int_prod_of_goods_c.at[1, 'after'])
-    print(f"I37 {int_prod_of_goods_c.at[0, 'after']} ")
+            domestic_market_of_group_b_products.at[0, 'after'], int_prod_of_goods_c.at[1, 'after'])
 
     # H40
     def func_h40(df, H39, H37, B9):
         return H39 / (H37 ** B9)
 
     int_prod_of_goods_c.at[3, 'before'] = int_prod_of_goods_c['before'].pipe(func_h40,
-                                                                             int_prod_of_goods_c.at[2, 'before'],
-                                                                             int_prod_of_goods_c.at[0, 'before'],
-                                                                             elasticity_at_its_own_price.loc[
-                                                                                 'e_DI_C', 'Эластичности по собственной цене'])
-    print(f"H40 {int_prod_of_goods_c.at[3, 'before']} ")
+             int_prod_of_goods_c.at[2, 'before'], int_prod_of_goods_c.at[0, 'before'],
+             elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
 
     # I39
     def func_i39(df, H40, I37, B9):
         return H40 * (I37) ** B9
 
     int_prod_of_goods_c.at[2, 'after'] = int_prod_of_goods_c['after'].pipe(func_i39,
-                                                                           int_prod_of_goods_c.at[3, 'before'],
-                                                                           int_prod_of_goods_c.at[0, 'after'],
-                                                                           elasticity_at_its_own_price.loc[
-                                                                               'e_DI_C', 'Эластичности по собственной цене'])
-    print(f"I39 {int_prod_of_goods_c.at[2, 'after']} ")
+           int_prod_of_goods_c.at[3, 'before'], int_prod_of_goods_c.at[0, 'after'],
+           elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
 
     # H43
     def func_h43(df, H30, H31, B16):
         return (H30 - H31) * B16
 
     prod_bal_of_group_b_goods.at[0, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h43,
-                                                                                         int_prod_balance_of_goods_a.at[
-                                                                                             0, 'before'],
-                                                                                         int_prod_balance_of_goods_a.at[
-                                                                                             1, 'before'],
-                                                                                         output_coefficients.loc[
-                                                                                             'T_A_to_B1', 'Коэффициенты выхода продукции'])
-    print(f"H43 {prod_bal_of_group_b_goods.at[0, 'before']} ")
+             int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[1, 'before'],
+             output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'])
 
     # I43
     def func_i43(df, I30, I31, B16):
         return (I30 - I31) * B16
 
     prod_bal_of_group_b_goods.at[0, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i43,
-                                                                                       int_prod_balance_of_goods_a.at[
-                                                                                           0, 'after'],
-                                                                                       int_prod_balance_of_goods_a.at[
-                                                                                           1, 'after'],
-                                                                                       output_coefficients.loc[
-                                                                                           'T_A_to_B1', 'Коэффициенты выхода продукции'])
-    print(f"I43 {prod_bal_of_group_b_goods.at[0, 'after']} ")
+           int_prod_balance_of_goods_a.at[0, 'after'], int_prod_balance_of_goods_a.at[1, 'after'],
+           output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'])
 
     # H44
     prod_bal_of_group_b_goods.at[1, 'before'] = int_prod_of_goods_c.at[2, 'before']
-    print(f"H44 {prod_bal_of_group_b_goods.at[1, 'before']} ")
 
     # I44
     prod_bal_of_group_b_goods.at[1, 'after'] = int_prod_of_goods_c.at[2, 'after']
-    print(f"I44 {prod_bal_of_group_b_goods.at[1, 'after']} ")
 
     # H45
     def func_h45(df, H43, H44):
         return H43 - H44
 
     prod_bal_of_group_b_goods.at[2, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h45,
-                                                                                         prod_bal_of_group_b_goods.at[
-                                                                                             0, 'before'],
-                                                                                         prod_bal_of_group_b_goods.at[
-                                                                                             1, 'before'])
-    print(f"H45 {prod_bal_of_group_b_goods.at[2, 'before']} ")
+             prod_bal_of_group_b_goods.at[0, 'before'], prod_bal_of_group_b_goods.at[1, 'before'])
+
 
     # I45
     def func_i45(df, I43, I44):
         return I43 - I44
 
     prod_bal_of_group_b_goods.at[2, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i45,
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           0, 'after'],
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           1, 'after'])
-    print(f"I45 {prod_bal_of_group_b_goods.at[2, 'after']} ")
+           prod_bal_of_group_b_goods.at[0, 'after'], prod_bal_of_group_b_goods.at[1, 'after'])
 
     # H46
     def func_h46(df, H30, H31, B17):
         return (H30 - H31) * B17
 
     prod_bal_of_group_b_goods.at[3, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h46,
-                                                                                         int_prod_balance_of_goods_a.at[
-                                                                                             0, 'before'],
-                                                                                         int_prod_balance_of_goods_a.at[
-                                                                                             1, 'before'],
-                                                                                         output_coefficients.loc[
-                                                                                             'T_A_to_B2', 'Коэффициенты выхода продукции'])
-    print(f"H46 {prod_bal_of_group_b_goods.at[3, 'before']} ")
+             int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[1, 'before'],
+             output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I46
     def func_i46(df, I30, I31, B17):
         return (I30 - I31) * B17
 
     prod_bal_of_group_b_goods.at[3, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i46,
-                                                                                       int_prod_balance_of_goods_a.at[
-                                                                                           0, 'after'],
-                                                                                       int_prod_balance_of_goods_a.at[
-                                                                                           1, 'after'],
-                                                                                       output_coefficients.loc[
-                                                                                           'T_A_to_B2', 'Коэффициенты выхода продукции'])
-    print(f"I46 {prod_bal_of_group_b_goods.at[3, 'after']} ")
+           int_prod_balance_of_goods_a.at[0, 'after'], int_prod_balance_of_goods_a.at[1, 'after'],
+           output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I47
     def func_i47(df, H47, I44, H44):
         return H47 * I44 / H44
 
     prod_bal_of_group_b_goods.at[4, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i47,
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           4, 'before'],
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           1, 'after'],
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           1, 'before'])
-    print(f"I47 {prod_bal_of_group_b_goods.at[4, 'after']} ")
+           prod_bal_of_group_b_goods.at[4, 'before'], prod_bal_of_group_b_goods.at[1, 'after'],
+           prod_bal_of_group_b_goods.at[1, 'before'])
 
     # H48
     def func_h48(df, H46, H47):
         return H46 - H47
 
     prod_bal_of_group_b_goods.at[5, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h48,
-                                                                                         prod_bal_of_group_b_goods.at[
-                                                                                             3, 'before'],
-                                                                                         prod_bal_of_group_b_goods.at[
-                                                                                             4, 'before'])
-    print(f"H48 {prod_bal_of_group_b_goods.at[5, 'before']} ")
+             prod_bal_of_group_b_goods.at[3, 'before'], prod_bal_of_group_b_goods.at[4, 'before'])
+
 
     # I48
     def func_i48(df, I46, I47):
         return I46 - I47
 
     prod_bal_of_group_b_goods.at[5, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i48,
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           3, 'after'],
-                                                                                       prod_bal_of_group_b_goods.at[
-                                                                                           4, 'after'])
-    print(f"I48 {prod_bal_of_group_b_goods.at[5, 'after']} ")
+           prod_bal_of_group_b_goods.at[3, 'after'], prod_bal_of_group_b_goods.at[4, 'after'])
 
     # N4
     prices.at[0, 'before'] = internal_market_of_product_a.at[2, 'before']
-    print(f"N4 {prices.at[0, 'before']} ")
     # O4
     prices.at[0, 'after'] = internal_market_of_product_a.at[2, 'after']
-    print(f"O4 {prices.at[0, 'after']} ")
     # P4
     prices.at[0, 'increment'] = prices.at[0, 'after'] - prices.at[0, 'before']
-    print(f"P4 {prices.at[0, 'increment']} ")
     # Q4
     prices.at[0, 'increment_pr'] = prices.at[0, 'after'] / prices.at[0, 'before'] - 1
-    print(f"Q4 {prices.at[0, 'increment_pr']} ")
 
     # N5
     prices.at[1, 'before'] = domestic_market_of_group_b_products.at[0, 'before']
-    print(f"N5 {prices.at[1, 'before']} ")
     # O5
     prices.at[1, 'after'] = domestic_market_of_group_b_products.at[0, 'after']
-    print(f"O5 {prices.at[1, 'after']} ")
     # P5
     prices.at[1, 'increment'] = prices.at[1, 'after'] - prices.at[1, 'before']
-    print(f"P5 {prices.at[1, 'increment']} ")
     # Q5
     prices.at[1, 'increment_pr'] = prices.at[1, 'after'] / prices.at[1, 'before'] - 1
-    print(f"Q5 {prices.at[1, 'increment_pr']} ")
 
     # N6
     prices.at[2, 'before'] = domestic_market_of_group_b_products.at[1, 'before']
-    print(f"N6 {prices.at[2, 'before']} ")
     # O6
     prices.at[2, 'after'] = domestic_market_of_group_b_products.at[1, 'after']
-    print(f"O6 {prices.at[2, 'after']} ")
     # P6
     prices.at[2, 'increment'] = prices.at[2, 'after'] - prices.at[2, 'before']
-    print(f"P6 {prices.at[2, 'increment']} ")
     # Q6
     prices.at[2, 'increment_pr'] = prices.at[2, 'after'] / prices.at[2, 'before'] - 1
-    print(f"Q6 {prices.at[2, 'increment_pr']} ")
 
     # N7
     prices.at[3, 'before'] = int_prod_of_goods_c.at[0, 'before']
-    print(f"N7 {prices.at[3, 'before']} ")
     # O7
     prices.at[3, 'after'] = int_prod_of_goods_c.at[0, 'after']
-    print(f"O7 {prices.at[3, 'after']} ")
     # P7
     prices.at[3, 'increment'] = prices.at[3, 'after'] - prices.at[3, 'before']
-    print(f"P7 {prices.at[3, 'increment']} ")
     # Q7
     prices.at[3, 'increment_pr'] = prices.at[3, 'after'] / prices.at[3, 'before'] - 1
-    print(f"Q7 {prices.at[3, 'increment_pr']} ")
 
     # P8
     prices.at[4, 'increment'] = prices.at[3, 'increment_pr'] * list_of_products.at['C', 'Вклад в ИПЦ'] / 100
-    print(f"P8 {prices.at[4, 'increment']} ")
 
     # N11
     production_and_consumption.at[0, 'before'] = int_prod_balance_of_goods_a.at[0, 'before']
-    print(f"N11 {production_and_consumption.at[0, 'before']} ")
     # O11
     production_and_consumption.at[0, 'after'] = int_prod_balance_of_goods_a.at[0, 'after']
-    print(f"O11 {production_and_consumption.at[0, 'after']} ")
     # P11
     production_and_consumption.at[0, 'increment'] = production_and_consumption.at[0, 'after'] - \
                                                     production_and_consumption.at[0, 'before']
-    print(f"P11 {production_and_consumption.at[0, 'increment']} ")
     # Q11
     production_and_consumption.at[0, 'increment_pr'] = production_and_consumption.at[0, 'after'] / \
                                                        production_and_consumption.at[0, 'before'] - 1
-    print(f"Q11 {production_and_consumption.at[0, 'increment_pr']} ")
 
     # N12
     production_and_consumption.at[1, 'before'] = prod_bal_of_group_b_goods.at[0, 'before']
-    print(f"N12 {production_and_consumption.at[1, 'before']} ")
     # O12
     production_and_consumption.at[1, 'after'] = prod_bal_of_group_b_goods.at[0, 'after']
-    print(f"O12 {production_and_consumption.at[1, 'after']} ")
     # P12
     production_and_consumption.at[1, 'increment'] = production_and_consumption.at[1, 'after'] - \
                                                     production_and_consumption.at[1, 'before']
-    print(f"P12 {production_and_consumption.at[1, 'increment']} ")
     # Q12
     production_and_consumption.at[1, 'increment_pr'] = production_and_consumption.at[1, 'after'] / \
                                                        production_and_consumption.at[1, 'before'] - 1
-    print(f"Q12 {production_and_consumption.at[1, 'increment_pr']} ")
 
     # N13
     production_and_consumption.at[2, 'before'] = prod_bal_of_group_b_goods.at[1, 'before']
-    print(f"N13 {production_and_consumption.at[2, 'before']} ")
     # O13
     production_and_consumption.at[2, 'after'] = prod_bal_of_group_b_goods.at[1, 'after']
-    print(f"O13 {production_and_consumption.at[2, 'after']} ")
     # P13
     production_and_consumption.at[2, 'increment'] = production_and_consumption.at[2, 'after'] - \
                                                     production_and_consumption.at[2, 'before']
-    print(f"P13 {production_and_consumption.at[2, 'increment']} ")
     # Q13
     production_and_consumption.at[2, 'increment_pr'] = production_and_consumption.at[2, 'after'] / \
                                                        production_and_consumption.at[2, 'before'] - 1
-    print(f"Q13 {production_and_consumption.at[2, 'increment_pr']} ")
 
     # N14
     production_and_consumption.at[3, 'before'] = prod_bal_of_group_b_goods.at[2, 'before']
-    print(f"N14 {production_and_consumption.at[3, 'before']} ")
     # O14
     production_and_consumption.at[3, 'after'] = prod_bal_of_group_b_goods.at[2, 'after']
-    print(f"O14 {production_and_consumption.at[3, 'after']} ")
     # P14
     production_and_consumption.at[3, 'increment'] = production_and_consumption.at[3, 'after'] - \
                                                     production_and_consumption.at[3, 'before']
-    print(f"P14 {production_and_consumption.at[3, 'increment']} ")
     # Q14
     production_and_consumption.at[3, 'increment_pr'] = production_and_consumption.at[3, 'after'] / \
                                                        production_and_consumption.at[3, 'before'] - 1
-    print(f"Q14 {production_and_consumption.at[3, 'increment_pr']} ")
 
     # N15
     production_and_consumption.at[4, 'before'] = prod_bal_of_group_b_goods.at[3, 'before']
-    print(f"N15 {production_and_consumption.at[4, 'before']} ")
     # O15
     production_and_consumption.at[4, 'after'] = prod_bal_of_group_b_goods.at[3, 'after']
-    print(f"O15 {production_and_consumption.at[4, 'after']} ")
     # P15
     production_and_consumption.at[4, 'increment'] = production_and_consumption.at[4, 'after'] - \
                                                     production_and_consumption.at[4, 'before']
-    print(f"P15 {production_and_consumption.at[4, 'increment']} ")
     # Q15
     production_and_consumption.at[4, 'increment_pr'] = production_and_consumption.at[4, 'after'] / \
                                                        production_and_consumption.at[4, 'before'] - 1
-    print(f"Q15 {production_and_consumption.at[4, 'increment_pr']} ")
 
     # N16
     production_and_consumption.at[5, 'before'] = prod_bal_of_group_b_goods.at[4, 'before']
-    print(f"N16 {production_and_consumption.at[5, 'before']} ")
     # O16
     production_and_consumption.at[5, 'after'] = prod_bal_of_group_b_goods.at[4, 'after']
-    print(f"O16 {production_and_consumption.at[5, 'after']} ")
     # P16
     production_and_consumption.at[5, 'increment'] = production_and_consumption.at[5, 'after'] - \
                                                     production_and_consumption.at[5, 'before']
-    print(f"P16 {production_and_consumption.at[5, 'increment']} ")
     # Q16
     production_and_consumption.at[5, 'increment_pr'] = production_and_consumption.at[5, 'after'] / \
                                                        production_and_consumption.at[5, 'before'] - 1
-    print(f"Q16 {production_and_consumption.at[5, 'increment_pr']} ")
 
     # N17
     production_and_consumption.at[6, 'before'] = prod_bal_of_group_b_goods.at[5, 'before']
-    print(f"N17 {production_and_consumption.at[6, 'before']} ")
     # O17
     production_and_consumption.at[6, 'after'] = prod_bal_of_group_b_goods.at[5, 'after']
-    print(f"O17 {production_and_consumption.at[6, 'after']} ")
     # P17
     production_and_consumption.at[6, 'increment'] = production_and_consumption.at[6, 'after'] - \
                                                     production_and_consumption.at[6, 'before']
-    print(f"P17 {production_and_consumption.at[6, 'increment']} ")
     # Q17
     production_and_consumption.at[6, 'increment_pr'] = production_and_consumption.at[6, 'after'] / \
                                                        production_and_consumption.at[6, 'before'] - 1
-    print(f"Q17 {production_and_consumption.at[6, 'increment_pr']} ")
+
 
     # N18
     production_and_consumption.at[7, 'before'] = int_prod_of_goods_c.at[2, 'before']
-    print(f"N18 {production_and_consumption.at[7, 'before']} ")
     # O18
     production_and_consumption.at[7, 'after'] = int_prod_of_goods_c.at[2, 'after']
-    print(f"O18 {production_and_consumption.at[7, 'after']} ")
     # P18
     production_and_consumption.at[7, 'increment'] = production_and_consumption.at[7, 'after'] - \
                                                     production_and_consumption.at[7, 'before']
-    print(f"P18 {production_and_consumption.at[7, 'increment']} ")
     # Q18
     production_and_consumption.at[7, 'increment_pr'] = production_and_consumption.at[7, 'after'] / \
                                                        production_and_consumption.at[7, 'before'] - 1
-    print(f"Q18 {production_and_consumption.at[7, 'increment_pr']} ")
 
     # N22
     def func_n22(df, H45, H3, H48, H4, H7):
@@ -831,8 +647,6 @@ def oil_export(input_data):
                                                                prod_bal_of_group_b_goods.at[5, 'before'],
                                                                prices_group_b_products.at[1, 'before'],
                                                                prices_group_b_products.at[4, 'before'])
-    print(f"N22 {cost_effects.at[0, 'before']} ")
-
     # O22
     def func_o22(df, I45, I3, I48, I4, I7):
         return (I45 * I3 + I48 * I4) * I7
@@ -842,13 +656,11 @@ def oil_export(input_data):
                                                              prod_bal_of_group_b_goods.at[5, 'after'],
                                                              prices_group_b_products.at[1, 'after'],
                                                              prices_group_b_products.at[4, 'after'])
-    print(f"O22 {cost_effects.at[0, 'after']} ")
+
     # P22
     cost_effects.at[0, 'increment'] = cost_effects.at[0, 'after'] - cost_effects.at[0, 'before']
-    print(f"P22 {cost_effects.at[0, 'increment']} ")
     # Q22
     cost_effects.at[0, 'increment_pr'] = cost_effects.at[0, 'after'] / cost_effects.at[0, 'before'] - 1
-    print(f"Q22 {cost_effects.at[0, 'increment_pr']} ")
 
     # N23
     def func_n23(df, H13, H45, H17, H48):
@@ -858,8 +670,6 @@ def oil_export(input_data):
                                                                prod_bal_of_group_b_goods.at[2, 'before'],
                                                                calc_export_customs_duty.at[6, 'before'],
                                                                prod_bal_of_group_b_goods.at[5, 'before'])
-    print(f"N23 {cost_effects.at[1, 'before']} ")
-
     # O23
     def func_o23(df, I13, I45, I17, I48):
         return I13 * I45 + I17 * I48
@@ -868,13 +678,10 @@ def oil_export(input_data):
                                                              prod_bal_of_group_b_goods.at[2, 'after'],
                                                              calc_export_customs_duty.at[6, 'after'],
                                                              prod_bal_of_group_b_goods.at[5, 'after'])
-    print(f"O23 {cost_effects.at[1, 'after']} ")
     # P23
     cost_effects.at[1, 'increment'] = cost_effects.at[1, 'after'] - cost_effects.at[1, 'before']
-    print(f"P23 {cost_effects.at[1, 'increment']} ")
     # Q23
     cost_effects.at[1, 'increment_pr'] = cost_effects.at[1, 'after'] / cost_effects.at[1, 'before'] - 1
-    print(f"Q23 {cost_effects.at[1, 'increment_pr']} ")
 
     # N26
     def func_n26(df, N11, N4, O4, O11):
@@ -883,8 +690,6 @@ def oil_export(input_data):
     cost_effects.at[4, 'before'] = cost_effects['before'].pipe(func_n26, production_and_consumption.at[0, 'before'],
                                                                prices.at[0, 'before'], prices.at[0, 'after'],
                                                                production_and_consumption.at[0, 'after'])
-    print(f"N26 {cost_effects.at[4, 'before']} ")
-
     # N28
     def func_n28(df, N5, O5, N13, O13):
         return (N5 - O5) * N13 + 0.5 * (N5 - O5) * (O13 - N13)
@@ -893,8 +698,6 @@ def oil_export(input_data):
                                                                prices.at[1, 'after'],
                                                                production_and_consumption.at[2, 'before'],
                                                                production_and_consumption.at[2, 'after'])
-    print(f"N28 {cost_effects.at[6, 'before']} ")
-
     # N29
     def func_n29(df, N6, O6, N16, O16):
         return (N6 - O6) * N16 + 0.5 * (N6 - O6) * (O16 - N16)
@@ -903,16 +706,13 @@ def oil_export(input_data):
                                                                prices.at[2, 'after'],
                                                                production_and_consumption.at[5, 'before'],
                                                                production_and_consumption.at[5, 'after'])
-    print(f"N29 {cost_effects.at[7, 'before']} ")
-
     # N27
     def func_n27(df, N28, N29):
         return N28 + N29
 
     cost_effects.at[5, 'before'] = cost_effects['before'].pipe(func_n27, cost_effects.at[6, 'before'],
                                                                cost_effects.at[7, 'before'])
-    print(f"N26 {cost_effects.at[5, 'before']} ")
-
+    
     # N30
     def func_n30(df, N26, N27, P23):
         return N26 + N27 + P23
@@ -920,7 +720,6 @@ def oil_export(input_data):
     cost_effects.at[8, 'before'] = cost_effects['before'].pipe(func_n30, cost_effects.at[4, 'before'],
                                                                cost_effects.at[5, 'before'],
                                                                cost_effects.at[1, 'increment'])
-    print(f"N30 {cost_effects.at[8, 'before']} ")
 
     # N33
     def func_n33(df, N11, O4, N4, O11):
@@ -929,7 +728,6 @@ def oil_export(input_data):
     cost_effects.at[11, 'before'] = cost_effects['before'].pipe(func_n33, production_and_consumption.at[0, 'before'],
                                                                 prices.at[0, 'after'], prices.at[0, 'before'],
                                                                 production_and_consumption.at[0, 'after'])
-    print(f"N33 {cost_effects.at[11, 'before']} ")
 
     # N34
     def func_n34(df, N4, O11, N11, O4):
@@ -939,7 +737,6 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[0, 'after'],
                                                                 production_and_consumption.at[0, 'before'],
                                                                 prices.at[0, 'after'])
-    print(f"N34 {cost_effects.at[12, 'before']} ")
 
     # N32
     def func_n32(df, N33, N34):
@@ -947,7 +744,6 @@ def oil_export(input_data):
 
     cost_effects.at[10, 'before'] = cost_effects['before'].pipe(func_n32, cost_effects.at[11, 'before'],
                                                                 cost_effects.at[12, 'before'])
-    print(f"N32 {cost_effects.at[10, 'before']} ")
 
     # N37
     def func_n37(df, N12, O5, N5, O12):
@@ -956,7 +752,6 @@ def oil_export(input_data):
     cost_effects.at[15, 'before'] = cost_effects['before'].pipe(func_n37, production_and_consumption.at[1, 'before'],
                                                                 prices.at[1, 'after'], prices.at[1, 'before'],
                                                                 production_and_consumption.at[1, 'after'])
-    print(f"N37 {cost_effects.at[15, 'before']} ")
 
     # N38
     def func_n38(df, N5, O15, N15, O5):
@@ -966,7 +761,6 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[4, 'after'],
                                                                 production_and_consumption.at[4, 'before'],
                                                                 prices.at[1, 'after'])
-    print(f"N38 {cost_effects.at[16, 'before']} ")
 
     # N36
     def func_n36(df, N37, N38):
@@ -974,7 +768,6 @@ def oil_export(input_data):
 
     cost_effects.at[14, 'before'] = cost_effects['before'].pipe(func_n36, cost_effects.at[15, 'before'],
                                                                 cost_effects.at[16, 'before'])
-    print(f"N36 {cost_effects.at[14, 'before']} ")
 
     # N41
     def func_n41(df, N13, O5, N5, O13):
@@ -983,7 +776,6 @@ def oil_export(input_data):
     cost_effects.at[19, 'before'] = cost_effects['before'].pipe(func_n41, production_and_consumption.at[2, 'before'],
                                                                 prices.at[1, 'after'], prices.at[1, 'before'],
                                                                 production_and_consumption.at[2, 'after'])
-    print(f"N41 {cost_effects.at[19, 'before']} ")
 
     # N42
     def func_n42(df, N5, O13, N13, O5):
@@ -993,15 +785,12 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[2, 'after'],
                                                                 production_and_consumption.at[2, 'before'],
                                                                 prices.at[1, 'after'])
-    print(f"N42 {cost_effects.at[20, 'before']} ")
-
     # N40
     def func_n40(df, N41, N42):
         return N41 + N42
 
     cost_effects.at[18, 'before'] = cost_effects['before'].pipe(func_n40, cost_effects.at[19, 'before'],
                                                                 cost_effects.at[20, 'before'])
-    print(f"N40 {cost_effects.at[18, 'before']} ")
 
     # N45
     def func_n45(df, N15, O6, N6, O15):
@@ -1010,7 +799,6 @@ def oil_export(input_data):
     cost_effects.at[23, 'before'] = cost_effects['before'].pipe(func_n45, production_and_consumption.at[4, 'before'],
                                                                 prices.at[2, 'after'], prices.at[2, 'before'],
                                                                 production_and_consumption.at[4, 'after'])
-    print(f"N45 {cost_effects.at[23, 'before']} ")
 
     # N46
     def func_n46(df, N6, O15, N15, O6):
@@ -1020,7 +808,6 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[4, 'after'],
                                                                 production_and_consumption.at[4, 'before'],
                                                                 prices.at[2, 'after'])
-    print(f"N46 {cost_effects.at[24, 'before']} ")
 
     # N44
     def func_n44(df, N45, N46):
@@ -1028,7 +815,6 @@ def oil_export(input_data):
 
     cost_effects.at[22, 'before'] = cost_effects['before'].pipe(func_n44, cost_effects.at[23, 'before'],
                                                                 cost_effects.at[24, 'before'])
-    print(f"N44 {cost_effects.at[22, 'before']} ")
 
     # N49
     def func_n49(df, N16, O6, N6, O16):
@@ -1037,7 +823,6 @@ def oil_export(input_data):
     cost_effects.at[27, 'before'] = cost_effects['before'].pipe(func_n49, production_and_consumption.at[5, 'before'],
                                                                 prices.at[2, 'after'], prices.at[2, 'before'],
                                                                 production_and_consumption.at[5, 'after'])
-    print(f"N49 {cost_effects.at[27, 'before']} ")
 
     # N50
     def func_n50(df, N6, O16, N16, O6):
@@ -1047,7 +832,6 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[5, 'after'],
                                                                 production_and_consumption.at[5, 'before'],
                                                                 prices.at[2, 'after'])
-    print(f"N50 {cost_effects.at[28, 'before']} ")
 
     # N48
     def func_n48(df, N49, N50):
@@ -1055,7 +839,6 @@ def oil_export(input_data):
 
     cost_effects.at[26, 'before'] = cost_effects['before'].pipe(func_n48, cost_effects.at[27, 'before'],
                                                                 cost_effects.at[28, 'before'])
-    print(f"N48 {cost_effects.at[26, 'before']} ")
 
     # N53
     def func_n53(df, N18, O7, N7, O18):
@@ -1064,7 +847,6 @@ def oil_export(input_data):
     cost_effects.at[31, 'before'] = cost_effects['before'].pipe(func_n53, production_and_consumption.at[7, 'before'],
                                                                 prices.at[3, 'after'], prices.at[3, 'before'],
                                                                 production_and_consumption.at[7, 'after'])
-    print(f"N53 {cost_effects.at[31, 'before']} ")
 
     # N54
     def func_n54(df, N7, O18, N18, O7):
@@ -1074,7 +856,6 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[7, 'after'],
                                                                 production_and_consumption.at[7, 'before'],
                                                                 prices.at[3, 'after'])
-    print(f"N54 {cost_effects.at[32, 'before']} ")
 
     # N52
     def func_n52(df, N53, N54):
@@ -1082,7 +863,6 @@ def oil_export(input_data):
 
     cost_effects.at[30, 'before'] = cost_effects['before'].pipe(func_n52, cost_effects.at[31, 'before'],
                                                                 cost_effects.at[32, 'before'])
-    print(f"N52 {cost_effects.at[30, 'before']} ")
 
     # N57
     def func_n57(df, N18, O7, N7, O18):
@@ -1091,7 +871,6 @@ def oil_export(input_data):
     cost_effects.at[35, 'before'] = cost_effects['before'].pipe(func_n57, production_and_consumption.at[7, 'before'],
                                                                 prices.at[3, 'after'], prices.at[3, 'before'],
                                                                 production_and_consumption.at[7, 'after'])
-    print(f"N57 {cost_effects.at[35, 'before']} ")
 
     # N58
     def func_n58(df, N7, O18, N18, O7):
@@ -1101,7 +880,6 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[7, 'after'],
                                                                 production_and_consumption.at[7, 'before'],
                                                                 prices.at[3, 'after'])
-    print(f"N58 {cost_effects.at[36, 'before']} ")
 
     # N56
     def func_n56(df, N57, N58):
@@ -1109,19 +887,6 @@ def oil_export(input_data):
 
     cost_effects.at[34, 'before'] = cost_effects['before'].pipe(func_n56, cost_effects.at[35, 'before'],
                                                                 cost_effects.at[36, 'before'])
-    print(f"N56 {cost_effects.at[34, 'before']} ")
-
-    print(prices_group_b_products.to_markdown())
-    print(calc_export_customs_duty.to_markdown())
-    print(domestic_market_of_group_b_products.to_markdown())
-    print(internal_market_of_product_a.to_markdown())
-    print(int_prod_balance_of_goods_a.to_markdown())
-    print(int_prod_of_goods_c.to_markdown())
-    print(prod_bal_of_group_b_goods.to_markdown())
-
-    print(prices.to_markdown())
-    print(production_and_consumption.to_markdown())
-    print(cost_effects.to_markdown())
 
     result_to_front = {
         'prices_on_world_market_of_group_b_products': [prices_group_b_products.to_dict('index')],
