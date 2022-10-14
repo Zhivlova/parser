@@ -56,9 +56,13 @@ def wheat_exports(input_data):
     df = pd.read_excel(file, usecols='A:Q', index_col=0)
 
     # Список товаров
-    list_of_products = df.iloc[:4][['Список товаров', 'Вклад в ИПЦ']]
+    list_of_products = df.iloc[0:3, 0:2]
+    list_of_products = list_of_products.rename(columns={
+        'Список товаров': 'Обозначение',
+        'Unnamed: 1': 'Список товаров'})
     print(list_of_products.to_markdown())
 
 
 input_data = InputDataBase(user_data)
 result = wheat_exports(input_data)
+print(result)
