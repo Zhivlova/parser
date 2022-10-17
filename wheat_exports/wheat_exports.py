@@ -50,18 +50,119 @@ class InputDataBase:
 
 def wheat_exports(input_data):
     # Получаем данные из модели
-    mydir = 'C:/Users/Professional/Desktop/parser/wheat_exports/'
+    mydir = '/Users/natalazivlova/Desktop/parser/wheat_exports/'
     myfile = 'Экспорт_пшеница.xlsm'
     file = os.path.join(mydir, myfile)
-    df = pd.read_excel(file, usecols='A:Q', index_col=0)
+    df = pd.read_excel(file, usecols='A:Q')
 
     # Список товаров
     list_of_products = df.iloc[0:3, 0:2]
+    list_of_products.reset_index(inplace=True)
     list_of_products = list_of_products.rename(columns={
         'Список товаров': 'Обозначение',
         'Unnamed: 1': 'Список товаров'})
-    print(list_of_products.to_markdown())
+    # print(list_of_products.to_markdown())
 
+    # Эластичности по собственной цене
+    elasticity_at_price = df.iloc[5:14, 0:1]
+    elasticity_at_price.reset_index(inplace=True)
+    elasticity_at_price = elasticity_at_price.rename(columns={'Список товаров': 'Обозначение',
+                                                              'Unnamed: 1': 'Эластичности по собственной цене'})
+    # print(elasticity_at_price)
+
+    # Цены на мировом рынке
+    prices_on_world_market = df.iloc[1:7, 4:10]
+    prices_on_world_market.index = np.arange(0, len(prices_on_world_market))
+    prices_on_world_market = prices_on_world_market.rename(
+        columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure', 'Unnamed: 6': 'designation',
+                 'до': 'before', 'после': 'after', 'Unnamed: 9': 'status'})
+    # print(prices_on_world_market.to_markdown())
+
+    # Расчет суммы вывозной таможенной пошлины
+    calc_customs_duty = df.iloc[9:20, 4:10]
+    calc_customs_duty.index = np.arange(0, len(calc_customs_duty))
+    calc_customs_duty = calc_customs_duty.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                          'Unnamed: 6': 'designation', 'до': 'before', 'после': 'after',
+                                                          'Unnamed: 9': 'status'})
+    # print(calc_customs_duty.to_markdown())
+
+    # Внутренние цены с учетом демпфера
+    int_prices_inc_dempfer = df.iloc[22:25, 4:10]
+    int_prices_inc_dempfer.index = np.arange(0, len(int_prices_inc_dempfer))
+    int_prices_inc_dempfer = int_prices_inc_dempfer.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                                    'Unnamed: 6': 'designation', 'до': 'before',
+                                                                    'после': 'after', 'Unnamed: 9': 'status'})
+    # print(int_prices_inc_dempfer.to_markdown())
+
+    # Внутреннее производство товара А
+    int_prod_product_a = df.iloc[27:31, 4:10]
+    int_prod_product_a.index = np.arange(0, len(int_prod_product_a))
+    int_prod_product_a = int_prod_product_a.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                            'Unnamed: 6': 'designation', 'до': 'before',
+                                                            'после': 'after', 'Unnamed: 9': 'status'})
+    # print(int_prod_product_a.to_markdown())
+
+    # Внутреннее производство товара С1
+    int_prod_product_c1 = df.iloc[33:40, 4:9]
+    int_prod_product_c1.index = np.arange(0, len(int_prod_product_c1))
+
+    int_prod_product_c1 = int_prod_product_c1.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                              'Unnamed: 6': 'designation', 'до': 'before',
+                                                              'после': 'after', 'Unnamed: 9': 'status'})
+    # print(int_prod_product_c1.to_markdown())
+
+    # Внутреннее производство товара С2
+    int_prod_product_c2 = df.iloc[42:49, 4:9]
+    int_prod_product_c2.index = np.arange(0, len(int_prod_product_c2))
+
+    int_prod_product_c2 = int_prod_product_c2.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                              'Unnamed: 6': 'designation', 'до': 'before',
+                                                              'после': 'after', 'Unnamed: 9': 'status'})
+    # print(int_prod_product_c2.to_markdown())
+
+    # Прочее использование и баланс товара А
+    other_use_prod_a = df.iloc[51:54, 4:9]
+    other_use_prod_a.index = np.arange(0, len(other_use_prod_a))
+
+    other_use_prod_a = other_use_prod_a.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                        'Unnamed: 6': 'designation', 'до': 'before',
+                                                        'после': 'after', 'Unnamed: 9': 'status'})
+    # print(other_use_prod_a.to_markdown())
+
+    # Мировой рынок товара А
+    world_market_good_a = df.iloc[56:68, 4:10]
+    world_market_good_a.index = np.arange(0, len(world_market_good_a))
+
+    world_market_good_a = world_market_good_a.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
+                                                              'Unnamed: 6': 'designation', 'до': 'before',
+                                                              'после': 'after', 'Unnamed: 9': 'status'})
+    # print(world_market_good_a.to_markdown())
+
+    # Цены
+    prices = df.iloc[2:8, 11:17]
+    prices.index = np.arange(0, len(prices))
+    prices = prices.rename(columns={'Результаты': 'title', 'Unnamed: 12': 'measure', 'до.1': 'before',
+                                    'после.1': 'after', 'Прирост': 'increment', 'Unnamed: 16': 'increment_pr'})
+    # print(prices.to_markdown())
+
+    # Производство и потребление
+    production_and_consumption = df.iloc[10:15, 11:17]
+    production_and_consumption.index = np.arange(0, len(production_and_consumption))
+    production_and_consumption = production_and_consumption.rename(columns={'Результаты': 'title',
+                                                                            'Unnamed: 12': 'measure',
+                                                                            'до.1': 'before',
+                                                                            'после.1': 'after',
+                                                                            'Прирост': 'increment',
+                                                                            'Unnamed: 16': 'increment_pr'})
+    # print(production_and_consumption.to_markdown())
+
+    # Стоимостные эффекты
+    cost_effects = df.iloc[17:46, 11:17]
+    cost_effects.index = np.arange(0, len(cost_effects))
+    cost_effects = cost_effects.rename(columns={'Результаты': 'title', 'Unnamed: 12': 'measure',
+                                                'до.1': 'before', 'после.1': 'after',
+                                                'Прирост': 'increment', 'Unnamed: 16': 'increment_pr'})
+    # print(cost_effects.to_markdown())
 
 input_data = InputDataBase(user_data)
 result = wheat_exports(input_data)
