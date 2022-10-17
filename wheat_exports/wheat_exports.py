@@ -4,15 +4,25 @@ import numpy as np
 import pandas as pd
 import os
 
+example_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
+                'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
+                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
+                'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
+                't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
+                't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+                'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+                'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
+                'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+
 user_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
-             'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
-             'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
-             'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
-             't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
-             't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
-             'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-             'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
-             'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+                'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
+                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
+                'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
+                't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
+                't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+                'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+                'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
+                'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 
 class InputDataBase:
@@ -76,7 +86,6 @@ def wheat_exports(input_data):
     prices_on_world_market = prices_on_world_market.rename(
         columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure', 'Unnamed: 6': 'designation',
                  'до': 'before', 'после': 'after', 'Unnamed: 9': 'status'})
-    # print(prices_on_world_market.to_markdown())
 
     # Расчет суммы вывозной таможенной пошлины
     calc_customs_duty = df.iloc[9:20, 4:10]
@@ -163,6 +172,92 @@ def wheat_exports(input_data):
                                                 'до.1': 'before', 'после.1': 'after',
                                                 'Прирост': 'increment', 'Unnamed: 16': 'increment_pr'})
     # print(cost_effects.to_markdown())
+
+    """Вводим новые значения"""
+
+    # Цены на мировом рынке
+
+    prices_on_world_market.at[1, 'after'] = input_data.PW_A_shift_after
+    prices_on_world_market.at[1, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
+    prices_on_world_market.at[1, 'before'] != prices_on_world_market.at[1, 'after'] else 'Параметр не изменен')
+
+    prices_on_world_market.at[3, 'before'] = input_data.ER_before
+    prices_on_world_market.at[3, 'after'] = input_data.ER_after
+    prices_on_world_market.at[3, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен'
+    if prices_on_world_market.at[3, 'before'] != prices_on_world_market.at[3, 'after'] else 'Параметр не изменен')
+
+    prices_on_world_market.at[4, 'before'] = input_data.CT_before
+    prices_on_world_market.at[4, 'after'] = input_data.CT_after
+    prices_on_world_market.at[4, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен'
+    if prices_on_world_market.at[4, 'before'] != prices_on_world_market.at[4, 'after'] else 'Параметр не изменен')
+
+    prices_on_world_market.at[5, 'before'] = input_data.TD_before
+    prices_on_world_market.at[5, 'after'] = input_data.TD_after
+    prices_on_world_market.at[5, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен'
+    if prices_on_world_market.at[5, 'before'] != prices_on_world_market.at[5, 'after'] else 'Параметр не изменен')
+
+    # print(prices_on_world_market.to_markdown())
+
+    # Расчет суммы вывозной таможенной пошлины
+    calc_customs_duty.at[0, 'before'] = input_data.Pb_before
+    calc_customs_duty.at[0, 'after'] = input_data.Pb_after
+    calc_customs_duty.at[0, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
+    if calc_customs_duty.at[0, 'before'] != calc_customs_duty.at[0, 'after'] else 'Параметр не изменен')
+
+    calc_customs_duty.at[1, 'before'] = input_data.Pb2_before
+    calc_customs_duty.at[1, 'after'] = input_data.Pb2_after
+    calc_customs_duty.at[1, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
+    if calc_customs_duty.at[1, 'before'] != calc_customs_duty.at[1, 'after'] else 'Параметр не изменен')
+
+    calc_customs_duty.at[2, 'before'] = input_data.Pb3_before
+    calc_customs_duty.at[2, 'after'] = input_data.Pb3_after
+    calc_customs_duty.at[2, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
+    if calc_customs_duty.at[2, 'before'] != calc_customs_duty.at[2, 'after'] else 'Параметр не изменен')
+
+    calc_customs_duty.at[3, 'before'] = input_data.t1_before
+    calc_customs_duty.at[3, 'after'] = input_data.t1_after
+    calc_customs_duty.at[3, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
+    if calc_customs_duty.at[3, 'before'] != calc_customs_duty.at[3, 'after'] else 'Параметр не изменен')
+
+    calc_customs_duty.at[4, 'before'] = input_data.t2_before
+    calc_customs_duty.at[4, 'after'] = input_data.t2_after
+    calc_customs_duty.at[4, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
+    if calc_customs_duty.at[4, 'before'] != calc_customs_duty.at[4, 'after'] else 'Параметр не изменен')
+
+    calc_customs_duty.at[5, 'before'] = input_data.t3_before
+    calc_customs_duty.at[5, 'after'] = input_data.t3_after
+    calc_customs_duty.at[5, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
+    if calc_customs_duty.at[5, 'before'] != calc_customs_duty.at[5, 'after'] else 'Параметр не изменен')
+
+    # Внутренние цены с учетом демпфера
+    int_prices_inc_dempfer.at[1, 'before'] = input_data.demp_before
+    int_prices_inc_dempfer.at[1, 'after'] = input_data.demp_after
+    int_prices_inc_dempfer.at[1, 'status'] = int_prices_inc_dempfer['status'].pipe(lambda x: 'Параметр изменен'
+    if int_prices_inc_dempfer.at[1, 'before'] != int_prices_inc_dempfer.at[1, 'after'] else 'Параметр не изменен')
+
+    # Внутреннее производство товара А
+    int_prod_product_a.at[1, 'before'] = input_data.i_cost_before
+    int_prod_product_a.at[1, 'after'] = input_data.i_cost_after
+    int_prod_product_a.at[0, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен'
+    if int_prod_product_a.at[1, 'before'] != int_prod_product_a.at[1, 'after'] else 'Параметр не изменен')
+
+    int_prod_product_a.at[2, 'before'] = input_data.shift_QSI_A_before
+    int_prod_product_a.at[2, 'after'] = input_data.shift_QSI_A_after
+    int_prod_product_a.at[1, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен'
+    if int_prod_product_a.at[2, 'before'] != int_prod_product_a.at[2, 'after'] else 'Параметр не изменен')
+
+    # Мировой рынок товара А
+    world_market_good_a.at[8, 'before'] = input_data.shift_QSW_A_before
+    world_market_good_a.at[8, 'after'] = input_data.shift_QSW_A_after
+    world_market_good_a.at[8, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен'
+    if world_market_good_a.at[8, 'before'] != world_market_good_a.at[8, 'after'] else 'Параметр не изменен')
+
+    world_market_good_a.at[9, 'before'] = input_data.i_cost_world_before
+    world_market_good_a.at[9, 'after'] = input_data.i_cost_world_after
+    world_market_good_a.at[9, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен'
+    if world_market_good_a.at[9, 'before'] != world_market_good_a.at[9, 'after'] else 'Параметр не изменен')
+    print(world_market_good_a.to_markdown())
+
 
 input_data = InputDataBase(user_data)
 result = wheat_exports(input_data)
