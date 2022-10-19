@@ -15,14 +15,14 @@ example_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
                 'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 user_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
-                'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
-                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
-                'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
-                't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
-                't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
-                'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-                'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
-                'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+             'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
+             'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
+             'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
+             't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
+             't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+             'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+             'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
+             'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 
 class InputDataBase:
@@ -74,7 +74,7 @@ def wheat_exports(input_data):
     # print(list_of_products.to_markdown())
 
     # Эластичности по собственной цене
-    elasticity_at_price = df.iloc[5:14, 0:1]
+    elasticity_at_price = df.iloc[5:14, 0:2]
     elasticity_at_price.reset_index(inplace=True)
     elasticity_at_price = elasticity_at_price.rename(columns={'Список товаров': 'Обозначение',
                                                               'Unnamed: 1': 'Эластичности по собственной цене'})
@@ -183,81 +183,533 @@ def wheat_exports(input_data):
 
     prices_on_world_market.at[3, 'before'] = input_data.ER_before
     prices_on_world_market.at[3, 'after'] = input_data.ER_after
-    prices_on_world_market.at[3, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен'
-    if prices_on_world_market.at[3, 'before'] != prices_on_world_market.at[3, 'after'] else 'Параметр не изменен')
+    prices_on_world_market.at[3, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
+    prices_on_world_market.at[3, 'before'] != prices_on_world_market.at[3, 'after'] else 'Параметр не изменен')
 
     prices_on_world_market.at[4, 'before'] = input_data.CT_before
     prices_on_world_market.at[4, 'after'] = input_data.CT_after
-    prices_on_world_market.at[4, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен'
-    if prices_on_world_market.at[4, 'before'] != prices_on_world_market.at[4, 'after'] else 'Параметр не изменен')
+    prices_on_world_market.at[4, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
+    prices_on_world_market.at[4, 'before'] != prices_on_world_market.at[4, 'after'] else 'Параметр не изменен')
 
     prices_on_world_market.at[5, 'before'] = input_data.TD_before
     prices_on_world_market.at[5, 'after'] = input_data.TD_after
-    prices_on_world_market.at[5, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен'
-    if prices_on_world_market.at[5, 'before'] != prices_on_world_market.at[5, 'after'] else 'Параметр не изменен')
-
-    # print(prices_on_world_market.to_markdown())
+    prices_on_world_market.at[5, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
+    prices_on_world_market.at[5, 'before'] != prices_on_world_market.at[5, 'after'] else 'Параметр не изменен')
 
     # Расчет суммы вывозной таможенной пошлины
     calc_customs_duty.at[0, 'before'] = input_data.Pb_before
     calc_customs_duty.at[0, 'after'] = input_data.Pb_after
-    calc_customs_duty.at[0, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
-    if calc_customs_duty.at[0, 'before'] != calc_customs_duty.at[0, 'after'] else 'Параметр не изменен')
+    calc_customs_duty.at[0, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен' if
+    calc_customs_duty.at[0, 'before'] != calc_customs_duty.at[0, 'after'] else 'Параметр не изменен')
 
     calc_customs_duty.at[1, 'before'] = input_data.Pb2_before
     calc_customs_duty.at[1, 'after'] = input_data.Pb2_after
-    calc_customs_duty.at[1, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
-    if calc_customs_duty.at[1, 'before'] != calc_customs_duty.at[1, 'after'] else 'Параметр не изменен')
+    calc_customs_duty.at[1, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен' if
+    calc_customs_duty.at[1, 'before'] != calc_customs_duty.at[1, 'after'] else 'Параметр не изменен')
 
     calc_customs_duty.at[2, 'before'] = input_data.Pb3_before
     calc_customs_duty.at[2, 'after'] = input_data.Pb3_after
-    calc_customs_duty.at[2, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
-    if calc_customs_duty.at[2, 'before'] != calc_customs_duty.at[2, 'after'] else 'Параметр не изменен')
+    calc_customs_duty.at[2, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен' if
+    calc_customs_duty.at[2, 'before'] != calc_customs_duty.at[2, 'after'] else 'Параметр не изменен')
 
     calc_customs_duty.at[3, 'before'] = input_data.t1_before
     calc_customs_duty.at[3, 'after'] = input_data.t1_after
-    calc_customs_duty.at[3, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
-    if calc_customs_duty.at[3, 'before'] != calc_customs_duty.at[3, 'after'] else 'Параметр не изменен')
+    calc_customs_duty.at[3, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен' if
+    calc_customs_duty.at[3, 'before'] != calc_customs_duty.at[3, 'after'] else 'Параметр не изменен')
 
     calc_customs_duty.at[4, 'before'] = input_data.t2_before
     calc_customs_duty.at[4, 'after'] = input_data.t2_after
-    calc_customs_duty.at[4, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
-    if calc_customs_duty.at[4, 'before'] != calc_customs_duty.at[4, 'after'] else 'Параметр не изменен')
+    calc_customs_duty.at[4, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен' if
+    calc_customs_duty.at[4, 'before'] != calc_customs_duty.at[4, 'after'] else 'Параметр не изменен')
 
     calc_customs_duty.at[5, 'before'] = input_data.t3_before
     calc_customs_duty.at[5, 'after'] = input_data.t3_after
-    calc_customs_duty.at[5, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен'
-    if calc_customs_duty.at[5, 'before'] != calc_customs_duty.at[5, 'after'] else 'Параметр не изменен')
+    calc_customs_duty.at[5, 'status'] = calc_customs_duty['status'].pipe(lambda x: 'Параметр изменен' if
+    calc_customs_duty.at[5, 'before'] != calc_customs_duty.at[5, 'after'] else 'Параметр не изменен')
 
     # Внутренние цены с учетом демпфера
     int_prices_inc_dempfer.at[1, 'before'] = input_data.demp_before
     int_prices_inc_dempfer.at[1, 'after'] = input_data.demp_after
-    int_prices_inc_dempfer.at[1, 'status'] = int_prices_inc_dempfer['status'].pipe(lambda x: 'Параметр изменен'
-    if int_prices_inc_dempfer.at[1, 'before'] != int_prices_inc_dempfer.at[1, 'after'] else 'Параметр не изменен')
+    int_prices_inc_dempfer.at[1, 'status'] = int_prices_inc_dempfer['status'].pipe(lambda x: 'Параметр изменен' if
+    int_prices_inc_dempfer.at[1, 'before'] != int_prices_inc_dempfer.at[1, 'after'] else 'Параметр не изменен')
 
     # Внутреннее производство товара А
     int_prod_product_a.at[1, 'before'] = input_data.i_cost_before
     int_prod_product_a.at[1, 'after'] = input_data.i_cost_after
-    int_prod_product_a.at[0, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен'
-    if int_prod_product_a.at[1, 'before'] != int_prod_product_a.at[1, 'after'] else 'Параметр не изменен')
+    int_prod_product_a.at[0, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен' if
+    int_prod_product_a.at[1, 'before'] != int_prod_product_a.at[1, 'after'] else 'Параметр не изменен')
 
     int_prod_product_a.at[2, 'before'] = input_data.shift_QSI_A_before
     int_prod_product_a.at[2, 'after'] = input_data.shift_QSI_A_after
-    int_prod_product_a.at[1, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен'
-    if int_prod_product_a.at[2, 'before'] != int_prod_product_a.at[2, 'after'] else 'Параметр не изменен')
+    int_prod_product_a.at[1, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен' if
+    int_prod_product_a.at[2, 'before'] != int_prod_product_a.at[2, 'after'] else 'Параметр не изменен')
 
     # Мировой рынок товара А
     world_market_good_a.at[8, 'before'] = input_data.shift_QSW_A_before
     world_market_good_a.at[8, 'after'] = input_data.shift_QSW_A_after
-    world_market_good_a.at[8, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен'
-    if world_market_good_a.at[8, 'before'] != world_market_good_a.at[8, 'after'] else 'Параметр не изменен')
+    world_market_good_a.at[8, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен' if
+    world_market_good_a.at[8, 'before'] != world_market_good_a.at[8, 'after'] else 'Параметр не изменен')
 
     world_market_good_a.at[9, 'before'] = input_data.i_cost_world_before
     world_market_good_a.at[9, 'after'] = input_data.i_cost_world_after
-    world_market_good_a.at[9, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен'
-    if world_market_good_a.at[9, 'before'] != world_market_good_a.at[9, 'after'] else 'Параметр не изменен')
-    print(world_market_good_a.to_markdown())
+    world_market_good_a.at[9, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен' if
+    world_market_good_a.at[9, 'before'] != world_market_good_a.at[9, 'after'] else 'Параметр не изменен')
 
+    """Перерасчет ячеек с новыми значениями"""
+    prices_on_world_market.at[1, 'before'] = 0
+
+    # H5
+    def func_h5(df, H4, H3):
+        return H4 + H3
+
+    prices_on_world_market.at[2, 'before'] = prices_on_world_market['before'].pipe(func_h5,
+                                                                                   prices_on_world_market.at[
+                                                                                       1, 'before'],
+                                                                                   prices_on_world_market.at[
+                                                                                       0, 'before'])
+
+    # I5
+    def func_i5(df, I4, I3):
+        return I4 + I3
+
+    prices_on_world_market.at[2, 'after'] = prices_on_world_market['after'].pipe(func_i5,
+                                                                                 prices_on_world_market.at[1, 'after'],
+                                                                                 prices_on_world_market.at[0, 'after'])
+
+    # H17
+    def func_h17(df, H5, H6, H11, H14):
+        return (H5 * H6 - H11) * H14
+
+    calc_customs_duty.at[6, 'before'] = calc_customs_duty['before'].pipe(func_h17,
+                                                                         prices_on_world_market.at[2, 'before'],
+                                                                         prices_on_world_market.at[3, 'before'],
+                                                                         calc_customs_duty.at[0, 'before'],
+                                                                         calc_customs_duty.at[3, 'before'])
+
+    # I17
+    def func_i17(df, I5, I6, I11, I14):
+        return (I5 * I6 - I11) * I14
+
+    calc_customs_duty.at[6, 'after'] = calc_customs_duty['after'].pipe(func_h17, prices_on_world_market.at[2, 'after'],
+                                                                       prices_on_world_market.at[3, 'after'],
+                                                                       calc_customs_duty.at[0, 'after'],
+                                                                       calc_customs_duty.at[3, 'after'])
+
+    # H18
+    def func_h18(df, H5, H12, H6, H15, H11, H14):
+        return (H5 - H12) * H6 * H15 + (H12 * H6 - H11) * H14
+
+    calc_customs_duty.at[7, 'before'] = calc_customs_duty['before'].pipe(func_h18,
+                                                                         prices_on_world_market.at[2, 'before'],
+                                                                         calc_customs_duty.at[1, 'before'],
+                                                                         prices_on_world_market.at[3, 'before'],
+                                                                         calc_customs_duty.at[4, 'before'],
+                                                                         calc_customs_duty.at[0, 'before'],
+                                                                         calc_customs_duty.at[3, 'before'])
+
+    # I18
+    def func_i18(df, I5, I12, I6, I15, I11, I14):
+        return (I5 - I12) * I6 * I15 + (I12 * I6 - I11) * I14
+
+    calc_customs_duty.at[7, 'after'] = calc_customs_duty['after'].pipe(func_i18,
+                                                                       prices_on_world_market.at[2, 'after'],
+                                                                       calc_customs_duty.at[1, 'after'],
+                                                                       prices_on_world_market.at[3, 'after'],
+                                                                       calc_customs_duty.at[4, 'after'],
+                                                                       calc_customs_duty.at[0, 'after'],
+                                                                       calc_customs_duty.at[3, 'after'])
+
+    # H19
+    def func_h19(df, H5, H13, H6, H16, H12, H15, H11, H14):
+        return (H5 - H13) * H6 * H16 + (H13 - H12) * H6 * H15 + (H12 * H6 - H11) * H14
+
+    calc_customs_duty.at[8, 'before'] = calc_customs_duty['before'].pipe(func_h19,
+                                                                         prices_on_world_market.at[2, 'before'],
+                                                                         calc_customs_duty.at[2, 'before'],
+                                                                         prices_on_world_market.at[3, 'before'],
+                                                                         calc_customs_duty.at[5, 'before'],
+                                                                         calc_customs_duty.at[1, 'before'],
+                                                                         calc_customs_duty.at[4, 'before'],
+                                                                         calc_customs_duty.at[0, 'before'],
+                                                                         calc_customs_duty.at[3, 'before'])
+
+    # I19
+    def func_i19(df, I5, I13, I6, I16, I12, I15, I11, I14):
+        return (I5 - I13) * I6 * I16 + (I13 - I12) * I6 * I15 + (I12 * I6 - I11) * I14
+
+    calc_customs_duty.at[8, 'after'] = calc_customs_duty['after'].pipe(func_i19,
+                                                                       prices_on_world_market.at[2, 'after'],
+                                                                       calc_customs_duty.at[2, 'after'],
+                                                                       prices_on_world_market.at[3, 'after'],
+                                                                       calc_customs_duty.at[5, 'after'],
+                                                                       calc_customs_duty.at[1, 'after'],
+                                                                       calc_customs_duty.at[4, 'after'],
+                                                                       calc_customs_duty.at[0, 'after'],
+                                                                       calc_customs_duty.at[3, 'after'])
+
+    # H20
+    def func_h20(df, H5, H12, H17, H13, H18, H19):
+        if H5 < H12:
+            H20 = H17
+        elif H5 < H13:
+            H20 = H18
+        else:
+            H20 = H19
+        return H20
+
+    calc_customs_duty.at[9, 'before'] = calc_customs_duty['before'].pipe(func_h20,
+                                                                         prices_on_world_market.at[2, 'before'],
+                                                                         calc_customs_duty.at[1, 'before'],
+                                                                         calc_customs_duty.at[6, 'before'],
+                                                                         calc_customs_duty.at[2, 'before'],
+                                                                         calc_customs_duty.at[7, 'before'],
+                                                                         calc_customs_duty.at[8, 'before'])
+
+    # I20
+    def func_i20(df, I3, I12, I17, I13, I18, I19):
+        if I3 < I12:
+            I20 = I17
+        elif I3 < I13:
+            I20 = I18
+        else:
+            I20 = I19
+        return I20
+
+    calc_customs_duty.at[9, 'after'] = calc_customs_duty['after'].pipe(func_i20,
+                                                                       prices_on_world_market.at[0, 'after'],
+                                                                       calc_customs_duty.at[1, 'after'],
+                                                                       calc_customs_duty.at[6, 'after'],
+                                                                       calc_customs_duty.at[2, 'after'],
+                                                                       calc_customs_duty.at[7, 'after'],
+                                                                       calc_customs_duty.at[8, 'after'])
+
+    # H21
+    def func_h21(df, H20, H5, H6):
+        return H20 / (H5 * H6)
+
+    calc_customs_duty.at[10, 'before'] = calc_customs_duty['before'].pipe(func_h21,
+                                                                          calc_customs_duty.at[9, 'before'],
+                                                                          prices_on_world_market.at[2, 'before'],
+                                                                          prices_on_world_market.at[3, 'before'])
+
+    # I21
+    def func_i21(df, I20, I5, I6):
+        return I20 / (I5 * I6)
+
+    calc_customs_duty.at[10, 'after'] = calc_customs_duty['after'].pipe(func_i21,
+                                                                        calc_customs_duty.at[9, 'after'],
+                                                                        prices_on_world_market.at[2, 'after'],
+                                                                        prices_on_world_market.at[3, 'after'])
+
+    # H24
+    def func_h24(df, H5, H7, H6, H20, H8):
+        return ((H5 - H7) * H6 - H20) * (1 - H8)
+
+    int_prices_inc_dempfer.at[0, 'before'] = int_prices_inc_dempfer['before'].pipe(func_h24,
+                                                                                   prices_on_world_market.at[
+                                                                                       2, 'before'],
+                                                                                   prices_on_world_market.at[
+                                                                                       4, 'before'],
+                                                                                   prices_on_world_market.at[
+                                                                                       3, 'before'],
+                                                                                   calc_customs_duty.at[9, 'before'],
+                                                                                   prices_on_world_market.at[
+                                                                                       5, 'before'])
+
+    # I24
+    def func_i24(df, I5, I7, I6, I20, I8):
+        return ((I5 - I7) * I6 - I20) * (1 - I8)
+
+    int_prices_inc_dempfer.at[0, 'after'] = int_prices_inc_dempfer['after'].pipe(func_i24,
+                                                                                 prices_on_world_market.at[2, 'after'],
+                                                                                 prices_on_world_market.at[4, 'after'],
+                                                                                 prices_on_world_market.at[3, 'after'],
+                                                                                 calc_customs_duty.at[9, 'after'],
+                                                                                 prices_on_world_market.at[5, 'after'])
+    # H47
+    def func_h47(df, H46, H44):
+        return H46/H44
+
+    int_prod_product_c2.at[3, 'before'] = int_prod_product_c2['before'].pipe(func_h47, int_prod_product_c2.at[2, 'before'],
+                                                                              int_prod_product_c2.at[0, 'before'])
+    # I47
+    int_prod_product_c2.at[3, 'after'] = int_prod_product_c2.at[3, 'before']
+
+    # H38
+    def func_h38(df, H37, H35):
+        return H37/H35
+
+    int_prod_product_c1.at[3, 'before'] = int_prod_product_c1['before'].pipe(func_h38, int_prod_product_c1.at[2, 'before'],
+                                                                             int_prod_product_c1.at[0, 'before'])
+    #I38
+    int_prod_product_c1.at[3, 'after'] = int_prod_product_c1.at[3, 'before']
+
+
+
+    # H54
+    def func_h54(df, H53, H44, H47, H35, H38):
+        return H53+H44*H47+H35*H38
+
+    other_use_prod_a.at[1, 'before'] = other_use_prod_a['before'].pipe(func_h54, other_use_prod_a.at[0, 'before'],
+                                                                       int_prod_product_c2.at[0, 'before'],
+                                                                       int_prod_product_c2.at[3, 'before'],
+                                                                       int_prod_product_c1.at[0, 'before'],
+                                                                       int_prod_product_c1.at[3, 'before'])
+
+    # H55
+    def func_h55(df, H29, H54):
+        return H29-H54
+
+    other_use_prod_a.at[2, 'before'] = other_use_prod_a['before'].pipe(func_h55, int_prod_product_a.at[0, 'before'],
+                                                                       other_use_prod_a.at[1, 'before'])
+    # H26
+    def func_h26(df, H24, H20, H55, H29, H25):
+        return H24+H20*H55/H29*H25
+
+    int_prices_inc_dempfer.at[2, 'before'] = int_prices_inc_dempfer['before'].pipe(func_h26,
+                                                                                   int_prices_inc_dempfer.at[0, 'before'],
+                                                                                   calc_customs_duty.at[9, 'before'],
+                                                                                   other_use_prod_a.at[2, 'before'],
+                                                                                   int_prod_product_a.at[0, 'before'],
+                                                                                   int_prices_inc_dempfer.at[1, 'before'])
+
+    # I26
+    def func_i26(df, I24, I20, H55, H29, I25):
+        return I24+I20*H55/H29*I25
+
+    int_prices_inc_dempfer.at[2, 'after'] = int_prices_inc_dempfer['after'].pipe(func_i26,
+                                                                                   int_prices_inc_dempfer.at[
+                                                                                       0, 'after'],
+                                                                                   calc_customs_duty.at[9, 'after'],
+                                                                                   other_use_prod_a.at[2, 'before'],
+                                                                                   int_prod_product_a.at[0, 'before'],
+                                                                                   int_prices_inc_dempfer.at[
+                                                                                       1, 'after'])
+
+    # H32
+    def func_h32(df, H29, H31, H26, H30, B7):
+        return H29 / (1 + H31) / (H26 / H30) ** B7
+
+    int_prod_product_a.at[3, 'before'] = int_prod_product_a['before'].pipe(func_h32, int_prod_product_a.at[0, 'before'],
+                                                                           int_prod_product_a.at[2, 'before'],
+                                                                           int_prices_inc_dempfer.at[2, 'before'],
+                                                                           int_prod_product_a.at[1, 'before'],
+                                                                           elasticity_at_price.at[
+                                                                               0, 'Эластичности по собственной цене'])
+
+    # I29
+    def func_i29(df, H32, I31, I26, I30, B7):
+        return H32 * (1 + I31) * (I26 / I30) ** B7
+
+    int_prod_product_a.at[0, 'after'] = int_prod_product_a['after'].pipe(func_i29, int_prod_product_a.at[3, 'before'],
+                                                                         int_prod_product_a.at[2, 'after'],
+                                                                         int_prices_inc_dempfer.at[2, 'after'],
+                                                                         int_prod_product_a.at[1, 'after'],
+                                                                         elasticity_at_price.at[
+                                                                             0, 'Эластичности по собственной цене'])
+
+    # H41
+    def func_h41(df, H40, H35):
+        return H40/H35
+
+    int_prod_product_c1.at[6, 'before'] = int_prod_product_c1['before'].pipe(func_h41, int_prod_product_c1.at[5, 'before'],
+                                                                             int_prod_product_c1.at[0, 'before'])
+
+    # H36
+    def func_h36(df, H35, H41, B8):
+        return H35/(H41**B8)
+
+    int_prod_product_c1.at[1, 'before'] = int_prod_product_c1['before'].pipe(func_h36, int_prod_product_c1.at[0, 'before'],
+                                                                             int_prod_product_c1.at[6, 'before'],
+                                                                             elasticity_at_price.at[
+                                                                                 1, 'Эластичности по собственной цене'])
+    
+    # I35
+    def func_i35(df, H36, I41, B8):
+        return H36*(I41)**B8
+
+    int_prod_product_c1.at[0, 'after'] = int_prod_product_c1['after'].pipe(func_i35, int_prod_product_c1.at[1, 'before'],
+                                                                           int_prod_product_c1.at[6, 'after'],
+                                                                           elasticity_at_price.at[
+                                                                               1, 'Эластичности по собственной цене'])
+
+    # H39
+    def func_h39(df, H41, H38, H24):
+        return H41-H38*H24
+    int_prod_product_c1.at[4, 'before'] = int_prod_product_c1['before'].pipe(func_h39, int_prod_product_c1.at[6, 'before'],
+                                                                             int_prod_product_c1.at[3, 'before'],
+                                                                             int_prices_inc_dempfer.at[0, 'before'])
+
+    # I39
+    int_prod_product_c1.at[4, 'after'] = int_prod_product_c1.at[4, 'before']
+
+    # I41
+    def func_i41(df, I38, I24, I39):
+        return I38*I24+I39
+
+    int_prod_product_c1.at[6, 'after'] = int_prod_product_c1['after'].pipe(func_i41, int_prod_product_c1.at[3, 'after'],
+                                                                           int_prices_inc_dempfer.at[0, 'after'],
+                                                                           int_prod_product_c1.at[4, 'after'])
+
+
+    #I40
+    def func_i40(df, I35, I41):
+        return I35*I41
+    int_prod_product_c1.at[5, 'after'] = int_prod_product_c1['after'].pipe(func_i40, int_prod_product_c1.at[0, 'after'],
+                                                                           int_prod_product_c1.at[6, 'after'])
+
+    # H50
+    def func_h50(df, H49, H44):
+        return H49/H44
+
+    int_prod_product_c2.at[6, 'before'] = int_prod_product_c2['before'].pipe(func_h50, int_prod_product_c2.at[5, 'before'],
+                                                                             int_prod_product_c2.at[0, 'before'])
+
+    # H45
+    def func_h45(df, H44, H50, B9):
+        return H44/(H50**B9)
+
+    int_prod_product_c2.at[1, 'before'] = int_prod_product_c2['before'].pipe(func_h45, int_prod_product_c2.at[0, 'before'],
+                                                        int_prod_product_c2.at[6, 'before'],
+                                                        elasticity_at_price.at[2, 'Эластичности по собственной цене'])
+    # I44
+    def func_i44(df, H45, I50, B9):
+        return H45*(I50)**B9
+
+    int_prod_product_c2.at[0, 'after'] = int_prod_product_c2['after'].pipe(func_i44, int_prod_product_c2.at[1, 'before'],
+                                                                           int_prod_product_c2.at[6, 'after'],
+                                                                           elasticity_at_price.at[
+                                                                               2, 'Эластичности по собственной цене'])
+    # H48
+    def func_h48(df, H50, H47, H24):
+        return H50-H47*H24
+
+    int_prod_product_c2.at[4, 'before'] = int_prod_product_c2['before'].pipe(func_h48, int_prod_product_c2.at[6, 'before'],
+                                                                             int_prod_product_c2.at[3, 'before'],
+                                                                             int_prices_inc_dempfer.at[0, 'before'])
+    # I48
+    int_prod_product_c2.at[4, 'after'] = int_prod_product_c2.at[4, 'before']
+
+    # I50
+    def func_i50(df, I47, I24, I48):
+        return I47*I24+I48
+    int_prod_product_c2.at[6, 'after'] = int_prod_product_c2['after'].pipe(func_i50, int_prod_product_c2.at[3, 'after'],
+                                                                           int_prices_inc_dempfer.at[0, 'after'],
+                                                                           int_prod_product_c2.at[4, 'after'])
+    # I54
+    def func_i54(df, I53, I44, I47, I35, I38):
+        return I53+I44*I47+I35*I38
+    other_use_prod_a.at[1, 'after'] = other_use_prod_a['after'].pipe(func_i54, other_use_prod_a.at[0, 'after'],
+                                                                     int_prod_product_c2.at[0, 'after'],
+                                                                     int_prod_product_c2.at[3, 'after'],
+                                                                     int_prod_product_c1.at[0, 'after'],
+                                                                     int_prod_product_c1.at[3, 'after'])
+
+    # I55
+    def func_i55(df, I29, I54):
+        return I29-I54
+
+    other_use_prod_a.at[2, 'after'] = other_use_prod_a['after'].pipe(func_i55, int_prod_product_a.at[0, 'after'],
+                                                                     other_use_prod_a.at[1, 'after'])
+
+    # H61
+    def func_h61(df, H58, H60):
+        return H58-H60
+    world_market_good_a.at[3, 'before'] = world_market_good_a['before'].pipe(func_h61, world_market_good_a.at[0, 'before'],
+                                                                             world_market_good_a.at[2, 'before'])
+    # H62
+    def func_h62(df, H58, H66, H5, H7, H67, B10):
+        return H58/(1+H66)/((H5-H7)/H67)**B10
+    world_market_good_a.at[4, 'before'] = world_market_good_a['before'].pipe(func_h62, world_market_good_a.at[0, 'before'],
+                                                                             world_market_good_a.at[8, 'before'],
+                                                                             prices_on_world_market.at[2, 'before'],
+                                                                             prices_on_world_market.at[4, 'before'],
+                                                                             world_market_good_a.at[9, 'before'],
+                                                                             elasticity_at_price.at[
+                                                                                 3, 'Эластичности по собственной цене'])
+    # I58
+    def func_i58(df, H62, I66, I5, I7, I67, B10):
+        return H62*(1+I66)*((I5-I7)/I67)**B10
+
+    world_market_good_a.at[0, 'after'] = world_market_good_a['after'].pipe(func_i58, world_market_good_a.at[4, 'before'],
+                                                                           world_market_good_a.at[8, 'after'],
+                                                                           prices_on_world_market.at[2, 'after'],
+                                                                           prices_on_world_market.at[4, 'after'],
+                                                                           world_market_good_a.at[9, 'after'],
+                                                                           elasticity_at_price.at[
+                                                                               3, 'Эластичности по собственной цене'])
+
+    # H63
+    def func_h63(df, H59, H5, B11):
+        return H59/H5**B11
+
+    world_market_good_a.at[5, 'before'] = world_market_good_a['before'].pipe(func_h63, world_market_good_a.at[1, 'before'],
+                                                        prices_on_world_market.at[2, 'before'],
+                                                        elasticity_at_price.at[4, 'Эластичности по собственной цене'])
+
+    # I59
+    def func_i59(df, H63, I3, B11):
+        return H63*I3**B11
+
+    world_market_good_a.at[1, 'after'] = world_market_good_a['after'].pipe(func_i59, world_market_good_a.at[5, 'before'],
+                                                                           prices_on_world_market.at[0, 'after'],
+                                                                           elasticity_at_price.at[
+                                                                               4, 'Эластичности по собственной цене'])
+
+    # H64
+    def func_h64(df, H60, H5, B11):
+        return H60/H5**B11
+
+    world_market_good_a.at[6, 'before'] = world_market_good_a['before'].pipe(func_h64, world_market_good_a.at[2, 'before'],
+                                                                             prices_on_world_market.at[2, 'before'],
+                                                                             elasticity_at_price.at[
+                                                                                 4, 'Эластичности по собственной цене'])
+
+    # I60
+    def func_i60(df, H64, I3, B11):
+        return H64*I3**B11
+
+    world_market_good_a.at[2, 'after'] = world_market_good_a['after'].pipe(func_i60, world_market_good_a.at[6, 'before'],
+                                                                           prices_on_world_market.at[0, 'after'],
+                                                                           elasticity_at_price.at[
+                                                                               4, 'Эластичности по собственной цене'])
+
+    # I61
+    def func_i61(df, I58, I60):
+        return I58 - I60
+
+    world_market_good_a.at[3, 'after'] = world_market_good_a['after'].pipe(func_i61, world_market_good_a.at[0, 'after'],
+                                                                           world_market_good_a.at[2, 'after'])
+    # H65
+    def func_h65(df, H55, H61):
+        return H55+H61
+    world_market_good_a.at[7, 'before'] = world_market_good_a['before'].pipe(func_h65, other_use_prod_a.at[2, 'before'],
+                                                                             world_market_good_a.at[3, 'before'])
+
+    # I65
+    def func_i65(df, I55, I61):
+        return I55+I61
+
+    world_market_good_a.at[7, 'after'] = world_market_good_a['after'].pipe(func_i65, other_use_prod_a.at[2, 'after'],
+                                                                           world_market_good_a.at[3, 'after'])
+
+    # H68
+    def func_h68(df, H59, H65):
+        return H59-H65
+    world_market_good_a.at[10, 'before'] = world_market_good_a['before'].pipe(func_h68, world_market_good_a.at[1, 'before'],
+                                                                              world_market_good_a.at[7, 'before'])
+
+    # I68
+    def func_i68(df, I59, I65):
+        return I59-I65
+
+    world_market_good_a.at[10, 'after'] = world_market_good_a['after'].pipe(func_i68, world_market_good_a.at[1, 'after'],
+                                                                            world_market_good_a.at[7, 'after'])
+
+
+
+
+    print(world_market_good_a.to_markdown())
 
 input_data = InputDataBase(user_data)
 result = wheat_exports(input_data)
