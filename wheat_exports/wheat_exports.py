@@ -15,14 +15,14 @@ example_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
                 'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 user_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
-             'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
-             'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
-             'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
-             't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
-             't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
-             'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-             'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
-             'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+                'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
+                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
+                'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
+                't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
+                't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+                'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+                'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
+                'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 
 class InputDataBase:
@@ -66,12 +66,12 @@ def wheat_exports(input_data):
     df = pd.read_excel(file, usecols='A:Q')
 
     # Список товаров
-    list_of_products = df.iloc[0:3, 0:2]
+    list_of_products = df.iloc[0:3, 0:3]
     list_of_products.reset_index(inplace=True)
     list_of_products = list_of_products.rename(columns={
         'Список товаров': 'Обозначение',
         'Unnamed: 1': 'Список товаров'})
-    # print(list_of_products.to_markdown())
+
 
     # Эластичности по собственной цене
     elasticity_at_price = df.iloc[5:14, 0:2]
@@ -705,11 +705,107 @@ def wheat_exports(input_data):
 
     world_market_good_a.at[10, 'after'] = world_market_good_a['after'].pipe(func_i68, world_market_good_a.at[1, 'after'],
                                                                             world_market_good_a.at[7, 'after'])
+    # N4
+    prices.at[0, 'before'] = prices_on_world_market.at[2, 'before']
+    # O4
+    prices.at[0, 'after'] = prices_on_world_market.at[2, 'after']
+    # P4
+    prices.at[0, 'increment'] = prices.at[0, 'after'] - prices.at[0, 'before']
+    # Q4
+    prices.at[0, 'increment_pr'] = prices.at[0, 'after'] / prices.at[0, 'before'] -1
+
+    # N5
+    prices.at[1, 'before'] = int_prices_inc_dempfer.at[0, 'before']
+    # O5
+    prices.at[1, 'after'] = int_prices_inc_dempfer.at[0, 'after']
+    # P5
+    prices.at[1, 'increment'] = int_prices_inc_dempfer.at[0, 'after'] - int_prices_inc_dempfer.at[0, 'before']
+    # Q5
+    prices.at[1, 'increment_pr'] = int_prices_inc_dempfer.at[0, 'after'] / int_prices_inc_dempfer.at[0, 'before'] - 1
+
+    # N6
+    prices.at[2, 'before'] = int_prices_inc_dempfer.at[2, 'before']
+    # O6
+    prices.at[2, 'after'] = int_prices_inc_dempfer.at[2, 'after']
+    # P6
+    prices.at[2, 'increment'] = int_prices_inc_dempfer.at[2, 'after'] - int_prices_inc_dempfer.at[2, 'before']
+    # Q6
+    prices.at[2, 'increment_pr'] = int_prices_inc_dempfer.at[2, 'after'] / int_prices_inc_dempfer.at[2, 'before'] - 1
+
+    # N7
+    prices.at[3, 'before'] = int_prod_product_c1.at[6, 'before']
+    # O7
+    prices.at[3, 'after'] = int_prod_product_c1.at[6, 'after']
+    # P7
+    prices.at[3, 'increment'] = int_prod_product_c1.at[6, 'after'] - int_prod_product_c1.at[6, 'before']
+    # Q7
+    prices.at[3, 'increment_pr'] = int_prod_product_c1.at[6, 'after'] / int_prod_product_c1.at[6, 'before'] - 1
+
+    # N8
+    prices.at[4, 'before'] = int_prod_product_c2.at[6, 'before']
+    # O8
+    prices.at[4, 'after'] = int_prod_product_c2.at[6, 'after']
+    # P8
+    prices.at[4, 'increment'] = int_prod_product_c2.at[6, 'after'] - int_prod_product_c2.at[6, 'before']
+    # Q8
+    prices.at[4, 'increment_pr'] = int_prod_product_c2.at[6, 'after'] / int_prod_product_c2.at[6, 'before'] - 1
+
+    # P9
+    def func_p9(df, Q7, C3, Q8, C4):
+        return Q7*C3/100+Q8*C4/100
+    prices.at[5, 'increment'] = prices['increment'].pipe(func_p9, prices.at[3, 'increment_pr'],
+                                                         list_of_products.at[1, 'Вклад в ИПЦ'],
+                                                         prices.at[3, 'increment_pr'],
+                                                         list_of_products.at[2, 'Вклад в ИПЦ'])
+
+    # N12
+    production_and_consumption.at[0, 'before'] = int_prod_product_a.at[0, 'before']
+    # O12
+    production_and_consumption.at[0, 'after'] = int_prod_product_a.at[0, 'after']
+    # P12
+    production_and_consumption.at[0, 'increment'] = int_prod_product_a.at[0, 'after'] - int_prod_product_a.at[0, 'before']
+    # Q12
+    production_and_consumption.at[0, 'increment_pr'] = int_prod_product_a.at[0, 'after'] / int_prod_product_a.at[0, 'before'] - 1
+
+    # N13
+    production_and_consumption.at[1, 'before'] = other_use_prod_a.at[1, 'before']
+    # O13
+    production_and_consumption.at[1, 'after'] = other_use_prod_a.at[1, 'after']
+    # P13
+    production_and_consumption.at[1, 'increment'] = other_use_prod_a.at[1, 'after'] - other_use_prod_a.at[1, 'before']
+    # Q13
+    production_and_consumption.at[1, 'increment_pr'] = other_use_prod_a.at[1, 'after'] / other_use_prod_a.at[1, 'before'] - 1
+
+    # N14
+    production_and_consumption.at[2, 'before'] = other_use_prod_a.at[2, 'before']
+    # O14
+    production_and_consumption.at[2, 'after'] = other_use_prod_a.at[2, 'after']
+    # P14
+    production_and_consumption.at[2, 'increment'] = other_use_prod_a.at[2, 'after'] - other_use_prod_a.at[2, 'before']
+    # Q14
+    production_and_consumption.at[2, 'increment_pr'] = other_use_prod_a.at[2, 'after'] / other_use_prod_a.at[2, 'before'] - 1
+
+    # N15
+    production_and_consumption.at[3, 'before'] = int_prod_product_c1.at[0, 'before']
+    # O15
+    production_and_consumption.at[3, 'after'] = int_prod_product_c1.at[0, 'after']
+    # P15
+    production_and_consumption.at[3, 'increment'] = int_prod_product_c1.at[0, 'after'] - int_prod_product_c1.at[0, 'before']
+    # Q15
+    production_and_consumption.at[3, 'increment_pr'] = int_prod_product_c1.at[0, 'after'] / int_prod_product_c1.at[0, 'before'] - 1
+
+    # N16
+    production_and_consumption.at[4, 'before'] = int_prod_product_c2.at[0, 'before']
+    # O16
+    production_and_consumption.at[4, 'after'] = int_prod_product_c2.at[0, 'after']
+    # P16
+    production_and_consumption.at[4, 'increment'] = int_prod_product_c2.at[0, 'after'] - int_prod_product_c2.at[0, 'before']
+    # Q16
+    production_and_consumption.at[4, 'increment_pr'] = int_prod_product_c2.at[0, 'after'] / int_prod_product_c2.at[0, 'before'] - 1
+
+    print(production_and_consumption.to_markdown())
 
 
-
-
-    print(world_market_good_a.to_markdown())
 
 input_data = InputDataBase(user_data)
 result = wheat_exports(input_data)
