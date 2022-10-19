@@ -1,7 +1,8 @@
 import os
 from openpyxl import Workbook, load_workbook
+import csv
 
-
+import pandas as pd
 
 mydir = '/Users/natalazivlova/Desktop/parser/28.09/'
 myfile = 'рейтинг 2021 корр.xlsx'
@@ -21,6 +22,8 @@ for row in range(2, 87):
     scores = sheet[row][2].value
     sonko['scores'].append(scores)
 print(sonko)
+
+lines1 = pd.DataFrame(sonko)
 
 social_entrepreneurship = {"subject": [], "scores": []}
 for row in range(2, 87):
@@ -181,3 +184,18 @@ for row in range(2, 87):
     scores = sheet[row][22].value
     final_results['scores'].append(scores)
 print(final_results)
+
+
+
+with open('scores.csv', 'w') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Субъект", "Баллы"])
+# for i in final_results:
+#     subject = i[0]
+#     scores = i[1]
+#
+#     with open('scores.csv', 'w') as file:
+#         writer = csv.writer(file)
+#         writer.writerow(
+#             i
+#         )

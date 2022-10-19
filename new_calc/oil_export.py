@@ -3,21 +3,23 @@ import pandas as pd
 import os
 from pprint import pprint
 
-example_data = {'PW_B1_before': 1500.0, 'PW_B1_after': 1500.0, 'PW_B2_before': 300.0, 'PW_B2_after': 300.0,
-                'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+example_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226.8, 'PW_B2_after': 226.8,
+                'ER_before': 72.3, 'ER_after': 72.3, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
                 'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
-                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
-                'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
-                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
-                'QDI_С': 3.0, 'QDI_B2': 2.0}
+                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1': 48942.7, 'PI_B2': 13061.9,
+                'PI_A': 23415.2, 'QSI_A': 13.761, 'QSW_RUS_A_before': 0.723, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
+                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 106430.8,
+                'QDI_С': 2.048, 'QDI_B2': 3.567}
 
-user_data = {'PW_B1_before': 1500.0, 'PW_B1_after': 1500.0, 'PW_B2_before': 300.0, 'PW_B2_after': 300.0,
-             'ER_before': 75.0, 'ER_after': 75.0, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
-             'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
-             'Pb_B2_after': 13875.0, 'tb_B2_before': 0.7, 'tb_B2_after': 0.7, 'PI_B1': 90000.0, 'PI_B2': 15000.0,
-             'PI_A': 40000.0, 'QSI_A': 15.0, 'QSW_RUS_A_before': 0.0, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
-             'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 130000.0,
-             'QDI_С': 3.0, 'QDI_B2': 2.0}
+user_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226.8, 'PW_B2_after': 226.8,
+                'ER_before': 72.3, 'ER_after': 72.3, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+                'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
+                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1': 48942.7, 'PI_B2': 13061.9,
+                'PI_A': 23415.2, 'QSI_A': 13.761, 'QSW_RUS_A_before': 0.723, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
+                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 106430.8,
+                'QDI_С': 2.048, 'QDI_B2': 3.567}
+
+
 
 
 class InputDataBase:
@@ -68,6 +70,7 @@ def oil_export(input_data):
     elasticity_at_its_own_price = df.iloc[6:12, 0:1]
     elasticity_at_its_own_price = elasticity_at_its_own_price.rename(columns={'Список товаров': 'Эластичности по '
                                                                                                 'собственной цене'})
+
     # Коэффициенты выхода продукции
     output_coefficients = df.iloc[14:16, 0:1]
     output_coefficients = output_coefficients.rename(columns={'Список товаров': 'Коэффициенты выхода продукции'})
@@ -78,12 +81,14 @@ def oil_export(input_data):
     prices_group_b_products = prices_group_b_products.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'currency',
                                                                       'Unnamed: 6': 'designation', 'до': 'before',
                                                                       'после': 'after', 'Unnamed: 9': 'status'})
+
     # Расчет суммы вывозной таможенной пошлины
     calc_export_customs_duty = df.iloc[9:17, 3:9]
     calc_export_customs_duty.index = np.arange(0, len(calc_export_customs_duty))
     calc_export_customs_duty = calc_export_customs_duty.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                                         'Unnamed: 6': 'designation', 'до': 'before',
                                                                         'после': 'after', 'Unnamed: 9': 'status'})
+
     # Внутренний рынок товаров группы B
     domestic_market_of_group_b_products = df.iloc[19:21, 3:8]
     domestic_market_of_group_b_products.index = np.arange(0, len(domestic_market_of_group_b_products))
@@ -227,11 +232,14 @@ def oil_export(input_data):
 
     # H13
     def func_h13(df, H3, H7, H11, H12):
-        return (H3 * H7 - H11) * H12
+        H13 = (H3 * H7 - H11) * H12
+        return max(0, H13)
 
     calc_export_customs_duty.at[2, 'before'] = calc_export_customs_duty['before'].pipe(func_h13,
-                    prices_group_b_products.at[0, 'before'], prices_group_b_products.at[4, 'before'],
-                    calc_export_customs_duty.at[0, 'before'], calc_export_customs_duty.at[1, 'before'])
+                                                                            prices_group_b_products.at[0, 'before'],
+                                                                            prices_group_b_products.at[4, 'before'],
+                                                                            calc_export_customs_duty.at[0, 'before'],
+                                                                            calc_export_customs_duty.at[1, 'before'])
 
     # H5
     def func_h5(df, H3, H21, H8, H13, H7):
@@ -246,7 +254,8 @@ def oil_export(input_data):
 
     # H17
     def func_h17(df, H4, H7, H15, H16):
-        return (H4 * H7 - H15) * H16
+        H17 = (H4 * H7 - H15) * H16
+        return max(0, H17)
 
     calc_export_customs_duty.at[6, 'before'] = calc_export_customs_duty['before'].pipe(func_h17,
                     prices_group_b_products.at[1, 'before'], prices_group_b_products.at[4, 'before'],
@@ -264,17 +273,10 @@ def oil_export(input_data):
     # I6
     prices_group_b_products.at[3, 'after'] = prices_group_b_products.at[3, 'before']
 
-    # H13
-    def func_h13(df, H3, H7, H11, H12):
-        return (H3 * H7 - H11) * H12
-
-    calc_export_customs_duty.at[2, 'before'] = calc_export_customs_duty['before'].pipe(func_h13,
-                   prices_group_b_products.at[0, 'before'], prices_group_b_products.at[4, 'before'],
-                   calc_export_customs_duty.at[0, 'before'], calc_export_customs_duty.at[1, 'before'])
-
     # I13
     def func_i13(df, I3, I7, I11, I12):
-        return (I3 * I7 - I11) * I12
+        I13 = (I3 * I7 - I11) * I12
+        return max(0, I13)
 
     calc_export_customs_duty.at[2, 'after'] = calc_export_customs_duty['after'].pipe(func_i13,
                  prices_group_b_products.at[0, 'after'], prices_group_b_products.at[4, 'after'],
@@ -296,21 +298,15 @@ def oil_export(input_data):
                  calc_export_customs_duty.at[2, 'after'], prices_group_b_products.at[0, 'after'],
                  prices_group_b_products.at[4, 'after'])
 
-    # H17
-    def func_h17(df, H4, H7, H15, H16):
-        return (H4 * H7 - H15) * H16
-
-    calc_export_customs_duty.at[6, 'before'] = calc_export_customs_duty['before'].pipe(func_h17,
-               prices_group_b_products.at[1, 'before'], prices_group_b_products.at[4, 'before'],
-               calc_export_customs_duty.at[4, 'before'], calc_export_customs_duty.at[5, 'before'])
-
     # I17
     def func_i17(df, I4, I7, I15, I16):
-        return (I4 * I7 - I15) * I16
+        I17 = (I4 * I7 - I15) * I16
+        return max(0, I17)
 
     calc_export_customs_duty.at[6, 'after'] = calc_export_customs_duty['after'].pipe(func_i17,
                 prices_group_b_products.at[1, 'after'], prices_group_b_products.at[4, 'after'],
                 calc_export_customs_duty.at[4, 'after'], calc_export_customs_duty.at[5, 'after'])
+
     # H18
     def func_h18(df, H17, H4, H7):
         return H17 / (H4 * H7)
@@ -488,12 +484,14 @@ def oil_export(input_data):
            output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I47
-    def func_i47(df, H47, I44, H44):
-        return H47 * I44 / H44
+    def func_i47(df, H47, I22, H22, B9):
+        return H47*(I22/H22)**B9
 
     prod_bal_of_group_b_goods.at[4, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i47,
-           prod_bal_of_group_b_goods.at[4, 'before'], prod_bal_of_group_b_goods.at[1, 'after'],
-           prod_bal_of_group_b_goods.at[1, 'before'])
+                                          prod_bal_of_group_b_goods.at[4, 'before'],
+                                          domestic_market_of_group_b_products.at[1, 'after'],
+                                          domestic_market_of_group_b_products.at[1, 'before'],
+                                          elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
 
     # H48
     def func_h48(df, H46, H47):
@@ -680,8 +678,20 @@ def oil_export(input_data):
                                                              prod_bal_of_group_b_goods.at[5, 'after'])
     # P23
     cost_effects.at[1, 'increment'] = cost_effects.at[1, 'after'] - cost_effects.at[1, 'before']
+
     # Q23
-    cost_effects.at[1, 'increment_pr'] = cost_effects.at[1, 'after'] / cost_effects.at[1, 'before'] - 1
+    def func_q23(df, O23, N23):
+        try:
+            Q23 = O23 / N23 - 1
+        except ZeroDivisionError:
+            Q23 = '-'
+        else:
+            Q23 = '-'
+        return Q23
+    cost_effects.at[1, 'increment_pr'] = cost_effects['increment_pr'].pipe(func_q23, cost_effects.at[1, 'after'],
+                                                                           cost_effects.at[1, 'before'])
+    print(cost_effects.at[1, 'increment_pr'])
+    print(cost_effects.to_markdown())
 
     # N26
     def func_n26(df, N11, N4, O4, O11):
@@ -906,4 +916,4 @@ def oil_export(input_data):
 
 input_data = InputDataBase(user_data)
 result = oil_export(input_data)
-pprint(result)
+# pprint(result)

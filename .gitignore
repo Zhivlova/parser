@@ -1,2 +1,3 @@
 # Project exclude paths
 /venv/
+/oil_export/oil_export/settings.py

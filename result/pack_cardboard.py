@@ -9,6 +9,7 @@ from elasticity import average_value
 #               2125, 42]
 
 
+
 class InputDataBase:
     def __init__(self, ER_0, P_MMI_USD_0, NMMI_0, NMMI_1, TMMI_0, TMMI_1, SVA_0, SH_0, Q_MMI_0, P_MDI_0, Q_MDI_0, Q_SDP_0,
                  Q_FDC_0, Q_PDC_0, P_FDP_0, Q_FDP_0, P_FXP_0):
@@ -36,7 +37,7 @@ input = InputDataBase(72.14, 0.18, 1.29, 0, 0.01890618906286916, 0, 14.686756, 0
 
 
 
-def calc(user_values):
+def cardboard_market(input):
 
     result = dict()
 
@@ -375,15 +376,15 @@ def calc(user_values):
     PXM_P = P_PXM_1 - P_MDI_1
     eqs.append(PXM_P)
 
-    print(eqs)
+    # print(eqs)
     eq_result = fsum(eqs)
 
     if eq_result < 0.000001:
         solution = 'Решение найдено'
-        print(f'{eq_result} {solution}')
+        # print(f'{eq_result} {solution}')
     else:
         solution = 'Решение не найдено'
-        print(f'{eq_result} {solution}')
+        # print(f'{eq_result} {solution}')
 
     K_1 = (1 - exp(-P_MDI_1 / Λ_1))
     result['K_1'] = K_1
@@ -705,5 +706,23 @@ def calc(user_values):
         ]}
     return result_to_front
 
+data_pack_cardboard = cardboard_market(input)
 
-print(calc(input))
+print(data_pack_cardboard['Поиск решения'])
+
+
+def get_tables_to_frontend(data_pack_cardboard):
+    control_actions = data_pack_cardboard['Управляющие воздействия модели']
+    finding_solution = data_pack_cardboard['Поиск решения']
+    variable_name = data_pack_cardboard['Наименование переменной']
+
+    tables_to_frontend = {
+        'control_actions': control_actions,
+        'finding_solution': finding_solution,
+        'variable_name': variable_name,
+
+    }
+    return tables_to_frontend
+
+get_tables_to_frontend(data_pack_cardboard)
+print(get_tables_to_frontend)
