@@ -4,34 +4,29 @@ import numpy as np
 import pandas as pd
 import os
 
-example_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
-                'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
-                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
-                'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
-                't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
-                't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
-                'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-                'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
-                'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+example_data = {}
 
-user_data = {'PW_A_shift_after': 0.0, 'ER_before': 75.0, 'ER_after': 75.0,
-                'CT_before': 50.0, 'CT_after': 50.0, 'TD_before': 0.0, 'TD_after': 0.0,
-                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0,
-                'Pb2_after': 375.0, 'Pb3_before': 400.0, 'Pb3_after': 400.0,
-                't1_before': 0.7, 't1_after': 0.69, 't2_before': 0.8, 't2_after': 0.8,
-                't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
-                'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-                'shift_QSI_A_after': 0.0, 'shift_QSW_A_before': 0.0,
-                'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+user_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.0, 'PW_A_shift_before': 0.0, 'PW_A_shift_after': 0.0,
+             'ER_before': 72.3, 'ER_after': 72.3, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
+             'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0, 'Pb2_after': 375.0,
+             'Pb3_before': 400.0, 'Pb3_after': 400.0, 't1_before': 0.0, 't1_after': 0.7, 't2_before': 0.8,
+             't2_after': 0.8, 't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+             'QSI_A_before': 76.882, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+             'shift_QSI_A_after': 0.0, 'QDI_С1_before': 14.0, 'QDI_A_C1_before': 15.129,
+             'SpI_C1_before': 1883521.0, 'QDI_С2_before': 13.297, 'QDI_A_C2_before': 17.736, 'SpI_C2_before': 3505628.0,
+             'QS_exRUS_A_before': 678.7, 'QD_A_before': 191.2, 'QD_exRUS_A_before': 524.0,
+             'shift_QSW_A_before': 0.0, 'shift_QSW_A_after': 0.0, 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 
 class InputDataBase:
     def __init__(self, dict_from_frontend):
+        self.PW_A_const_before = float(dict_from_frontend.get('PW_A_const_before'))
+        self.PW_A_const_after = float(dict_from_frontend.get('PW_A_const_after'))
+        self.PW_A_shift_before = float(dict_from_frontend.get('PW_A_shift_before'))
         self.PW_A_shift_after = float(dict_from_frontend.get('PW_A_shift_after'))
         self.ER_before = float(dict_from_frontend.get('ER_before'))
         self.ER_after = float(dict_from_frontend.get('ER_after'))
         self.CT_before = float(dict_from_frontend.get('CT_before'))
-        self.CT_after = float(dict_from_frontend.get('CT_after'))
         self.TD_before = float(dict_from_frontend.get('TD_before'))
         self.TD_after = float(dict_from_frontend.get('TD_after'))
         self.Pb_before = float(dict_from_frontend.get('Pb_before'))
@@ -48,10 +43,20 @@ class InputDataBase:
         self.t3_after = float(dict_from_frontend.get('t3_after'))
         self.demp_before = float(dict_from_frontend.get('demp_before'))
         self.demp_after = float(dict_from_frontend.get('demp_after'))
+        self.QSI_A_before = float(dict_from_frontend.get('QSI_A_before'))
         self.i_cost_before = float(dict_from_frontend.get('i_cost_before'))
         self.i_cost_after = float(dict_from_frontend.get('i_cost_after'))
         self.shift_QSI_A_before = float(dict_from_frontend.get('shift_QSI_A_before'))
         self.shift_QSI_A_after = float(dict_from_frontend.get('shift_QSI_A_after'))
+        self.QDI_С1_before = float(dict_from_frontend.get('QDI_С1_before'))
+        self.QDI_A_C1_before = float(dict_from_frontend.get('QDI_A_C1_before'))
+        self.SpI_C1_before = float(dict_from_frontend.get('SpI_C1_before'))
+        self.QDI_С2_before = float(dict_from_frontend.get('QDI_С2_before'))
+        self.QDI_A_C2_before = float(dict_from_frontend.get('QDI_A_C2_before'))
+        self.SpI_C2_before = float(dict_from_frontend.get('SpI_C2_before'))
+        self.QS_exRUS_A_before = float(dict_from_frontend.get('QS_exRUS_A_before'))
+        self.QD_A_before = float(dict_from_frontend.get('QD_A_before'))
+        self.QD_exRUS_A_before = float(dict_from_frontend.get('QD_exRUS_A_before'))
         self.shift_QSW_A_before = float(dict_from_frontend.get('shift_QSW_A_before'))
         self.shift_QSW_A_after = float(dict_from_frontend.get('shift_QSW_A_after'))
         self.i_cost_world_before = float(dict_from_frontend.get('i_cost_world_before'))
@@ -61,24 +66,22 @@ class InputDataBase:
 def wheat_exports(input_data):
     # Получаем данные из модели
     mydir = '/Users/natalazivlova/Desktop/parser/wheat_exports/'
-    myfile = 'Экспорт_пшеница.xlsm'
+    myfile = 'Экспорт_пшеница_легенда.xlsm'
     file = os.path.join(mydir, myfile)
-    df = pd.read_excel(file, usecols='A:Q')
+    df = pd.read_excel(file, usecols='A:Q', index_col=0)
 
     # Список товаров
-    list_of_products = df.iloc[0:3, 0:3]
+    list_of_products = df.iloc[0:3, 0:2]
     list_of_products.reset_index(inplace=True)
     list_of_products = list_of_products.rename(columns={
         'Список товаров': 'Обозначение',
         'Unnamed: 1': 'Список товаров'})
 
-
     # Эластичности по собственной цене
-    elasticity_at_price = df.iloc[5:14, 0:2]
+    elasticity_at_price = df.iloc[5:14, 0:1]
     elasticity_at_price.reset_index(inplace=True)
     elasticity_at_price = elasticity_at_price.rename(columns={'Список товаров': 'Обозначение',
                                                               'Unnamed: 1': 'Эластичности по собственной цене'})
-    # print(elasticity_at_price)
 
     # Цены на мировом рынке
     prices_on_world_market = df.iloc[1:7, 4:10]
@@ -93,7 +96,6 @@ def wheat_exports(input_data):
     calc_customs_duty = calc_customs_duty.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                           'Unnamed: 6': 'designation', 'до': 'before', 'после': 'after',
                                                           'Unnamed: 9': 'status'})
-    # print(calc_customs_duty.to_markdown())
 
     # Внутренние цены с учетом демпфера
     int_prices_inc_dempfer = df.iloc[22:25, 4:10]
@@ -101,15 +103,13 @@ def wheat_exports(input_data):
     int_prices_inc_dempfer = int_prices_inc_dempfer.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                                     'Unnamed: 6': 'designation', 'до': 'before',
                                                                     'после': 'after', 'Unnamed: 9': 'status'})
-    # print(int_prices_inc_dempfer.to_markdown())
-
+    
     # Внутреннее производство товара А
     int_prod_product_a = df.iloc[27:31, 4:10]
     int_prod_product_a.index = np.arange(0, len(int_prod_product_a))
     int_prod_product_a = int_prod_product_a.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                             'Unnamed: 6': 'designation', 'до': 'before',
                                                             'после': 'after', 'Unnamed: 9': 'status'})
-    # print(int_prod_product_a.to_markdown())
 
     # Внутреннее производство товара С1
     int_prod_product_c1 = df.iloc[33:40, 4:9]
@@ -118,7 +118,6 @@ def wheat_exports(input_data):
     int_prod_product_c1 = int_prod_product_c1.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                               'Unnamed: 6': 'designation', 'до': 'before',
                                                               'после': 'after', 'Unnamed: 9': 'status'})
-    # print(int_prod_product_c1.to_markdown())
 
     # Внутреннее производство товара С2
     int_prod_product_c2 = df.iloc[42:49, 4:9]
@@ -127,7 +126,6 @@ def wheat_exports(input_data):
     int_prod_product_c2 = int_prod_product_c2.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                               'Unnamed: 6': 'designation', 'до': 'before',
                                                               'после': 'after', 'Unnamed: 9': 'status'})
-    # print(int_prod_product_c2.to_markdown())
 
     # Прочее использование и баланс товара А
     other_use_prod_a = df.iloc[51:54, 4:9]
@@ -136,7 +134,6 @@ def wheat_exports(input_data):
     other_use_prod_a = other_use_prod_a.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                         'Unnamed: 6': 'designation', 'до': 'before',
                                                         'после': 'after', 'Unnamed: 9': 'status'})
-    # print(other_use_prod_a.to_markdown())
 
     # Мировой рынок товара А
     world_market_good_a = df.iloc[56:68, 4:10]
@@ -145,14 +142,12 @@ def wheat_exports(input_data):
     world_market_good_a = world_market_good_a.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                               'Unnamed: 6': 'designation', 'до': 'before',
                                                               'после': 'after', 'Unnamed: 9': 'status'})
-    # print(world_market_good_a.to_markdown())
 
     # Цены
     prices = df.iloc[2:8, 11:17]
     prices.index = np.arange(0, len(prices))
     prices = prices.rename(columns={'Результаты': 'title', 'Unnamed: 12': 'measure', 'до.1': 'before',
                                     'после.1': 'after', 'Прирост': 'increment', 'Unnamed: 16': 'increment_pr'})
-    # print(prices.to_markdown())
 
     # Производство и потребление
     production_and_consumption = df.iloc[10:15, 11:17]
@@ -163,7 +158,6 @@ def wheat_exports(input_data):
                                                                             'после.1': 'after',
                                                                             'Прирост': 'increment',
                                                                             'Unnamed: 16': 'increment_pr'})
-    # print(production_and_consumption.to_markdown())
 
     # Стоимостные эффекты
     cost_effects = df.iloc[17:46, 11:17]
@@ -171,12 +165,10 @@ def wheat_exports(input_data):
     cost_effects = cost_effects.rename(columns={'Результаты': 'title', 'Unnamed: 12': 'measure',
                                                 'до.1': 'before', 'после.1': 'after',
                                                 'Прирост': 'increment', 'Unnamed: 16': 'increment_pr'})
-    # print(cost_effects.to_markdown())
 
     """Вводим новые значения"""
 
     # Цены на мировом рынке
-
     prices_on_world_market.at[1, 'after'] = input_data.PW_A_shift_after
     prices_on_world_market.at[1, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
     prices_on_world_market.at[1, 'before'] != prices_on_world_market.at[1, 'after'] else 'Параметр не изменен')
@@ -974,7 +966,7 @@ def wheat_exports(input_data):
 
     # N45
     cost_effects.at[26, 'before'] = cost_effects.at[27, 'before'] + cost_effects.at[28, 'before']
-    print(cost_effects.to_markdown())
+
 
 
 
