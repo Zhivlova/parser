@@ -4,7 +4,17 @@ import numpy as np
 import pandas as pd
 import os
 
-example_data = {}
+example_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.0, 'PW_A_shift_before': 0.0, 'PW_A_shift_after': 0.0,
+                 'ER_before': 72.3, 'ER_after': 72.3, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
+                 'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0, 'Pb2_after': 375.0,
+                 'Pb3_before': 400.0, 'Pb3_after': 400.0, 't1_before': 0.0, 't1_after': 0.7, 't2_before': 0.8,
+                 't2_after': 0.8, 't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+                 'QSI_A_before': 76.882, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+                 'shift_QSI_A_after': 0.0, 'QDI_С1_before': 14.0, 'QDI_A_C1_before': 15.129,
+                 'SpI_C1_before': 1883521.0, 'QDI_С2_before': 13.297, 'QDI_A_C2_before': 17.736,
+                 'SpI_C2_before': 3505628.0, 'QS_exRUS_A_before': 678.7, 'QD_A_before': 191.2,
+                 'QD_exRUS_A_before': 524.0, 'shift_QSW_A_before': 0.0, 'shift_QSW_A_after': 0.0,
+                 'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 user_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.0, 'PW_A_shift_before': 0.0, 'PW_A_shift_after': 0.0,
              'ER_before': 72.3, 'ER_after': 72.3, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
@@ -169,6 +179,10 @@ def wheat_exports(input_data):
     """Вводим новые значения"""
 
     # Цены на мировом рынке
+    prices_on_world_market.at[0, 'before'] = input_data.PW_A_const_before
+    prices_on_world_market.at[0, 'after'] = input_data.PW_A_const_after
+
+    prices_on_world_market.at[1, 'before'] = input_data.PW_A_shift_before
     prices_on_world_market.at[1, 'after'] = input_data.PW_A_shift_after
     prices_on_world_market.at[1, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
     prices_on_world_market.at[1, 'before'] != prices_on_world_market.at[1, 'after'] else 'Параметр не изменен')
@@ -179,7 +193,6 @@ def wheat_exports(input_data):
     prices_on_world_market.at[3, 'before'] != prices_on_world_market.at[3, 'after'] else 'Параметр не изменен')
 
     prices_on_world_market.at[4, 'before'] = input_data.CT_before
-    prices_on_world_market.at[4, 'after'] = input_data.CT_after
     prices_on_world_market.at[4, 'status'] = prices_on_world_market['status'].pipe(lambda x: 'Параметр изменен' if
     prices_on_world_market.at[4, 'before'] != prices_on_world_market.at[4, 'after'] else 'Параметр не изменен')
 
@@ -226,17 +239,39 @@ def wheat_exports(input_data):
     int_prices_inc_dempfer.at[1, 'before'] != int_prices_inc_dempfer.at[1, 'after'] else 'Параметр не изменен')
 
     # Внутреннее производство товара А
+    int_prod_product_a.at[0, 'before'] = input_data.QSI_A_before
+
     int_prod_product_a.at[1, 'before'] = input_data.i_cost_before
     int_prod_product_a.at[1, 'after'] = input_data.i_cost_after
-    int_prod_product_a.at[0, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен' if
+    int_prod_product_a.at[1, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен' if
     int_prod_product_a.at[1, 'before'] != int_prod_product_a.at[1, 'after'] else 'Параметр не изменен')
 
     int_prod_product_a.at[2, 'before'] = input_data.shift_QSI_A_before
     int_prod_product_a.at[2, 'after'] = input_data.shift_QSI_A_after
-    int_prod_product_a.at[1, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен' if
+    int_prod_product_a.at[2, 'status'] = int_prod_product_a['status'].pipe(lambda x: 'Параметр изменен' if
     int_prod_product_a.at[2, 'before'] != int_prod_product_a.at[2, 'after'] else 'Параметр не изменен')
 
+    # Внутреннее производство товара С1
+    int_prod_product_c1.at[0, 'before'] = input_data.QDI_С1_before
+
+    int_prod_product_c1.at[2, 'before'] = input_data.QDI_A_C1_before
+
+    int_prod_product_c1.at[5, 'before'] = input_data.SpI_C1_before
+
+    # Внутреннее производство товара С2
+    int_prod_product_c2.at[0, 'before'] = input_data.QDI_С2_before
+
+    int_prod_product_c2.at[2, 'before'] = input_data.QDI_A_C2_before
+
+    int_prod_product_c2.at[5, 'before'] = input_data.SpI_C2_before
+
     # Мировой рынок товара А
+    world_market_good_a.at[0, 'before'] = input_data.QS_exRUS_A_before
+
+    world_market_good_a.at[1, 'before'] = input_data.QD_A_before
+
+    world_market_good_a.at[2, 'before'] = input_data.QD_exRUS_A_before
+
     world_market_good_a.at[8, 'before'] = input_data.shift_QSW_A_before
     world_market_good_a.at[8, 'after'] = input_data.shift_QSW_A_after
     world_market_good_a.at[8, 'status'] = world_market_good_a['status'].pipe(lambda x: 'Параметр изменен' if
@@ -248,7 +283,6 @@ def wheat_exports(input_data):
     world_market_good_a.at[9, 'before'] != world_market_good_a.at[9, 'after'] else 'Параметр не изменен')
 
     """Перерасчет ячеек с новыми значениями"""
-    prices_on_world_market.at[1, 'before'] = 0
 
     # H5
     def func_h5(df, H4, H3):
