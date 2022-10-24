@@ -58,7 +58,7 @@ class InputDataBase:
 def oil_export(input_data):
     """Получаем данные из модели"""
 
-    mydir = '/Users/natalazivlova/Desktop/parser/new_calc/'
+    mydir = 'C:/Users/Professional/Desktop/parser/new_calc/'
     myfile = 'Экспорт_масло_легенда.xlsm'
     file = os.path.join(mydir, myfile)
     df = pd.read_excel(file, usecols='A:Q', index_col=0)
@@ -1183,11 +1183,311 @@ def oil_export(input_data):
                 'basebalance': prod_bal_of_group_b_goods.at[5, 'before'],
                 'newbalance': prod_bal_of_group_b_goods.at[5, 'after']
             }
+        ],
+        'fintable1': [
+            {
+                'id': '1',
+                'title': 'Внутреняя цена товара А',
+                'measure': 'долл США',
+                'basebalance': prices.at[0, 'before'],
+                'newbalance': prices.at[0, 'after'],
+                'growth': prices.at[0, 'increment'],
+                'growthpercent': prices.at[0, 'increment_pr']
+            },
+            {
+                'id': '2',
+                'title': 'Внутренняя цена товара B1',
+                'measure': 'руб/т',
+                'basebalance': prices.at[1, 'before'],
+                'newbalance': prices.at[1, 'after'],
+                'growth': prices.at[1, 'increment'],
+                'growthpercent': prices.at[1, 'increment_pr']
+            },
+            {
+                'id': '3',
+                'title': 'Внутренняя цена товара B2',
+                'measure': 'руб/т',
+                'basebalance': prices.at[2, 'before'],
+                'newbalance': prices.at[2, 'after'],
+                'growth': prices.at[2, 'increment'],
+                'growthpercent': prices.at[2, 'increment_pr']
+            },
+            {
+                'id': '4',
+                'title': 'Цена товара С',
+                'measure': 'руб/т',
+                'basebalance': prices.at[3, 'before'],
+                'newbalance': prices.at[3, 'after'],
+                'growth': prices.at[3, 'increment'],
+                'growthpercent': prices.at[3, 'increment_pr']
+            },
+            {
+                'id': '5',
+                'title': 'Изменение ИПЦ',
+                'measure': 'руб/т',
+                'basebalance': prices.at[4, 'before'],
+                'newbalance': prices.at[4, 'after'],
+                'growth': prices.at[4, 'increment'],
+                'growthpercent': prices.at[4, 'increment_pr']
+            }
+        ],
+        'fintable2': [
+            {
+                'id': '1',
+                'title': 'Внутреннее производство товара А',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[0, 'before'],
+                'newbalance': production_and_consumption.at[0, 'after'],
+                'growth': production_and_consumption.at[0, 'increment'],
+                'growthpercent': production_and_consumption.at[0, 'increment_pr']
+            },
+            {
+                'id': '2',
+                'title': 'Внутреннее производство товара B1',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[1, 'before'],
+                'newbalance': production_and_consumption.at[1, 'after'],
+                'growth': production_and_consumption.at[1, 'increment'],
+                'growthpercent': production_and_consumption.at[1, 'increment_pr']
+            },
+            {
+                'id': '3',
+                'title': 'Внутреннее потребление товара B1',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[2, 'before'],
+                'newbalance': production_and_consumption.at[2, 'after'],
+                'growth': production_and_consumption.at[2, 'increment'],
+                'growthpercent': production_and_consumption.at[2, 'increment_pr']
+            },
+            {
+                'id': '4',
+                'title': 'Экспорт товара B1',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[3, 'before'],
+                'newbalance': production_and_consumption.at[3, 'after'],
+                'growth': production_and_consumption.at[3, 'increment'],
+                'growthpercent': production_and_consumption.at[3, 'increment_pr']
+            },
+            {
+                'id': '5',
+                'title': 'Внутреннее производство товара B2',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[4, 'before'],
+                'newbalance': production_and_consumption.at[4, 'after'],
+                'growth': production_and_consumption.at[4, 'increment'],
+                'growthpercent': production_and_consumption.at[4, 'increment_pr']
+            },
+            {
+                'id': '6',
+                'title': 'Внутреннее потребление товара B2',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[5, 'before'],
+                'newbalance': production_and_consumption.at[5, 'after'],
+                'growth': production_and_consumption.at[5, 'increment'],
+                'growthpercent': production_and_consumption.at[5, 'increment_pr']
+            },
+            {
+                'id': '7',
+                'title': 'Экспорт товара B2',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[6, 'before'],
+                'newbalance': production_and_consumption.at[6, 'after'],
+                'growth': production_and_consumption.at[6, 'increment'],
+                'growthpercent': production_and_consumption.at[6, 'increment_pr']
+            },
+            {
+                'id': '8',
+                'title': 'Производство/потребление товара С',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[7, 'before'],
+                'newbalance': production_and_consumption.at[7, 'after'],
+                'growth': production_and_consumption.at[7, 'increment'],
+                'growthpercent': production_and_consumption.at[7, 'increment_pr']
+            }
+        ],
+        'fintable3': [
+            {
+                'id': '1',
+                'title': 'Эффект платежного баланса',
+                'measure': 'долл США * руб/долл США * млн тонн',
+                'basebalance': cost_effects.at[0, 'before'],
+                'newbalance': cost_effects.at[0, 'after'],
+                'growth': cost_effects.at[0, 'increment'],
+                'growthpercent': cost_effects.at[0, 'increment_pr']
+            },
+            {
+                'id': '2',
+                'title': 'Эффект таможенных сборов',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[1, 'before'],
+                'newbalance': cost_effects.at[1, 'after'],
+                'growth': cost_effects.at[1, 'increment'],
+                'growthpercent': cost_effects.at[1, 'increment_pr']
+            }
+        ],
+        'fintable4': [
+            {
+                'id': '1',
+                'title': '- излишек производителя товара А',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[4, 'before']
+            },
+            {
+                'id': '2',
+                'title': ' - излишек косвенных потребителей товара А',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[5, 'before']
+            },
+            {
+                'id': '3',
+                'title': '  - в т.ч. потребителей товара B1/C',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[6, 'before']
+            },
+            {
+                'id': '4',
+                'title': ' - в т.ч. потребителей товара B2',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[7, 'before']
+            },
+            {
+                'id': '5',
+                'title': 'Эффект экономических потерь',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[8, 'before']
+            },
+            {
+                'id': '6',
+                'title': 'Изменение оборота производителей товара А:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[10, 'before']
+            },
+            {
+                'id': '7',
+                'title': '- изменение оборота из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[11, 'before']
+            },
+            {
+                'id': '8',
+                'title': ' - изменение объема производства',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[12, 'before']
+            },
+            {
+                'id': '9',
+                'title': 'Изменение оборота производителей товара B1:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[14, 'before']
+            },
+            {
+                'id': '10',
+                'title': '- изменение оборота из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[15, 'before']
+            },
+            {
+                'id': '11',
+                'title': '- изменение объема производства',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[16, 'before']
+            },
+            {
+                'id': '12',
+                'title': 'Изменение суммы покупок потребителей товара B1:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[18, 'before']
+            },
+            {
+                'id': '13',
+                'title': ' - переплата потребителей из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[19, 'before']
+            },
+            {
+                'id': '14',
+                'title': '  - изменение объема потребления',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[20, 'before']
+            },
+            {
+                'id': '15',
+                'title': 'Изменение оборота производителей товара B2:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[22, 'before']
+            },
+            {
+                'id': '16',
+                'title': ' - изменение оборота из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[23, 'before']
+            },
+            {
+                'id': '17',
+                'title': ' - изменение объема производства',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[24, 'before']
+            },
+            {
+                'id': '18',
+                'title': 'Изменение суммы покупок потребителей товара B2:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[26, 'before']
+            },
+            {
+                'id': '19',
+                'title': ' - переплата потребителей из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[27, 'before']
+            },
+            {
+                'id': '20',
+                'title': ' - изменение объема потребления',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[28, 'before']
+            },
+            {
+                'id': '21',
+                'title': 'Изменение оборота производителей товара C:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[30, 'before']
+            },
+            {
+                'id': '22',
+                'title': '- изменение оборота из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[31, 'before']
+            },
+            {
+                'id': '23',
+                'title': ' - изменение объема производства',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[32, 'before']
+            },
+            {
+                'id': '24',
+                'title': 'Изменение суммы покупок потребителей товара С:',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[34, 'before']
+            },
+            {
+                'id': '25',
+                'title': '- переплата потребителей из-за изменения цен',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[35, 'before']
+            },
+            {
+                'id': '26',
+                'title': ' - изменение объема потребления',
+                'measure': 'руб/т * млн тонн',
+                'basebalance': cost_effects.at[36, 'before']
+            }
         ]
     }
+    print(cost_effects.to_markdown())
     return result_to_front
 
 
 input_data = InputDataBase(user_data)
 result = oil_export(input_data)
-print(result)
+
