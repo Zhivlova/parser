@@ -4,7 +4,7 @@ import os
 from pprint import pprint
 
 example_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226.8, 'PW_B2_after': 226.8,
-                'ER_before': 72.3, 'ER_after': 72.3, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+                'ER_before': 72.32, 'ER_after': 72.32, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
                 'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
                 'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1': 48942.7, 'PI_B2': 13061.9,
                 'PI_A': 23415.2, 'QSI_A': 13.761, 'QSW_RUS_A_before': 0.723, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
@@ -12,7 +12,7 @@ example_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226
                 'QDI_С': 2.048, 'QDI_B2': 3.567}
 
 user_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226.8, 'PW_B2_after': 226.8,
-                'ER_before': 72.3, 'ER_after': 72.3, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+                'ER_before': 72.32, 'ER_after': 72.32, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
                 'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
                 'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1': 48942.7, 'PI_B2': 13061.9,
                 'PI_A': 23415.2, 'QSI_A': 13.761, 'QSW_RUS_A_before': 0.723, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
@@ -690,8 +690,7 @@ def oil_export(input_data):
         return Q23
     cost_effects.at[1, 'increment_pr'] = cost_effects['increment_pr'].pipe(func_q23, cost_effects.at[1, 'after'],
                                                                            cost_effects.at[1, 'before'])
-    print(cost_effects.at[1, 'increment_pr'])
-    print(cost_effects.to_markdown())
+
 
     # N26
     def func_n26(df, N11, N4, O4, O11):
@@ -899,21 +898,296 @@ def oil_export(input_data):
                                                                 cost_effects.at[36, 'before'])
 
     result_to_front = {
-        'prices_on_world_market_of_group_b_products': [prices_group_b_products.to_dict('index')],
-        'calculation_of_amount_of_export_customs_duty': [calc_export_customs_duty.to_dict('index')],
-        'domestic_market_of_group_b_products': [domestic_market_of_group_b_products.to_dict('index')],
-        'internal_market_of_product_a': [internal_market_of_product_a.to_dict('index')],
-        'internal_production_and_balance_of_goods_a': [int_prod_balance_of_goods_a.to_dict('index')],
-        'internal_production_of_goods_c': [int_prod_of_goods_c.to_dict('index')],
-        'production_and_balance_of_group_b_goods': [prod_bal_of_group_b_goods.to_dict('index')],
-        'prices': [prices.to_dict('index')],
-        'cost_effects': [cost_effects.to_dict('index')],
-        'production_and_consumption': [production_and_consumption.to_dict('index')]
+        'table1': [
+            {
+                'id': '1',
+                'title': 'Мировая цена товара B1',
+                'measure': 'долл США',
+                'params': 'PW_B1',
+                'basebalance': prices_group_b_products.at[0, 'before'],
+                'newbalance': prices_group_b_products.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Мировая цена товара B2',
+                'measure': 'долл США',
+                'params': 'PW_B2',
+                'basebalance': prices_group_b_products.at[1, 'before'],
+                'newbalance': prices_group_b_products.at[1, 'after']
+            },
+            {
+                'id': '3',
+                'title': 'Стоимость услуг трейдеров товара B1',
+                'measure': 'долл США',
+                'params': 'CT_B1',
+                'basebalance': prices_group_b_products.at[2, 'before'],
+                'newbalance': prices_group_b_products.at[2, 'after']
+            },
+            {
+                'id': '4',
+                'title': 'Стоимость услуг трейдеров товара B2',
+                'measure': 'долл США',
+                'params': 'CT_B2',
+                'basebalance': prices_group_b_products.at[3, 'before'],
+                'newbalance': prices_group_b_products.at[3, 'after']
+            },
+            {
+                'id': '5',
+                'title': 'Обменный курс',
+                'measure': 'руб/долл США',
+                'params': 'ER',
+                'basebalance': prices_group_b_products.at[4, 'before'],
+                'newbalance': prices_group_b_products.at[4, 'after']
+            },
+            {
+                'id': '6',
+                'title': 'Дисконт к эквивалентной цене',
+                'measure': '',
+                'params': 'TD',
+                'basebalance': prices_group_b_products.at[5, 'before'],
+                'newbalance': prices_group_b_products.at[5, 'after']
+            }
+        ],
+        'table2': [
+            {
+                'id': '1',
+                'title': 'Базовая цена товара B1',
+                'measure': 'руб/т',
+                'params': 'Pb_B1',
+                'basebalance': calc_export_customs_duty.at[0, 'before'],
+                'newbalance': calc_export_customs_duty.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Ставка вывозной пошлины товара B1',
+                'measure': '',
+                'params': 'tb_B1',
+                'basebalance': calc_export_customs_duty.at[1, 'before'],
+                'newbalance': calc_export_customs_duty.at[1, 'after']
+            },
+            {
+                'id': '3',
+                'title': 'Вывозная таможенная пошлина на товар B1',
+                'measure': 'руб/т',
+                'params': 'tax_B1',
+                'basebalance': calc_export_customs_duty.at[2, 'before'],
+                'newbalance': calc_export_customs_duty.at[2, 'after']
+            },
+            {
+                'id': '4',
+                'title': 'Адвалорная ставка пошлины на товар B1',
+                'measure': '',
+                'params': 't_B1',
+                'basebalance': calc_export_customs_duty.at[3, 'before'],
+                'newbalance': calc_export_customs_duty.at[3, 'after']
+            },
+            {
+                'id': '5',
+                'title': 'Базовая цена товара B2',
+                'measure': 'руб/т',
+                'params': 'Pb_B2',
+                'basebalance': calc_export_customs_duty.at[4, 'before'],
+                'newbalance': calc_export_customs_duty.at[4, 'after']
+            },
+            {
+                'id': '6',
+                'title': 'Ставка вывозной пошлины товара B2',
+                'measure': '',
+                'params': 'tb_B2',
+                'basebalance': calc_export_customs_duty.at[5, 'before'],
+                'newbalance': calc_export_customs_duty.at[5, 'after']
+            },
+            {
+                'id': '7',
+                'title': 'Вывозная таможенная пошлина на товар B2',
+                'measure': 'руб/т',
+                'params': 'tax_B2',
+                'basebalance': calc_export_customs_duty.at[6, 'before'],
+                'newbalance': calc_export_customs_duty.at[6, 'after']
+            },
+            {
+                'id': '8',
+                'title': 'Адвалорная ставка пошлины на товар B2',
+                'measure': '',
+                'params': 't_B2',
+                'basebalance': calc_export_customs_duty.at[7, 'before'],
+                'newbalance': calc_export_customs_duty.at[7, 'after']
+            }
+        ],
+        'table3': [
+            {
+                'id': '1',
+                'title': 'Внутренняя цена товара B1',
+                'measure': 'руб/т',
+                'params': 'PI_B1',
+                'basebalance': domestic_market_of_group_b_products.at[0, 'before'],
+                'newbalance': domestic_market_of_group_b_products.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Внутренняя цена товара B2',
+                'measure': 'руб/т',
+                'params': 'PI_B2',
+                'basebalance': domestic_market_of_group_b_products.at[1, 'before'],
+                'newbalance': domestic_market_of_group_b_products.at[1, 'after']
+            }
+        ],
+        'table4': [
+            {
+                'id': '1',
+                'title': 'Стоимость продуктов переработки 1 единицы товара А',
+                'measure': 'руб/т',
+                'params': 'VP_A',
+                'basebalance': internal_market_of_product_a.at[0, 'before'],
+                'newbalance': internal_market_of_product_a.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Стоимость переработки 1 единицы товара А',
+                'measure': 'руб/т',
+                'params': 'VT_A',
+                'basebalance': internal_market_of_product_a.at[1, 'before'],
+                'newbalance': internal_market_of_product_a.at[1, 'after']
+            },
+            {
+                'id': '3',
+                'title': 'Внутренняя цена товара А',
+                'measure': 'руб/т',
+                'params': 'PI_A',
+                'basebalance': internal_market_of_product_a.at[2, 'before'],
+                'newbalance': internal_market_of_product_a.at[2, 'after']
+            }
+        ],
+        'table5': [
+            {
+                'id': '1',
+                'title': 'Объем внутреннего производства товара А',
+                'measure': 'млн тонн',
+                'params': 'QSI_A',
+                'basebalance': int_prod_balance_of_goods_a.at[0, 'before'],
+                'newbalance': int_prod_balance_of_goods_a.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Экспорт товара А (экзогенно)',
+                'measure': 'млн тонн',
+                'params': 'QSW_RUS_A',
+                'basebalance': int_prod_balance_of_goods_a.at[1, 'before'],
+                'newbalance': int_prod_balance_of_goods_a.at[1, 'after']
+            },
+            {
+                'id': '3',
+                'title': 'Индекс превышения затрат на производство над ценами',
+                'measure': '',
+                'params': 'i_cost',
+                'basebalance': int_prod_balance_of_goods_a.at[2, 'before'],
+                'newbalance': int_prod_balance_of_goods_a.at[2, 'after']
+            },
+            {
+                'id': '4',
+                'title': 'Экзогенный сдвиг во внутреннем предложении товара А',
+                'measure': '',
+                'params': 'shift_QSI_A',
+                'basebalance': int_prod_balance_of_goods_a.at[3, 'before'],
+                'newbalance': int_prod_balance_of_goods_a.at[3, 'after']
+            },
+            {
+                'id': '5',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QSI_A',
+                'basebalance': int_prod_balance_of_goods_a.at[4, 'before'],
+                'newbalance': int_prod_balance_of_goods_a.at[4, 'after']
+            }
+        ],
+        'table6': [
+            {
+                'id': '1',
+                'title': 'Внутренняя цена товара С',
+                'measure': 'руб/т',
+                'params': 'PI_С',
+                'basebalance': int_prod_of_goods_c.at[0, 'before'],
+                'newbalance': int_prod_of_goods_c.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Затраты на производство и обращение товара С (без учета стоимости В)',
+                'measure': 'руб/т',
+                'params': 'VT_C',
+                'basebalance': int_prod_of_goods_c.at[1, 'before'],
+                'newbalance': int_prod_of_goods_c.at[1, 'after']
+            },
+            {
+                'id': '3',
+                'title': 'Внутренний спрос на товар С',
+                'measure': 'млн тонн',
+                'params': 'QDI_С',
+                'basebalance': int_prod_of_goods_c.at[2, 'before'],
+                'newbalance': int_prod_of_goods_c.at[2, 'after']
+            },
+            {
+                'id': '4',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QDI_C',
+                'basebalance': int_prod_of_goods_c.at[3, 'before'],
+                'newbalance': int_prod_of_goods_c.at[3, 'after']
+            }
+        ],
+        'table7': [
+            {
+                'id': '1',
+                'title': 'Объем внутреннего производства товара B1',
+                'measure': 'млн тонн',
+                'params': 'QSI_B1',
+                'basebalance': prod_bal_of_group_b_goods.at[0, 'before'],
+                'newbalance': prod_bal_of_group_b_goods.at[0, 'after']
+            },
+            {
+                'id': '2',
+                'title': 'Внутренний спрос на товар B1',
+                'measure': 'млн тонн',
+                'params': 'QDI_B1',
+                'basebalance': prod_bal_of_group_b_goods.at[1, 'before'],
+                'newbalance': prod_bal_of_group_b_goods.at[1, 'after']
+            },
+            {
+                'id': '3',
+                'title': 'Экспорт товара B1',
+                'measure': 'млн тонн',
+                'params': 'QSW_RUS_B1',
+                'basebalance': prod_bal_of_group_b_goods.at[2, 'before'],
+                'newbalance': prod_bal_of_group_b_goods.at[2, 'after']
+            },
+            {
+                'id': '4',
+                'title': 'Объем внутреннего производства товара B2',
+                'measure': 'млн тонн',
+                'params': 'QSI_B2',
+                'basebalance': prod_bal_of_group_b_goods.at[3, 'before'],
+                'newbalance': prod_bal_of_group_b_goods.at[3, 'after']
+            },
+            {
+                'id': '5',
+                'title': 'Внутренний спрос на товар B2',
+                'measure': 'млн тонн',
+                'params': 'QDI_B2',
+                'basebalance': prod_bal_of_group_b_goods.at[4, 'before'],
+                'newbalance': prod_bal_of_group_b_goods.at[4, 'after']
+            },
+            {
+                'id': '6',
+                'title': 'Экспорт товара B2',
+                'measure': 'млн тонн',
+                'params': 'QSW_RUS_B2',
+                'basebalance': prod_bal_of_group_b_goods.at[5, 'before'],
+                'newbalance': prod_bal_of_group_b_goods.at[5, 'after']
+            }
+        ]
     }
-
     return result_to_front
 
 
 input_data = InputDataBase(user_data)
 result = oil_export(input_data)
-# pprint(result)
+print(result)
