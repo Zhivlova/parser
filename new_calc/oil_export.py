@@ -58,7 +58,7 @@ class InputDataBase:
 def oil_export(input_data):
     """Получаем данные из модели"""
 
-    mydir = 'C:/Users/Professional/Desktop/parser/new_calc/'
+    mydir = '/Users/natalazivlova/Desktop/parser/new_calc/'
     myfile = 'Экспорт_масло_легенда.xlsm'
     file = os.path.join(mydir, myfile)
     df = pd.read_excel(file, usecols='A:Q', index_col=0)
@@ -1224,11 +1224,11 @@ def oil_export(input_data):
             {
                 'id': '5',
                 'title': 'Изменение ИПЦ',
-                'measure': 'руб/т',
-                'basebalance': prices.at[4, 'before'],
-                'newbalance': prices.at[4, 'after'],
+                'measure': '',
+                'basebalance': '',
+                'newbalance': '',
                 'growth': prices.at[4, 'increment'],
-                'growthpercent': prices.at[4, 'increment_pr']
+                'growthpercent': ''
             }
         ],
         'fintable2': [
@@ -1334,19 +1334,19 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': ' - излишек косвенных потребителей товара А',
+                'title': '- излишек косвенных потребителей товара А',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[5, 'before']
             },
             {
                 'id': '3',
-                'title': '  - в т.ч. потребителей товара B1/C',
+                'title': '- в т.ч. потребителей товара B1/C',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[6, 'before']
             },
             {
                 'id': '4',
-                'title': ' - в т.ч. потребителей товара B2',
+                'title': '- в т.ч. потребителей товара B2',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[7, 'before']
             },
@@ -1370,7 +1370,7 @@ def oil_export(input_data):
             },
             {
                 'id': '8',
-                'title': ' - изменение объема производства',
+                'title': '- изменение объема производства',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[12, 'before']
             },
@@ -1400,13 +1400,13 @@ def oil_export(input_data):
             },
             {
                 'id': '13',
-                'title': ' - переплата потребителей из-за изменения цен',
+                'title': '- переплата потребителей из-за изменения цен',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[19, 'before']
             },
             {
                 'id': '14',
-                'title': '  - изменение объема потребления',
+                'title': '- изменение объема потребления',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[20, 'before']
             },
@@ -1418,13 +1418,13 @@ def oil_export(input_data):
             },
             {
                 'id': '16',
-                'title': ' - изменение оборота из-за изменения цен',
+                'title': '- изменение оборота из-за изменения цен',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[23, 'before']
             },
             {
                 'id': '17',
-                'title': ' - изменение объема производства',
+                'title': '- изменение объема производства',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[24, 'before']
             },
@@ -1436,13 +1436,13 @@ def oil_export(input_data):
             },
             {
                 'id': '19',
-                'title': ' - переплата потребителей из-за изменения цен',
+                'title': '- переплата потребителей из-за изменения цен',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[27, 'before']
             },
             {
                 'id': '20',
-                'title': ' - изменение объема потребления',
+                'title': '- изменение объема потребления',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[28, 'before']
             },
@@ -1460,7 +1460,7 @@ def oil_export(input_data):
             },
             {
                 'id': '23',
-                'title': ' - изменение объема производства',
+                'title': '- изменение объема производства',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[32, 'before']
             },
@@ -1478,7 +1478,7 @@ def oil_export(input_data):
             },
             {
                 'id': '26',
-                'title': ' - изменение объема потребления',
+                'title': '- изменение объема потребления',
                 'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[36, 'before']
             }
@@ -1490,4 +1490,4 @@ def oil_export(input_data):
 
 input_data = InputDataBase(user_data)
 result = oil_export(input_data)
-
+print(result)
