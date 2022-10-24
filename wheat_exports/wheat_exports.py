@@ -6,29 +6,31 @@ import numpy as np
 import pandas as pd
 import os
 
-example_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.8, 'PW_A_shift_before': 0.0,
-                'PW_A_shift_after': 0.0,
-                'ER_before': 72.3, 'ER_after': 72.3, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
-                'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0, 'Pb2_after': 375.0,
-                'Pb3_before': 400.0, 'Pb3_after': 400.0, 't1_before': 0.0, 't1_after': 0.7, 't2_before': 0.8,
-                't2_after': 0.8, 't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
-                'QSI_A_before': 76.882, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-                'shift_QSI_A_after': 0.0, 'QDI_С1_before': 14.0, 'QDI_A_C1_before': 15.129,
-                'SpI_C1_before': 1883521.0, 'QDI_С2_before': 13.297, 'QDI_A_C2_before': 17.736,
-                'SpI_C2_before': 3505628.0, 'QS_exRUS_A_before': 678.7, 'QD_A_before': 191.2,
-                'QD_exRUS_A_before': 524.0, 'shift_QSW_A_before': 0.0, 'shift_QSW_A_after': 0.0,
-                'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+from mpmath import fsum
+from numpy import sqrt
 
-user_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.8, 'PW_A_shift_before': 0.0, 'PW_A_shift_after': 0.0,
-             'ER_before': 72.3, 'ER_after': 72.3, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
+example_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.798691500235, 'PW_A_shift_before': 0.0, 'PW_A_shift_after': 0.0,
+             'ER_before': 72.32, 'ER_after': 72.32, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
              'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0, 'Pb2_after': 375.0,
              'Pb3_before': 400.0, 'Pb3_after': 400.0, 't1_before': 0.0, 't1_after': 0.7, 't2_before': 0.8,
              't2_after': 0.8, 't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
              'QSI_A_before': 76.882, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
-             'shift_QSI_A_after': 0.0, 'QDI_С1_before': 14.0, 'QDI_A_C1_before': 15.129,
+             'shift_QSI_A_after': 0.0, 'QDI_С1_before': 14.03, 'QDI_A_C1_before': 15.129,
              'SpI_C1_before': 1883521.0, 'QDI_С2_before': 13.297, 'QDI_A_C2_before': 17.736,
-             'SpI_C2_before': 3505628.0, 'QS_exRUS_A_before': 678.7, 'QD_A_before': 191.2,
-             'QD_exRUS_A_before': 524.0, 'shift_QSW_A_before': 0.0, 'shift_QSW_A_after': 0.0,
+             'SpI_C2_before': 3505628.0, 'QS_exRUS_A_before': 678.67, 'QD_A_before': 191.191,
+             'QD_exRUS_A_before': 524.002, 'shift_QSW_A_before': 0.0, 'shift_QSW_A_after': 0.0,
+             'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
+
+user_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.798691500235, 'PW_A_shift_before': 0.0, 'PW_A_shift_after': 0.0,
+             'ER_before': 72.32, 'ER_after': 72.32, 'CT_before': 59.0, 'TD_before': 0.0, 'TD_after': 0.0,
+             'Pb_before': 15000.0, 'Pb_after': 15000.0, 'Pb2_before': 375.0, 'Pb2_after': 375.0,
+             'Pb3_before': 400.0, 'Pb3_after': 400.0, 't1_before': 0.0, 't1_after': 0.7, 't2_before': 0.8,
+             't2_after': 0.8, 't3_before': 0.9, 't3_after': 0.9, 'demp_before': 0.1, 'demp_after': 0.1,
+             'QSI_A_before': 76.882, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+             'shift_QSI_A_after': 0.0, 'QDI_С1_before': 14.03, 'QDI_A_C1_before': 15.129,
+             'SpI_C1_before': 1883521.0, 'QDI_С2_before': 13.297, 'QDI_A_C2_before': 17.736,
+             'SpI_C2_before': 3505628.0, 'QS_exRUS_A_before': 678.67, 'QD_A_before': 191.191,
+             'QD_exRUS_A_before': 524.002, 'shift_QSW_A_before': 0.0, 'shift_QSW_A_after': 0.0,
              'i_cost_world_before': 1.0, 'i_cost_world_after': 1.0}
 
 
@@ -327,7 +329,7 @@ def wheat_exports(input_data):
                                                                        prices_on_world_market.at[3, 'after'],
                                                                        calc_customs_duty.at[0, 'after'],
                                                                        calc_customs_duty.at[3, 'after'])
-
+    print(calc_customs_duty.at[3, 'after'])
     # H18
     def func_h18(df, H5, H12, H6, H15, H11, H14):
         return (H5 - H12) * H6 * H15 + (H12 * H6 - H11) * H14
@@ -1076,7 +1078,8 @@ def wheat_exports(input_data):
     # N45
     cost_effects.at[26, 'before'] = cost_effects.at[27, 'before'] + cost_effects.at[28, 'before']
 
-    if np.square(world_market_good_a.at[10, 'after']) < 0.000001:
+
+    if world_market_good_a.at[10, 'after']**2 < 0.000001:
         solution = True
     else:
         solution = False
