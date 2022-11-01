@@ -1,26 +1,23 @@
 import numpy as np
 import pandas as pd
 import os
-from pprint import pprint
+
 
 example_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226.8, 'PW_B2_after': 226.8,
-                'ER_before': 72.32, 'ER_after': 72.32, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
-                'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
-                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1': 48942.7, 'PI_B2': 13061.9,
-                'PI_A': 23415.2, 'QSI_A': 13.761, 'QSW_RUS_A_before': 0.723, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
-                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 106430.8,
-                'QDI_С': 2.048, 'QDI_B2': 3.567}
+             'ER_before': 72.32, 'ER_after': 72.32, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+             'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
+             'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1_before': 48942.7,
+             'PI_B2_before': 13061.9, 'PI_A_before': 23415.2, 'QSI_A_before': 13.761, 'QSW_RUS_A_before': 0.723,
+             'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+             'shift_QSI_A_after': 0.0, 'PI_С_before': 106430.8, 'QDI_С_before': 2.048, 'QDI_B2_before': 3.567}
 
 user_data = {'PW_B1_before': 829.0, 'PW_B1_after': 829.0, 'PW_B2_before': 226.8, 'PW_B2_after': 226.8,
-                'ER_before': 72.32, 'ER_after': 72.32, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
-                'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
-                'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1': 48942.7, 'PI_B2': 13061.9,
-                'PI_A': 23415.2, 'QSI_A': 13.761, 'QSW_RUS_A_before': 0.723, 'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0,
-                'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0, 'shift_QSI_A_after': 0.0, 'PI_С': 106430.8,
-                'QDI_С': 2.048, 'QDI_B2': 3.567}
-
-
-
+             'ER_before': 72.32, 'ER_after': 72.32, 'TD_before': 0.0, 'TD_after': 0.0, 'Pb_B1_before': 82500.0,
+             'Pb_B1_after': 82500.0, 'tb_B1_before': 0.0, 'tb_B1_after': 0.7, 'Pb_B2_before': 13875.0,
+             'Pb_B2_after': 13875.0, 'tb_B2_before': 0.0, 'tb_B2_after': 0.7, 'PI_B1_before': 48942.7,
+             'PI_B2_before': 13061.9, 'PI_A_before': 23415.2, 'QSI_A_before': 13.761, 'QSW_RUS_A_before': 0.723,
+             'QSW_RUS_A_after': 0.0, 'i_cost_before': 1.0, 'i_cost_after': 1.0, 'shift_QSI_A_before': 0.0,
+             'shift_QSI_A_after': 0.0, 'PI_С_before': 106430.8, 'QDI_С_before': 2.048, 'QDI_B2_before': 3.567}
 
 class InputDataBase:
     def __init__(self, dict_from_frontend):
@@ -40,25 +37,25 @@ class InputDataBase:
         self.Pb_B2_after = float(dict_from_frontend.get('Pb_B2_after'))
         self.tb_B2_before = float(dict_from_frontend.get('tb_B2_before'))
         self.tb_B2_after = float(dict_from_frontend.get('tb_B2_after'))
-        self.PI_B1 = float(dict_from_frontend.get('PI_B1'))
-        self.PI_B2 = float(dict_from_frontend.get('PI_B2'))
-        self.PI_A = float(dict_from_frontend.get('PI_A'))
-        self.QSI_A = float(dict_from_frontend.get('QSI_A'))
+        self.PI_B1_before = float(dict_from_frontend.get('PI_B1_before'))
+        self.PI_B2_before = float(dict_from_frontend.get('PI_B2_before'))
+        self.PI_A_before = float(dict_from_frontend.get('PI_A_before'))
+        self.QSI_A_before = float(dict_from_frontend.get('QSI_A_before'))
         self.QSW_RUS_A_before = float(dict_from_frontend.get('QSW_RUS_A_before'))
         self.QSW_RUS_A_after = float(dict_from_frontend.get('QSW_RUS_A_after'))
         self.i_cost_before = float(dict_from_frontend.get('i_cost_before'))
         self.i_cost_after = float(dict_from_frontend.get('i_cost_after'))
         self.shift_QSI_A_before = float(dict_from_frontend.get('shift_QSI_A_before'))
         self.shift_QSI_A_after = float(dict_from_frontend.get('shift_QSI_A_after'))
-        self.PI_С = float(dict_from_frontend.get('PI_С'))
-        self.QDI_С = float(dict_from_frontend.get('QDI_С'))
-        self.QDI_B2 = float(dict_from_frontend.get('QDI_B2'))
+        self.PI_С_before = float(dict_from_frontend.get('PI_С_before'))
+        self.QDI_С_before = float(dict_from_frontend.get('QDI_С_before'))
+        self.QDI_B2_before = float(dict_from_frontend.get('QDI_B2_before'))
 
 
 def oil_export(input_data):
     """Получаем данные из модели"""
 
-    mydir = '/Users/natalazivlova/Desktop/parser/new_calc/'
+    mydir = 'vavt_oil_export/oil_export/'
     myfile = 'Экспорт_масло_легенда.xlsm'
     file = os.path.join(mydir, myfile)
     df = pd.read_excel(file, usecols='A:Q', index_col=0)
@@ -70,7 +67,6 @@ def oil_export(input_data):
     elasticity_at_its_own_price = df.iloc[6:12, 0:1]
     elasticity_at_its_own_price = elasticity_at_its_own_price.rename(columns={'Список товаров': 'Эластичности по '
                                                                                                 'собственной цене'})
-
     # Коэффициенты выхода продукции
     output_coefficients = df.iloc[14:16, 0:1]
     output_coefficients = output_coefficients.rename(columns={'Список товаров': 'Коэффициенты выхода продукции'})
@@ -81,14 +77,12 @@ def oil_export(input_data):
     prices_group_b_products = prices_group_b_products.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'currency',
                                                                       'Unnamed: 6': 'designation', 'до': 'before',
                                                                       'после': 'after', 'Unnamed: 9': 'status'})
-
     # Расчет суммы вывозной таможенной пошлины
     calc_export_customs_duty = df.iloc[9:17, 3:9]
     calc_export_customs_duty.index = np.arange(0, len(calc_export_customs_duty))
     calc_export_customs_duty = calc_export_customs_duty.rename(columns={'Unnamed: 4': 'title', 'Unnamed: 5': 'measure',
                                                                         'Unnamed: 6': 'designation', 'до': 'before',
                                                                         'после': 'after', 'Unnamed: 9': 'status'})
-
     # Внутренний рынок товаров группы B
     domestic_market_of_group_b_products = df.iloc[19:21, 3:8]
     domestic_market_of_group_b_products.index = np.arange(0, len(domestic_market_of_group_b_products))
@@ -201,14 +195,14 @@ def oil_export(input_data):
     if calc_export_customs_duty.at[5, 'before'] != calc_export_customs_duty.at[5, 'after'] else 'Параметр не изменен')
 
     # Внутренний рынок товаров группы B
-    domestic_market_of_group_b_products.at[0, 'before'] = input_data.PI_B1
-    domestic_market_of_group_b_products.at[1, 'before'] = input_data.PI_B2
+    domestic_market_of_group_b_products.at[0, 'before'] = input_data.PI_B1_before
+    domestic_market_of_group_b_products.at[1, 'before'] = input_data.PI_B2_before
 
     # Внутренний рынок товара А
-    internal_market_of_product_a.at[2, 'before'] = input_data.PI_A
+    internal_market_of_product_a.at[2, 'before'] = input_data.PI_A_before
 
     # Внутреннее производство и баланс товара А
-    int_prod_balance_of_goods_a.at[0, 'before'] = input_data.QSI_A
+    int_prod_balance_of_goods_a.at[0, 'before'] = input_data.QSI_A_before
     int_prod_balance_of_goods_a.at[1, 'before'] = input_data.QSW_RUS_A_before
     int_prod_balance_of_goods_a.at[1, 'after'] = input_data.QSW_RUS_A_after
     int_prod_balance_of_goods_a.at[2, 'before'] = input_data.i_cost_before
@@ -222,11 +216,11 @@ def oil_export(input_data):
         lambda x: 'Параметр изменен' if int_prod_balance_of_goods_a.at[3, 'before'] !=
                                         int_prod_balance_of_goods_a.at[3, 'after'] else 'Параметр не изменен')
     # Внутреннее производство товара С
-    int_prod_of_goods_c.at[0, 'before'] = input_data.PI_С
-    int_prod_of_goods_c.at[2, 'before'] = input_data.QDI_С
+    int_prod_of_goods_c.at[0, 'before'] = input_data.PI_С_before
+    int_prod_of_goods_c.at[2, 'before'] = input_data.QDI_С_before
 
     # Производство и баланс товаров группы B
-    prod_bal_of_group_b_goods.at[4, 'before'] = input_data.QDI_B2
+    prod_bal_of_group_b_goods.at[4, 'before'] = input_data.QDI_B2_before
 
     """Перерасчет ячеек с новыми значениями"""
 
@@ -236,19 +230,30 @@ def oil_export(input_data):
         return max(0, H13)
 
     calc_export_customs_duty.at[2, 'before'] = calc_export_customs_duty['before'].pipe(func_h13,
-                                                                            prices_group_b_products.at[0, 'before'],
-                                                                            prices_group_b_products.at[4, 'before'],
-                                                                            calc_export_customs_duty.at[0, 'before'],
-                                                                            calc_export_customs_duty.at[1, 'before'])
+                                                                                       prices_group_b_products.at[
+                                                                                           0, 'before'],
+                                                                                       prices_group_b_products.at[
+                                                                                           4, 'before'],
+                                                                                       calc_export_customs_duty.at[
+                                                                                           0, 'before'],
+                                                                                       calc_export_customs_duty.at[
+                                                                                           1, 'before'])
 
     # H5
     def func_h5(df, H3, H21, H8, H13, H7):
         return H3 - ((H21 / (1 - H8) + H13) / H7)
 
     prices_group_b_products.at[2, 'before'] = prices_group_b_products['before'].pipe(func_h5,
-                    prices_group_b_products.at[0, 'before'], domestic_market_of_group_b_products.at[0, 'before'],
-                    prices_group_b_products.at[5, 'before'], calc_export_customs_duty.at[2, 'before'],
-                    prices_group_b_products.at[4, 'before'])
+                                                                                     prices_group_b_products.at[
+                                                                                         0, 'before'],
+                                                                                     domestic_market_of_group_b_products.at[
+                                                                                         0, 'before'],
+                                                                                     prices_group_b_products.at[
+                                                                                         5, 'before'],
+                                                                                     calc_export_customs_duty.at[
+                                                                                         2, 'before'],
+                                                                                     prices_group_b_products.at[
+                                                                                         4, 'before'])
     # I5
     prices_group_b_products.at[2, 'after'] = prices_group_b_products.at[2, 'before']
 
@@ -258,17 +263,30 @@ def oil_export(input_data):
         return max(0, H17)
 
     calc_export_customs_duty.at[6, 'before'] = calc_export_customs_duty['before'].pipe(func_h17,
-                    prices_group_b_products.at[1, 'before'], prices_group_b_products.at[4, 'before'],
-                    calc_export_customs_duty.at[4, 'before'], calc_export_customs_duty.at[5, 'before'])
+                                                                                       prices_group_b_products.at[
+                                                                                           1, 'before'],
+                                                                                       prices_group_b_products.at[
+                                                                                           4, 'before'],
+                                                                                       calc_export_customs_duty.at[
+                                                                                           4, 'before'],
+                                                                                       calc_export_customs_duty.at[
+                                                                                           5, 'before'])
 
     # H6
     def func_h6(df, H4, H22, H8, H17, H7):
         return H4 - ((H22 / (1 - H8) + H17) / H7)
 
     prices_group_b_products.at[3, 'before'] = prices_group_b_products['before'].pipe(func_h6,
-                   prices_group_b_products.at[1, 'before'], domestic_market_of_group_b_products.at[1, 'before'],
-                   prices_group_b_products.at[5, 'before'], calc_export_customs_duty.at[6, 'before'],
-                   prices_group_b_products.at[4, 'before'])
+                                                                                     prices_group_b_products.at[
+                                                                                         1, 'before'],
+                                                                                     domestic_market_of_group_b_products.at[
+                                                                                         1, 'before'],
+                                                                                     prices_group_b_products.at[
+                                                                                         5, 'before'],
+                                                                                     calc_export_customs_duty.at[
+                                                                                         6, 'before'],
+                                                                                     prices_group_b_products.at[
+                                                                                         4, 'before'])
 
     # I6
     prices_group_b_products.at[3, 'after'] = prices_group_b_products.at[3, 'before']
@@ -279,24 +297,38 @@ def oil_export(input_data):
         return max(0, I13)
 
     calc_export_customs_duty.at[2, 'after'] = calc_export_customs_duty['after'].pipe(func_i13,
-                 prices_group_b_products.at[0, 'after'], prices_group_b_products.at[4, 'after'],
-                 calc_export_customs_duty.at[0, 'after'], calc_export_customs_duty.at[1, 'after'])
+                                                                                     prices_group_b_products.at[
+                                                                                         0, 'after'],
+                                                                                     prices_group_b_products.at[
+                                                                                         4, 'after'],
+                                                                                     calc_export_customs_duty.at[
+                                                                                         0, 'after'],
+                                                                                     calc_export_customs_duty.at[
+                                                                                         1, 'after'])
 
     # H14
     def func_h14(df, H13, H3, H7):
         return H13 / (H3 * H7)
 
     calc_export_customs_duty.at[3, 'before'] = calc_export_customs_duty['before'].pipe(func_h14,
-                   calc_export_customs_duty.at[2, 'before'], prices_group_b_products.at[0, 'before'],
-                   prices_group_b_products.at[4, 'before'])
+                                                                                       calc_export_customs_duty.at[
+                                                                                           2, 'before'],
+                                                                                       prices_group_b_products.at[
+                                                                                           0, 'before'],
+                                                                                       prices_group_b_products.at[
+                                                                                           4, 'before'])
 
     # I14
     def func_i14(df, I13, I3, I7):
         return I13 / (I3 * I7)
 
     calc_export_customs_duty.at[3, 'after'] = calc_export_customs_duty['after'].pipe(func_i14,
-                 calc_export_customs_duty.at[2, 'after'], prices_group_b_products.at[0, 'after'],
-                 prices_group_b_products.at[4, 'after'])
+                                                                                     calc_export_customs_duty.at[
+                                                                                         2, 'after'],
+                                                                                     prices_group_b_products.at[
+                                                                                         0, 'after'],
+                                                                                     prices_group_b_products.at[
+                                                                                         4, 'after'])
 
     # I17
     def func_i17(df, I4, I7, I15, I16):
@@ -304,70 +336,108 @@ def oil_export(input_data):
         return max(0, I17)
 
     calc_export_customs_duty.at[6, 'after'] = calc_export_customs_duty['after'].pipe(func_i17,
-                prices_group_b_products.at[1, 'after'], prices_group_b_products.at[4, 'after'],
-                calc_export_customs_duty.at[4, 'after'], calc_export_customs_duty.at[5, 'after'])
+                                                                                     prices_group_b_products.at[
+                                                                                         1, 'after'],
+                                                                                     prices_group_b_products.at[
+                                                                                         4, 'after'],
+                                                                                     calc_export_customs_duty.at[
+                                                                                         4, 'after'],
+                                                                                     calc_export_customs_duty.at[
+                                                                                         5, 'after'])
 
     # H18
     def func_h18(df, H17, H4, H7):
         return H17 / (H4 * H7)
 
     calc_export_customs_duty.at[7, 'before'] = calc_export_customs_duty['before'].pipe(func_h18,
-               calc_export_customs_duty.at[6, 'before'], prices_group_b_products.at[1, 'before'],
-               prices_group_b_products.at[4, 'before'])
+                                                                                       calc_export_customs_duty.at[
+                                                                                           6, 'before'],
+                                                                                       prices_group_b_products.at[
+                                                                                           1, 'before'],
+                                                                                       prices_group_b_products.at[
+                                                                                           4, 'before'])
 
     # I18
     def func_i18(df, I17, I4, I7):
         return I17 / (I4 * I7)
 
     calc_export_customs_duty.at[7, 'after'] = calc_export_customs_duty['after'].pipe(func_i18,
-             calc_export_customs_duty.at[6, 'after'], prices_group_b_products.at[1, 'after'],
-             prices_group_b_products.at[4, 'after'])
-    
+                                                                                     calc_export_customs_duty.at[
+                                                                                         6, 'after'],
+                                                                                     prices_group_b_products.at[
+                                                                                         1, 'after'],
+                                                                                     prices_group_b_products.at[
+                                                                                         4, 'after'])
+
     # I21
     def func_i21(df, I3, I5, I7, I13, I8):
         return ((I3 - I5) * I7 - I13) * (1 - I8)
 
     domestic_market_of_group_b_products.at[0, 'after'] = domestic_market_of_group_b_products['after'].pipe(func_i21,
-           prices_group_b_products.at[0, 'after'], prices_group_b_products.at[2, 'after'],
-           prices_group_b_products.at[4, 'after'],calc_export_customs_duty.at[2, 'after'],
-           prices_group_b_products.at[5, 'after'])
+                                                                                                           prices_group_b_products.at[
+                                                                                                               0, 'after'],
+                                                                                                           prices_group_b_products.at[
+                                                                                                               2, 'after'],
+                                                                                                           prices_group_b_products.at[
+                                                                                                               4, 'after'],
+                                                                                                           calc_export_customs_duty.at[
+                                                                                                               2, 'after'],
+                                                                                                           prices_group_b_products.at[
+                                                                                                               5, 'after'])
 
     # I22
     def func_i22(df, I4, I6, I7, I17, I8):
         return ((I4 - I6) * I7 - I17) * (1 - I8)
 
     domestic_market_of_group_b_products.at[1, 'after'] = domestic_market_of_group_b_products['after'].pipe(func_i22,
-           prices_group_b_products.at[1, 'after'], prices_group_b_products.at[3, 'after'],
-           prices_group_b_products.at[4, 'after'], calc_export_customs_duty.at[6, 'after'],
-           prices_group_b_products.at[5, 'after'])
+                                                                                                           prices_group_b_products.at[
+                                                                                                               1, 'after'],
+                                                                                                           prices_group_b_products.at[
+                                                                                                               3, 'after'],
+                                                                                                           prices_group_b_products.at[
+                                                                                                               4, 'after'],
+                                                                                                           calc_export_customs_duty.at[
+                                                                                                               6, 'after'],
+                                                                                                           prices_group_b_products.at[
+                                                                                                               5, 'after'])
 
     # H25
     def func_h25(df, H21, B16, H22, B17):
         return H21 * B16 + H22 * B17
 
     internal_market_of_product_a.at[0, 'before'] = internal_market_of_product_a['before'].pipe(func_h25,
-           domestic_market_of_group_b_products.at[0, 'before'],
-           output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'],
-           domestic_market_of_group_b_products.at[1, 'before'],
-           output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+                                                                                               domestic_market_of_group_b_products.at[
+                                                                                                   0, 'before'],
+                                                                                               output_coefficients.loc[
+                                                                                                   'T_A_to_B1', 'Коэффициенты выхода продукции'],
+                                                                                               domestic_market_of_group_b_products.at[
+                                                                                                   1, 'before'],
+                                                                                               output_coefficients.loc[
+                                                                                                   'T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I25
     def func_i25(df, I21, B16, I22, B17):
         return I21 * B16 + I22 * B17
 
     internal_market_of_product_a.at[0, 'after'] = internal_market_of_product_a['after'].pipe(func_i25,
-             domestic_market_of_group_b_products.at[0, 'after'],
-             output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'],
-             domestic_market_of_group_b_products.at[1, 'after'],
-             output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+                                                                                             domestic_market_of_group_b_products.at[
+                                                                                                 0, 'after'],
+                                                                                             output_coefficients.loc[
+                                                                                                 'T_A_to_B1', 'Коэффициенты выхода продукции'],
+                                                                                             domestic_market_of_group_b_products.at[
+                                                                                                 1, 'after'],
+                                                                                             output_coefficients.loc[
+                                                                                                 'T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # H26
     def func_h26(df, H25, H27):
         return H25 - H27
 
     internal_market_of_product_a.at[1, 'before'] = internal_market_of_product_a['before'].pipe(func_h26,
-           internal_market_of_product_a.at[0, 'before'],
-           internal_market_of_product_a.at[2, 'before'])
+                                                                                               internal_market_of_product_a.at[
+                                                                                                   0, 'before'],
+                                                                                               internal_market_of_product_a.at[
+                                                                                                   2, 'before'])
 
     # I26
     internal_market_of_product_a.at[1, 'after'] = internal_market_of_product_a.at[1, 'before']
@@ -377,32 +447,51 @@ def oil_export(input_data):
         return I25 - I26
 
     internal_market_of_product_a.at[2, 'after'] = internal_market_of_product_a['after'].pipe(func_i27,
-             internal_market_of_product_a.at[0, 'after'], internal_market_of_product_a.at[1, 'after'])
+                                                                                             internal_market_of_product_a.at[
+                                                                                                 0, 'after'],
+                                                                                             internal_market_of_product_a.at[
+                                                                                                 1, 'after'])
 
     # H34
     def func_h34(df, H30, H33, H27, H32, B8):
         return H30 / (1 + H33) / (H27 / H32) ** B8
 
     int_prod_balance_of_goods_a.at[4, 'before'] = int_prod_balance_of_goods_a['before'].pipe(func_h34,
-             int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[3, 'before'],
-             internal_market_of_product_a.at[2, 'before'], int_prod_balance_of_goods_a.at[2, 'before'],
-             elasticity_at_its_own_price.loc['e_SI_A', 'Эластичности по собственной цене'])
+                                                                                             int_prod_balance_of_goods_a.at[
+                                                                                                 0, 'before'],
+                                                                                             int_prod_balance_of_goods_a.at[
+                                                                                                 3, 'before'],
+                                                                                             internal_market_of_product_a.at[
+                                                                                                 2, 'before'],
+                                                                                             int_prod_balance_of_goods_a.at[
+                                                                                                 2, 'before'],
+                                                                                             elasticity_at_its_own_price.loc[
+                                                                                                 'e_SI_A', 'Эластичности по собственной цене'])
 
     # I30
     def func_i30(df, H34, I33, I27, I32, B8):
         return H34 * (1 + I33) * (I27 / I32) ** B8
 
     int_prod_balance_of_goods_a.at[0, 'after'] = int_prod_balance_of_goods_a['after'].pipe(func_i30,
-            int_prod_balance_of_goods_a.at[4, 'before'], int_prod_balance_of_goods_a.at[3, 'after'],
-            internal_market_of_product_a.at[2, 'after'], int_prod_balance_of_goods_a.at[2, 'after'],
-            elasticity_at_its_own_price.loc['e_SI_A', 'Эластичности по собственной цене'])
+                                                                                           int_prod_balance_of_goods_a.at[
+                                                                                               4, 'before'],
+                                                                                           int_prod_balance_of_goods_a.at[
+                                                                                               3, 'after'],
+                                                                                           internal_market_of_product_a.at[
+                                                                                               2, 'after'],
+                                                                                           int_prod_balance_of_goods_a.at[
+                                                                                               2, 'after'],
+                                                                                           elasticity_at_its_own_price.loc[
+                                                                                               'e_SI_A', 'Эластичности по собственной цене'])
 
     # H38
     def func_h38(df, H37, H21):
         return H37 - H21
 
     int_prod_of_goods_c.at[1, 'before'] = int_prod_of_goods_c['before'].pipe(func_h38,
-             int_prod_of_goods_c.at[0, 'before'], domestic_market_of_group_b_products.at[0, 'before'])
+                                                                             int_prod_of_goods_c.at[0, 'before'],
+                                                                             domestic_market_of_group_b_products.at[
+                                                                                 0, 'before'])
 
     # I38
     int_prod_of_goods_c.at[1, 'after'] = int_prod_of_goods_c.at[1, 'before']
@@ -412,39 +501,53 @@ def oil_export(input_data):
         return I21 + I38
 
     int_prod_of_goods_c.at[0, 'after'] = int_prod_of_goods_c['after'].pipe(func_i37,
-            domestic_market_of_group_b_products.at[0, 'after'], int_prod_of_goods_c.at[1, 'after'])
+                                                                           domestic_market_of_group_b_products.at[
+                                                                               0, 'after'],
+                                                                           int_prod_of_goods_c.at[1, 'after'])
 
     # H40
     def func_h40(df, H39, H37, B9):
         return H39 / (H37 ** B9)
 
     int_prod_of_goods_c.at[3, 'before'] = int_prod_of_goods_c['before'].pipe(func_h40,
-             int_prod_of_goods_c.at[2, 'before'], int_prod_of_goods_c.at[0, 'before'],
-             elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
+                                                                             int_prod_of_goods_c.at[2, 'before'],
+                                                                             int_prod_of_goods_c.at[0, 'before'],
+                                                                             elasticity_at_its_own_price.loc[
+                                                                                 'e_DI_C', 'Эластичности по собственной цене'])
 
     # I39
     def func_i39(df, H40, I37, B9):
         return H40 * (I37) ** B9
 
     int_prod_of_goods_c.at[2, 'after'] = int_prod_of_goods_c['after'].pipe(func_i39,
-           int_prod_of_goods_c.at[3, 'before'], int_prod_of_goods_c.at[0, 'after'],
-           elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
+                                                                           int_prod_of_goods_c.at[3, 'before'],
+                                                                           int_prod_of_goods_c.at[0, 'after'],
+                                                                           elasticity_at_its_own_price.loc[
+                                                                               'e_DI_C', 'Эластичности по собственной цене'])
 
     # H43
     def func_h43(df, H30, H31, B16):
         return (H30 - H31) * B16
 
     prod_bal_of_group_b_goods.at[0, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h43,
-             int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[1, 'before'],
-             output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'])
+                                                                                         int_prod_balance_of_goods_a.at[
+                                                                                             0, 'before'],
+                                                                                         int_prod_balance_of_goods_a.at[
+                                                                                             1, 'before'],
+                                                                                         output_coefficients.loc[
+                                                                                             'T_A_to_B1', 'Коэффициенты выхода продукции'])
 
     # I43
     def func_i43(df, I30, I31, B16):
         return (I30 - I31) * B16
 
     prod_bal_of_group_b_goods.at[0, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i43,
-           int_prod_balance_of_goods_a.at[0, 'after'], int_prod_balance_of_goods_a.at[1, 'after'],
-           output_coefficients.loc['T_A_to_B1', 'Коэффициенты выхода продукции'])
+                                                                                       int_prod_balance_of_goods_a.at[
+                                                                                           0, 'after'],
+                                                                                       int_prod_balance_of_goods_a.at[
+                                                                                           1, 'after'],
+                                                                                       output_coefficients.loc[
+                                                                                           'T_A_to_B1', 'Коэффициенты выхода продукции'])
 
     # H44
     prod_bal_of_group_b_goods.at[1, 'before'] = int_prod_of_goods_c.at[2, 'before']
@@ -457,56 +560,78 @@ def oil_export(input_data):
         return H43 - H44
 
     prod_bal_of_group_b_goods.at[2, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h45,
-             prod_bal_of_group_b_goods.at[0, 'before'], prod_bal_of_group_b_goods.at[1, 'before'])
-
+                                                                                         prod_bal_of_group_b_goods.at[
+                                                                                             0, 'before'],
+                                                                                         prod_bal_of_group_b_goods.at[
+                                                                                             1, 'before'])
 
     # I45
     def func_i45(df, I43, I44):
         return I43 - I44
 
     prod_bal_of_group_b_goods.at[2, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i45,
-           prod_bal_of_group_b_goods.at[0, 'after'], prod_bal_of_group_b_goods.at[1, 'after'])
+                                                                                       prod_bal_of_group_b_goods.at[
+                                                                                           0, 'after'],
+                                                                                       prod_bal_of_group_b_goods.at[
+                                                                                           1, 'after'])
 
     # H46
     def func_h46(df, H30, H31, B17):
         return (H30 - H31) * B17
 
     prod_bal_of_group_b_goods.at[3, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h46,
-             int_prod_balance_of_goods_a.at[0, 'before'], int_prod_balance_of_goods_a.at[1, 'before'],
-             output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+                                                                                         int_prod_balance_of_goods_a.at[
+                                                                                             0, 'before'],
+                                                                                         int_prod_balance_of_goods_a.at[
+                                                                                             1, 'before'],
+                                                                                         output_coefficients.loc[
+                                                                                             'T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I46
     def func_i46(df, I30, I31, B17):
         return (I30 - I31) * B17
 
     prod_bal_of_group_b_goods.at[3, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i46,
-           int_prod_balance_of_goods_a.at[0, 'after'], int_prod_balance_of_goods_a.at[1, 'after'],
-           output_coefficients.loc['T_A_to_B2', 'Коэффициенты выхода продукции'])
+                                                                                       int_prod_balance_of_goods_a.at[
+                                                                                           0, 'after'],
+                                                                                       int_prod_balance_of_goods_a.at[
+                                                                                           1, 'after'],
+                                                                                       output_coefficients.loc[
+                                                                                           'T_A_to_B2', 'Коэффициенты выхода продукции'])
 
     # I47
     def func_i47(df, H47, I22, H22, B9):
-        return H47*(I22/H22)**B9
+        return H47 * (I22 / H22) ** B9
 
     prod_bal_of_group_b_goods.at[4, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i47,
-                                          prod_bal_of_group_b_goods.at[4, 'before'],
-                                          domestic_market_of_group_b_products.at[1, 'after'],
-                                          domestic_market_of_group_b_products.at[1, 'before'],
-                                          elasticity_at_its_own_price.loc['e_DI_C', 'Эластичности по собственной цене'])
+                                                                                       prod_bal_of_group_b_goods.at[
+                                                                                           4, 'before'],
+                                                                                       domestic_market_of_group_b_products.at[
+                                                                                           1, 'after'],
+                                                                                       domestic_market_of_group_b_products.at[
+                                                                                           1, 'before'],
+                                                                                       elasticity_at_its_own_price.loc[
+                                                                                           'e_DI_C', 'Эластичности по собственной цене'])
 
     # H48
     def func_h48(df, H46, H47):
         return H46 - H47
 
     prod_bal_of_group_b_goods.at[5, 'before'] = prod_bal_of_group_b_goods['before'].pipe(func_h48,
-             prod_bal_of_group_b_goods.at[3, 'before'], prod_bal_of_group_b_goods.at[4, 'before'])
-
+                                                                                         prod_bal_of_group_b_goods.at[
+                                                                                             3, 'before'],
+                                                                                         prod_bal_of_group_b_goods.at[
+                                                                                             4, 'before'])
 
     # I48
     def func_i48(df, I46, I47):
         return I46 - I47
 
     prod_bal_of_group_b_goods.at[5, 'after'] = prod_bal_of_group_b_goods['after'].pipe(func_i48,
-           prod_bal_of_group_b_goods.at[3, 'after'], prod_bal_of_group_b_goods.at[4, 'after'])
+                                                                                       prod_bal_of_group_b_goods.at[
+                                                                                           3, 'after'],
+                                                                                       prod_bal_of_group_b_goods.at[
+                                                                                           4, 'after'])
 
     # N4
     prices.at[0, 'before'] = internal_market_of_product_a.at[2, 'before']
@@ -624,7 +749,6 @@ def oil_export(input_data):
     production_and_consumption.at[6, 'increment_pr'] = production_and_consumption.at[6, 'after'] / \
                                                        production_and_consumption.at[6, 'before'] - 1
 
-
     # N18
     production_and_consumption.at[7, 'before'] = int_prod_of_goods_c.at[2, 'before']
     # O18
@@ -645,6 +769,7 @@ def oil_export(input_data):
                                                                prod_bal_of_group_b_goods.at[5, 'before'],
                                                                prices_group_b_products.at[1, 'before'],
                                                                prices_group_b_products.at[4, 'before'])
+
     # O22
     def func_o22(df, I45, I3, I48, I4, I7):
         return (I45 * I3 + I48 * I4) * I7
@@ -668,6 +793,7 @@ def oil_export(input_data):
                                                                prod_bal_of_group_b_goods.at[2, 'before'],
                                                                calc_export_customs_duty.at[6, 'before'],
                                                                prod_bal_of_group_b_goods.at[5, 'before'])
+
     # O23
     def func_o23(df, I13, I45, I17, I48):
         return I13 * I45 + I17 * I48
@@ -688,9 +814,11 @@ def oil_export(input_data):
         else:
             Q23 = '-'
         return Q23
+
     cost_effects.at[1, 'increment_pr'] = cost_effects['increment_pr'].pipe(func_q23, cost_effects.at[1, 'after'],
                                                                            cost_effects.at[1, 'before'])
-
+    print(cost_effects.at[1, 'increment_pr'])
+    print(cost_effects.to_markdown())
 
     # N26
     def func_n26(df, N11, N4, O4, O11):
@@ -699,6 +827,7 @@ def oil_export(input_data):
     cost_effects.at[4, 'before'] = cost_effects['before'].pipe(func_n26, production_and_consumption.at[0, 'before'],
                                                                prices.at[0, 'before'], prices.at[0, 'after'],
                                                                production_and_consumption.at[0, 'after'])
+
     # N28
     def func_n28(df, N5, O5, N13, O13):
         return (N5 - O5) * N13 + 0.5 * (N5 - O5) * (O13 - N13)
@@ -707,6 +836,7 @@ def oil_export(input_data):
                                                                prices.at[1, 'after'],
                                                                production_and_consumption.at[2, 'before'],
                                                                production_and_consumption.at[2, 'after'])
+
     # N29
     def func_n29(df, N6, O6, N16, O16):
         return (N6 - O6) * N16 + 0.5 * (N6 - O6) * (O16 - N16)
@@ -715,13 +845,14 @@ def oil_export(input_data):
                                                                prices.at[2, 'after'],
                                                                production_and_consumption.at[5, 'before'],
                                                                production_and_consumption.at[5, 'after'])
+
     # N27
     def func_n27(df, N28, N29):
         return N28 + N29
 
     cost_effects.at[5, 'before'] = cost_effects['before'].pipe(func_n27, cost_effects.at[6, 'before'],
                                                                cost_effects.at[7, 'before'])
-    
+
     # N30
     def func_n30(df, N26, N27, P23):
         return N26 + N27 + P23
@@ -794,6 +925,7 @@ def oil_export(input_data):
                                                                 production_and_consumption.at[2, 'after'],
                                                                 production_and_consumption.at[2, 'before'],
                                                                 prices.at[1, 'after'])
+
     # N40
     def func_n40(df, N41, N42):
         return N41 + N42
@@ -901,25 +1033,23 @@ def oil_export(input_data):
         'table1': [
             {
                 'id': '1',
-                'title': 'Мировая цена товара масло подсолнечное (сырье)',
+                'title': 'Мировая цена товара B1',
                 'measure': 'долл США',
                 'params': 'PW_B1',
                 'basebalance': prices_group_b_products.at[0, 'before'],
-                'newbalance': prices_group_b_products.at[0, 'after'],
-                'status': prices_group_b_products.at[0, 'status']
+                'newbalance': prices_group_b_products.at[0, 'after']
             },
             {
                 'id': '2',
-                'title': 'Мировая цена товара шрот подсолнечный',
+                'title': 'Мировая цена товара B2',
                 'measure': 'долл США',
                 'params': 'PW_B2',
                 'basebalance': prices_group_b_products.at[1, 'before'],
-                'newbalance': prices_group_b_products.at[1, 'after'],
-                'status': prices_group_b_products.at[1, 'status']
+                'newbalance': prices_group_b_products.at[1, 'after']
             },
             {
                 'id': '3',
-                'title': 'Стоимость услуг трейдеров товара масло подсолнечное (сырье)',
+                'title': 'Стоимость услуг трейдеров товара B1',
                 'measure': 'долл США',
                 'params': 'CT_B1',
                 'basebalance': prices_group_b_products.at[2, 'before'],
@@ -927,7 +1057,7 @@ def oil_export(input_data):
             },
             {
                 'id': '4',
-                'title': 'Стоимость услуг трейдеров товара шрот подсолнечный',
+                'title': 'Стоимость услуг трейдеров товара B2',
                 'measure': 'долл США',
                 'params': 'CT_B2',
                 'basebalance': prices_group_b_products.at[3, 'before'],
@@ -939,8 +1069,7 @@ def oil_export(input_data):
                 'measure': 'руб/долл США',
                 'params': 'ER',
                 'basebalance': prices_group_b_products.at[4, 'before'],
-                'newbalance': prices_group_b_products.at[4, 'after'],
-                'status': prices_group_b_products.at[4, 'status']
+                'newbalance': prices_group_b_products.at[4, 'after']
             },
             {
                 'id': '6',
@@ -954,7 +1083,7 @@ def oil_export(input_data):
         'table2': [
             {
                 'id': '1',
-                'title': 'Базовая цена товара масло подсолнечное (сырье)',
+                'title': 'Базовая цена товара B1',
                 'measure': 'руб/т',
                 'params': 'Pb_B1',
                 'basebalance': calc_export_customs_duty.at[0, 'before'],
@@ -962,7 +1091,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Ставка вывозной пошлины товара масло подсолнечное (сырье)',
+                'title': 'Ставка вывозной пошлины товара B1',
                 'measure': '',
                 'params': 'tb_B1',
                 'basebalance': calc_export_customs_duty.at[1, 'before'],
@@ -970,7 +1099,7 @@ def oil_export(input_data):
             },
             {
                 'id': '3',
-                'title': 'Вывозная таможенная пошлина на товар масло подсолнечное (сырье)',
+                'title': 'Вывозная таможенная пошлина на товар B1',
                 'measure': 'руб/т',
                 'params': 'tax_B1',
                 'basebalance': calc_export_customs_duty.at[2, 'before'],
@@ -978,7 +1107,7 @@ def oil_export(input_data):
             },
             {
                 'id': '4',
-                'title': 'Адвалорная ставка пошлины на товар масло подсолнечное (сырье)',
+                'title': 'Адвалорная ставка пошлины на товар B1',
                 'measure': '',
                 'params': 't_B1',
                 'basebalance': calc_export_customs_duty.at[3, 'before'],
@@ -986,7 +1115,7 @@ def oil_export(input_data):
             },
             {
                 'id': '5',
-                'title': 'Базовая цена товара масло подсолнечное (сырье)',
+                'title': 'Базовая цена товара B2',
                 'measure': 'руб/т',
                 'params': 'Pb_B2',
                 'basebalance': calc_export_customs_duty.at[4, 'before'],
@@ -994,7 +1123,7 @@ def oil_export(input_data):
             },
             {
                 'id': '6',
-                'title': 'Ставка вывозной пошлины товара масло подсолнечное (сырье)',
+                'title': 'Ставка вывозной пошлины товара B2',
                 'measure': '',
                 'params': 'tb_B2',
                 'basebalance': calc_export_customs_duty.at[5, 'before'],
@@ -1002,7 +1131,7 @@ def oil_export(input_data):
             },
             {
                 'id': '7',
-                'title': 'Вывозная таможенная пошлина на товар масло подсолнечное (сырье)',
+                'title': 'Вывозная таможенная пошлина на товар B2',
                 'measure': 'руб/т',
                 'params': 'tax_B2',
                 'basebalance': calc_export_customs_duty.at[6, 'before'],
@@ -1010,7 +1139,7 @@ def oil_export(input_data):
             },
             {
                 'id': '8',
-                'title': 'Адвалорная ставка пошлины на товар масло подсолнечное (сырье)',
+                'title': 'Адвалорная ставка пошлины на товар B2',
                 'measure': '',
                 'params': 't_B2',
                 'basebalance': calc_export_customs_duty.at[7, 'before'],
@@ -1020,7 +1149,7 @@ def oil_export(input_data):
         'table3': [
             {
                 'id': '1',
-                'title': 'Внутренняя цена товара масло подсолнечное (сырье)',
+                'title': 'Внутренняя цена товара B1',
                 'measure': 'руб/т',
                 'params': 'PI_B1',
                 'basebalance': domestic_market_of_group_b_products.at[0, 'before'],
@@ -1028,7 +1157,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Внутренняя цена товара шрот подсолнечный',
+                'title': 'Внутренняя цена товара B2',
                 'measure': 'руб/т',
                 'params': 'PI_B2',
                 'basebalance': domestic_market_of_group_b_products.at[1, 'before'],
@@ -1038,7 +1167,7 @@ def oil_export(input_data):
         'table4': [
             {
                 'id': '1',
-                'title': 'Стоимость продуктов переработки 1 единицы товара семена подсолнечника',
+                'title': 'Стоимость продуктов переработки 1 единицы товара А',
                 'measure': 'руб/т',
                 'params': 'VP_A',
                 'basebalance': internal_market_of_product_a.at[0, 'before'],
@@ -1046,7 +1175,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Стоимость переработки 1 единицы товара семена подсолнечника',
+                'title': 'Стоимость переработки 1 единицы товара А',
                 'measure': 'руб/т',
                 'params': 'VT_A',
                 'basebalance': internal_market_of_product_a.at[1, 'before'],
@@ -1054,7 +1183,7 @@ def oil_export(input_data):
             },
             {
                 'id': '3',
-                'title': 'Внутренняя цена товара семена подсолнечника',
+                'title': 'Внутренняя цена товара А',
                 'measure': 'руб/т',
                 'params': 'PI_A',
                 'basebalance': internal_market_of_product_a.at[2, 'before'],
@@ -1064,7 +1193,7 @@ def oil_export(input_data):
         'table5': [
             {
                 'id': '1',
-                'title': 'Объем внутреннего производства товара семена подсолнечника',
+                'title': 'Объем внутреннего производства товара А',
                 'measure': 'млн тонн',
                 'params': 'QSI_A',
                 'basebalance': int_prod_balance_of_goods_a.at[0, 'before'],
@@ -1072,7 +1201,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Экспорт товара семена подсолнечника (экзогенно)',
+                'title': 'Экспорт товара А (экзогенно)',
                 'measure': 'млн тонн',
                 'params': 'QSW_RUS_A',
                 'basebalance': int_prod_balance_of_goods_a.at[1, 'before'],
@@ -1088,7 +1217,7 @@ def oil_export(input_data):
             },
             {
                 'id': '4',
-                'title': 'Экзогенный сдвиг во внутреннем предложении товара семена подсолнечника',
+                'title': 'Экзогенный сдвиг во внутреннем предложении товара А',
                 'measure': '',
                 'params': 'shift_QSI_A',
                 'basebalance': int_prod_balance_of_goods_a.at[3, 'before'],
@@ -1106,7 +1235,7 @@ def oil_export(input_data):
         'table6': [
             {
                 'id': '1',
-                'title': 'Внутренняя цена товара масло подсолнечное рафинированное (потребление)',
+                'title': 'Внутренняя цена товара С',
                 'measure': 'руб/т',
                 'params': 'PI_С',
                 'basebalance': int_prod_of_goods_c.at[0, 'before'],
@@ -1114,8 +1243,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Затраты на производство и обращение товара масло подсолнечное рафинированное (потребление) '
-                         '(без учета стоимости В)',
+                'title': 'Затраты на производство и обращение товара С (без учета стоимости В)',
                 'measure': 'руб/т',
                 'params': 'VT_C',
                 'basebalance': int_prod_of_goods_c.at[1, 'before'],
@@ -1123,7 +1251,7 @@ def oil_export(input_data):
             },
             {
                 'id': '3',
-                'title': 'Внутренний спрос на товар масло подсолнечное рафинированное (потребление)',
+                'title': 'Внутренний спрос на товар С',
                 'measure': 'млн тонн',
                 'params': 'QDI_С',
                 'basebalance': int_prod_of_goods_c.at[2, 'before'],
@@ -1141,7 +1269,7 @@ def oil_export(input_data):
         'table7': [
             {
                 'id': '1',
-                'title': 'Объем внутреннего производства товара масло подсолнечное (сырье)',
+                'title': 'Объем внутреннего производства товара B1',
                 'measure': 'млн тонн',
                 'params': 'QSI_B1',
                 'basebalance': prod_bal_of_group_b_goods.at[0, 'before'],
@@ -1149,7 +1277,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Внутренний спрос на товар масло подсолнечное (сырье)',
+                'title': 'Внутренний спрос на товар B1',
                 'measure': 'млн тонн',
                 'params': 'QDI_B1',
                 'basebalance': prod_bal_of_group_b_goods.at[1, 'before'],
@@ -1157,7 +1285,7 @@ def oil_export(input_data):
             },
             {
                 'id': '3',
-                'title': 'Экспорт товара масло подсолнечное (сырье)',
+                'title': 'Экспорт товара B1',
                 'measure': 'млн тонн',
                 'params': 'QSW_RUS_B1',
                 'basebalance': prod_bal_of_group_b_goods.at[2, 'before'],
@@ -1165,7 +1293,7 @@ def oil_export(input_data):
             },
             {
                 'id': '4',
-                'title': 'Объем внутреннего производства товара шрот подсолнечный',
+                'title': 'Объем внутреннего производства товара B2',
                 'measure': 'млн тонн',
                 'params': 'QSI_B2',
                 'basebalance': prod_bal_of_group_b_goods.at[3, 'before'],
@@ -1173,7 +1301,7 @@ def oil_export(input_data):
             },
             {
                 'id': '5',
-                'title': 'Внутренний спрос на товар шрот подсолнечный',
+                'title': 'Внутренний спрос на товар B2',
                 'measure': 'млн тонн',
                 'params': 'QDI_B2',
                 'basebalance': prod_bal_of_group_b_goods.at[4, 'before'],
@@ -1181,7 +1309,7 @@ def oil_export(input_data):
             },
             {
                 'id': '6',
-                'title': 'Экспорт товара шрот подсолнечный',
+                'title': 'Экспорт товара B2',
                 'measure': 'млн тонн',
                 'params': 'QSW_RUS_B2',
                 'basebalance': prod_bal_of_group_b_goods.at[5, 'before'],
@@ -1191,7 +1319,7 @@ def oil_export(input_data):
         'fintable1': [
             {
                 'id': '1',
-                'title': 'Внутреняя цена товара семена подсолнечника',
+                'title': 'Внутреняя цена товара А',
                 'measure': 'долл США',
                 'basebalance': prices.at[0, 'before'],
                 'newbalance': prices.at[0, 'after'],
@@ -1200,7 +1328,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Внутренняя цена товара масло подсолнечное (сырье)',
+                'title': 'Внутренняя цена товара B1',
                 'measure': 'руб/т',
                 'basebalance': prices.at[1, 'before'],
                 'newbalance': prices.at[1, 'after'],
@@ -1209,7 +1337,7 @@ def oil_export(input_data):
             },
             {
                 'id': '3',
-                'title': 'Внутренняя цена товара шрот подсолнечный',
+                'title': 'Внутренняя цена товара B2',
                 'measure': 'руб/т',
                 'basebalance': prices.at[2, 'before'],
                 'newbalance': prices.at[2, 'after'],
@@ -1218,7 +1346,7 @@ def oil_export(input_data):
             },
             {
                 'id': '4',
-                'title': 'Цена товара масло подсолнечное рафинированное (потребление)',
+                'title': 'Цена товара С',
                 'measure': 'руб/т',
                 'basebalance': prices.at[3, 'before'],
                 'newbalance': prices.at[3, 'after'],
@@ -1238,7 +1366,7 @@ def oil_export(input_data):
         'fintable2': [
             {
                 'id': '1',
-                'title': 'Внутреннее производство товара семена подсолнечника',
+                'title': 'Внутреннее производство товара А',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[0, 'before'],
                 'newbalance': production_and_consumption.at[0, 'after'],
@@ -1247,7 +1375,7 @@ def oil_export(input_data):
             },
             {
                 'id': '2',
-                'title': 'Внутреннее производство товара масло подсолнечное (сырье)',
+                'title': 'Внутреннее производство товара B1',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[1, 'before'],
                 'newbalance': production_and_consumption.at[1, 'after'],
@@ -1256,7 +1384,7 @@ def oil_export(input_data):
             },
             {
                 'id': '3',
-                'title': 'Внутреннее потребление товара масло подсолнечное (сырье)',
+                'title': 'Внутреннее потребление товара B1',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[2, 'before'],
                 'newbalance': production_and_consumption.at[2, 'after'],
@@ -1265,7 +1393,7 @@ def oil_export(input_data):
             },
             {
                 'id': '4',
-                'title': 'Экспорт товара масло подсолнечное (сырье)',
+                'title': 'Экспорт товара B1',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[3, 'before'],
                 'newbalance': production_and_consumption.at[3, 'after'],
@@ -1274,7 +1402,7 @@ def oil_export(input_data):
             },
             {
                 'id': '5',
-                'title': 'Внутреннее производство товара шрот подсолнечный',
+                'title': 'Внутреннее производство товара B2',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[4, 'before'],
                 'newbalance': production_and_consumption.at[4, 'after'],
@@ -1283,7 +1411,7 @@ def oil_export(input_data):
             },
             {
                 'id': '6',
-                'title': 'Внутреннее потребление товара шрот подсолнечный',
+                'title': 'Внутреннее потребление товара B2',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[5, 'before'],
                 'newbalance': production_and_consumption.at[5, 'after'],
@@ -1292,7 +1420,7 @@ def oil_export(input_data):
             },
             {
                 'id': '7',
-                'title': 'Экспорт товара шрот подсолнечный',
+                'title': 'Экспорт товара B2',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[6, 'before'],
                 'newbalance': production_and_consumption.at[6, 'after'],
@@ -1301,7 +1429,7 @@ def oil_export(input_data):
             },
             {
                 'id': '8',
-                'title': 'Производство/потребление товара масло подсолнечное рафинированное (потребление)',
+                'title': 'Производство/потребление товара С',
                 'measure': 'млн тонн',
                 'basebalance': production_and_consumption.at[7, 'before'],
                 'newbalance': production_and_consumption.at[7, 'after'],
@@ -1313,7 +1441,7 @@ def oil_export(input_data):
             {
                 'id': '1',
                 'title': 'Эффект платежного баланса',
-                'measure': 'млн руб',
+                'measure': 'долл США * руб/долл США * млн тонн',
                 'basebalance': cost_effects.at[0, 'before'],
                 'newbalance': cost_effects.at[0, 'after'],
                 'growth': cost_effects.at[0, 'increment'],
@@ -1322,7 +1450,7 @@ def oil_export(input_data):
             {
                 'id': '2',
                 'title': 'Эффект таможенных сборов',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[1, 'before'],
                 'newbalance': cost_effects.at[1, 'after'],
                 'growth': cost_effects.at[1, 'increment'],
@@ -1332,169 +1460,161 @@ def oil_export(input_data):
         'fintable4': [
             {
                 'id': '1',
-                'title': '- излишек производителя товара семена подсолнечника',
-                'measure': 'млн руб',
+                'title': '- излишек производителя товара А',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[4, 'before']
             },
             {
                 'id': '2',
-                'title': '- излишек косвенных потребителей товара семена подсолнечника',
-                'measure': 'млн руб',
+                'title': '- излишек косвенных потребителей товара А',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[5, 'before']
             },
             {
                 'id': '3',
-                'title': '- в т.ч. потребителей товара масло подсолнечное сырое (сырье) / масло подсолнечное '
-                         'рафинированное (потребление)',
-                'measure': 'млн руб',
+                'title': '- в т.ч. потребителей товара B1/C',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[6, 'before']
             },
             {
                 'id': '4',
-                'title': '- в т.ч. потребителей товара шрот подсолнечный',
-                'measure': 'млн руб',
+                'title': '- в т.ч. потребителей товара B2',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[7, 'before']
             },
             {
                 'id': '5',
                 'title': 'Эффект экономических потерь',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[8, 'before']
             },
             {
                 'id': '6',
-                'title': 'Изменение оборота производителей товара семена подсолнечника:',
-                'measure': 'млн руб',
+                'title': 'Изменение оборота производителей товара А:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[10, 'before']
             },
             {
                 'id': '7',
                 'title': '- изменение оборота из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[11, 'before']
             },
             {
                 'id': '8',
                 'title': '- изменение объема производства',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[12, 'before']
             },
             {
                 'id': '9',
-                'title': 'Изменение оборота производителей товара масло подсолнечное сырое (сырье):',
-                'measure': 'млн руб',
+                'title': 'Изменение оборота производителей товара B1:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[14, 'before']
             },
             {
                 'id': '10',
                 'title': '- изменение оборота из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[15, 'before']
             },
             {
                 'id': '11',
                 'title': '- изменение объема производства',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[16, 'before']
             },
             {
                 'id': '12',
-                'title': 'Изменение суммы покупок потребителей товара масло подсолнечное сырое (сырье):',
-                'measure': 'млн руб',
+                'title': 'Изменение суммы покупок потребителей товара B1:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[18, 'before']
             },
             {
                 'id': '13',
                 'title': '- переплата потребителей из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[19, 'before']
             },
             {
                 'id': '14',
                 'title': '- изменение объема потребления',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[20, 'before']
             },
             {
                 'id': '15',
-                'title': 'Изменение оборота производителей товара шрот подсолнечный::',
-                'measure': 'млн руб',
+                'title': 'Изменение оборота производителей товара B2:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[22, 'before']
             },
             {
                 'id': '16',
                 'title': '- изменение оборота из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[23, 'before']
             },
             {
                 'id': '17',
                 'title': '- изменение объема производства',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[24, 'before']
             },
             {
                 'id': '18',
-                'title': 'Изменение суммы покупок потребителей товара шрот подсолнечный:',
-                'measure': 'млн руб',
+                'title': 'Изменение суммы покупок потребителей товара B2:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[26, 'before']
             },
             {
                 'id': '19',
                 'title': '- переплата потребителей из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[27, 'before']
             },
             {
                 'id': '20',
                 'title': '- изменение объема потребления',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[28, 'before']
             },
             {
                 'id': '21',
-                'title': 'Изменение оборота производителей товара масло подсолнечное рафинированное (потребление):',
-                'measure': 'млн руб',
+                'title': 'Изменение оборота производителей товара C:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[30, 'before']
             },
             {
                 'id': '22',
                 'title': '- изменение оборота из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[31, 'before']
             },
             {
                 'id': '23',
                 'title': '- изменение объема производства',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[32, 'before']
             },
             {
                 'id': '24',
-                'title': 'Изменение суммы покупок потребителей товара масло подсолнечное рафинированное (потребление):',
-                'measure': 'млн руб',
+                'title': 'Изменение суммы покупок потребителей товара С:',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[34, 'before']
             },
             {
                 'id': '25',
                 'title': '- переплата потребителей из-за изменения цен',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[35, 'before']
             },
             {
                 'id': '26',
                 'title': '- изменение объема потребления',
-                'measure': 'млн руб',
+                'measure': 'руб/т * млн тонн',
                 'basebalance': cost_effects.at[36, 'before']
             }
         ]
     }
-    print(prices_group_b_products.at[3, 'before'])
-    print(prices_group_b_products.at[3, 'before'].round(decimals=2))
 
     return result_to_front
-
-
-input_data = InputDataBase(user_data)
-result = oil_export(input_data)
-print(result)
