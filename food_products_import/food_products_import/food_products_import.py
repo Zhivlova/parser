@@ -32,8 +32,22 @@ def food_products_import(input_data):
     pricing_characteristics = pricing_characteristics.rename(columns={'Unnamed: 1': 'designation',
                                                                       'Unnamed: 2': 'measure', 'до': 'before',
                                                                       'после': 'after', 'Прирост,%': 'increment_pr'})
-    print(pricing_characteristics.to_markdown())
+    quantitative_characteristics = df.iloc[13:19, 0:5]
+    quantitative_characteristics.index = np.arange(0, len(quantitative_characteristics))
+    quantitative_characteristics = quantitative_characteristics.rename(columns={'Unnamed: 1': 'designation',
+                                                                      'Unnamed: 2': 'measure', 'до': 'before',
+                                                                      'после': 'after', 'Прирост,%': 'increment_pr'})
 
+    effects = df.iloc[22:46, 0:3]
+    effects.index = np.arange(0, len(effects))
+
+    parameter_values = df.iloc[1:9, 7:10]
+    parameter_values.index = np.arange(0, len(parameter_values))
+
+    # print(pricing_characteristics.to_markdown())
+    # print(quantitative_characteristics.to_markdown())
+    # print(effects.to_markdown())
+    print(parameter_values.to_markdown())
 
 input_data = InputDataBase(user_data)
 result = food_products_import(input_data)
