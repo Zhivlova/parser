@@ -1,11 +1,6 @@
-from math import fsum
-
 import numpy as np
 import pandas as pd
 import os
-
-import sympy
-
 
 example_data = {'PW_A_const_before': 228.0, 'PW_A_const_after': 228.798691500235, 'PW_A_shift_before': 0.0,
                 'PW_A_shift_after': 0.0, 'ER_before': 72.32, 'ER_after': 72.32, 'CT_before': 59.0, 'TD_before': 0.0,
@@ -79,7 +74,7 @@ class InputDataBase:
 
 def wheat_exports(input_data):
     # Получаем данные из модели
-    mydir = '/Users/natalazivlova/Desktop/parser/vavt_wheat_exports/wheat_exports/'
+    mydir = 'vavt_wheat_exports/wheat_exports/'
     myfile = 'Экспорт_пшеница_легенда.xlsm'
     file = os.path.join(mydir, myfile)
     df = pd.read_excel(file, usecols='A:Q', index_col=0)
@@ -460,6 +455,16 @@ def wheat_exports(input_data):
                                                                                  calc_customs_duty.at[9, 'after'],
                                                                                  prices_on_world_market.at[5, 'after'])
 
+    # H38
+    def func_h38(df, H37, H35):
+        return H37 / H35
+
+    int_prod_product_c1.at[3, 'before'] = int_prod_product_c1['before'].pipe(func_h38,
+                                                                             int_prod_product_c1.at[2, 'before'],
+                                                                             int_prod_product_c1.at[0, 'before'])
+    # I38
+    int_prod_product_c1.at[3, 'after'] = int_prod_product_c1.at[3, 'before']
+
     # H47
     def func_h47(df, H46, H44):
         return H46 / H44
@@ -470,15 +475,9 @@ def wheat_exports(input_data):
     # I47
     int_prod_product_c2.at[3, 'after'] = int_prod_product_c2.at[3, 'before']
 
-    # H38
-    def func_h38(df, H37, H35):
-        return H37 / H35
+    # H53
+    other_use_prod_a.at[0, 'before'] = int_prod_product_a.at[0, 'before'] * 0.098
 
-    int_prod_product_c1.at[3, 'before'] = int_prod_product_c1['before'].pipe(func_h38,
-                                                                             int_prod_product_c1.at[2, 'before'],
-                                                                             int_prod_product_c1.at[0, 'before'])
-    # I38
-    int_prod_product_c1.at[3, 'after'] = int_prod_product_c1.at[3, 'before']
 
     # H54
     def func_h54(df, H53, H44, H47, H35, H38):
@@ -496,11 +495,6 @@ def wheat_exports(input_data):
 
     other_use_prod_a.at[2, 'before'] = other_use_prod_a['before'].pipe(func_h55, int_prod_product_a.at[0, 'before'],
                                                                        other_use_prod_a.at[1, 'before'])
-    # H53
-    other_use_prod_a.at[0, 'before'] = int_prod_product_a.at[0, 'before'] * 0.098
-
-    # I53
-    other_use_prod_a.at[0, 'after'] = int_prod_product_a.at[0, 'after'] * 0.098
 
     # H26
     def func_h26(df, H24, H20, H55, H29, H25):
@@ -568,16 +562,6 @@ def wheat_exports(input_data):
                                                                              elasticity_at_price.at[
                                                                                  1, 'Эластичности по собственной цене'])
 
-    # I35
-    def func_i35(df, H36, I41, B8):
-        return H36 * (I41) ** B8
-
-    int_prod_product_c1.at[0, 'after'] = int_prod_product_c1['after'].pipe(func_i35,
-                                                                           int_prod_product_c1.at[1, 'before'],
-                                                                           int_prod_product_c1.at[6, 'after'],
-                                                                           elasticity_at_price.at[
-                                                                               1, 'Эластичности по собственной цене'])
-
     # H39
     def func_h39(df, H41, H38, H24):
         return H41 - H38 * H24
@@ -590,6 +574,12 @@ def wheat_exports(input_data):
     # I39
     int_prod_product_c1.at[4, 'after'] = int_prod_product_c1.at[4, 'before']
 
+    # I53
+    def func_i53(df, I29):
+        return I29 * 0.098
+
+    other_use_prod_a.at[0, 'after'] = other_use_prod_a['after'].pipe(func_i53, int_prod_product_a.at[0, 'after'])
+
     # I41
     def func_i41(df, I38, I24, I39):
         return I38 * I24 + I39
@@ -597,6 +587,21 @@ def wheat_exports(input_data):
     int_prod_product_c1.at[6, 'after'] = int_prod_product_c1['after'].pipe(func_i41, int_prod_product_c1.at[3, 'after'],
                                                                            int_prices_inc_dempfer.at[0, 'after'],
                                                                            int_prod_product_c1.at[4, 'after'])
+    # I35
+    def func_i35(df, H36, I41, B8):
+        return H36 * (I41) ** B8
+
+    int_prod_product_c1.at[0, 'after'] = int_prod_product_c1['after'].pipe(func_i35, int_prod_product_c1.at[1, 'before'],
+                                                                           int_prod_product_c1.at[6, 'after'],
+                                                        elasticity_at_price.at[1, 'Эластичности по собственной цене'])
+
+    # I37
+    def func_i37(df, I35, I38):
+        return I35*I38
+
+    int_prod_product_c1.at[2, 'after'] = int_prod_product_c1['after'].pipe(func_i37, int_prod_product_c1.at[0, 'after'],
+                                                                           int_prod_product_c1.at[3, 'after'])
+
 
     # I40
     def func_i40(df, I35, I41):
@@ -622,17 +627,6 @@ def wheat_exports(input_data):
                                                                              int_prod_product_c2.at[6, 'before'],
                                                                              elasticity_at_price.at[
                                                                                  2, 'Эластичности по собственной цене'])
-
-    # I44
-    def func_i44(df, H45, I50, B9):
-        return H45 * (I50) ** B9
-
-    int_prod_product_c2.at[0, 'after'] = int_prod_product_c2['after'].pipe(func_i44,
-                                                                           int_prod_product_c2.at[1, 'before'],
-                                                                           int_prod_product_c2.at[6, 'after'],
-                                                                           elasticity_at_price.at[
-                                                                               2, 'Эластичности по собственной цене'])
-
     # H48
     def func_h48(df, H50, H47, H24):
         return H50 - H47 * H24
@@ -651,6 +645,29 @@ def wheat_exports(input_data):
     int_prod_product_c2.at[6, 'after'] = int_prod_product_c2['after'].pipe(func_i50, int_prod_product_c2.at[3, 'after'],
                                                                            int_prices_inc_dempfer.at[0, 'after'],
                                                                            int_prod_product_c2.at[4, 'after'])
+    # I44
+    def func_i44(df, H45, I50, B9):
+        return H45 * (I50) ** B9
+
+    int_prod_product_c2.at[0, 'after'] = int_prod_product_c2['after'].pipe(func_i44,
+                                                                           int_prod_product_c2.at[1, 'before'],
+                                                                           int_prod_product_c2.at[6, 'after'],
+                                                                           elasticity_at_price.at[
+                                                                               2, 'Эластичности по собственной цене'])
+
+    # I46
+    def func_i46(df, I44, I47):
+        return I44*I47
+
+    int_prod_product_c2.at[2, 'after'] = int_prod_product_c2['after'].pipe(func_i46, int_prod_product_c2.at[0, 'after'],
+                                                                           int_prod_product_c2.at[3, 'after'])
+
+    # I49
+    def func_i49(df, I44, I50):
+        return I44*I50
+
+    int_prod_product_c2.at[5, 'after'] = int_prod_product_c2['after'].pipe(func_i49, int_prod_product_c2.at[0, 'after'],
+                                                                           int_prod_product_c2.at[6, 'after'])
 
     # I54
     def func_i54(df, I53, I44, I47, I35, I38):
@@ -931,6 +948,8 @@ def wheat_exports(input_data):
             Q20 = O20 / N20 - 1
         except ZeroDivisionError:
             Q20 = '-'
+        except ArithmeticError:
+            Q20 = '-'
         else:
             Q20 = '-'
         return Q20
@@ -1076,15 +1095,820 @@ def wheat_exports(input_data):
     # N45
     cost_effects.at[26, 'before'] = cost_effects.at[27, 'before'] + cost_effects.at[28, 'before']
 
-    if world_market_good_a.at[10, 'after'] ** 2 < 0.000001:
+    if (world_market_good_a.at[10, 'after']) ** 2 < 0.000001:
         solution = True
     else:
         solution = False
 
     result_to_front = {
+        'table1': [
+            {
+                'id': '1',
+                'title': 'Мировая цена пшеницы до сдвига',
+                'measure': 'долл США',
+                'params': 'PW_A_const',
+                'basebalance': prices_on_world_market.at[0, 'before'],
+                'newbalance': prices_on_world_market.at[0, 'after'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '2',
+                'title': 'Инфляционный сдвиг мировой цены пшеницы',
+                'measure': 'долл США',
+                'params': 'PW_A_shift',
+                'basebalance': prices_on_world_market.at[1, 'before'],
+                'newbalance': prices_on_world_market.at[1, 'after'],
+                'status': prices_on_world_market.at[1, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '3',
+                'title': 'Мировая цена пшеницы после сдвига',
+                'measure': 'долл США',
+                'params': 'PW_A',
+                'basebalance': prices_on_world_market.at[2, 'before'].round(decimals=2),
+                'newbalance': prices_on_world_market.at[2, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '4',
+                'title': 'Обменный курс',
+                'measure': 'руб/долл США',
+                'params': 'ER',
+                'basebalance': prices_on_world_market.at[3, 'before'],
+                'newbalance': prices_on_world_market.at[3, 'after'],
+                'status': prices_on_world_market.at[3, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '5',
+                'title': 'Стоимость услуг трейдеров',
+                'measure': 'долл США',
+                'params': 'CT',
+                'basebalance': prices_on_world_market.at[4, 'before'],
+                'newbalance': prices_on_world_market.at[4, 'after'].round(decimals=2),
+                'status': prices_on_world_market.at[4, 'status'],
+                "editBase": 'true',
+                "editNew": 'false'
+            },
+            {
+                'id': '6',
+                'title': 'Дисконт к эквивалентной цене',
+                'measure': '',
+                'params': 'TD',
+                'basebalance': prices_on_world_market.at[5, 'before'],
+                'newbalance': prices_on_world_market.at[5, 'after'],
+                'status': prices_on_world_market.at[5, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            }
+        ],
+        'table2': [
+            {
+                'id': '1',
+                'title': 'Первая базовая цена',
+                'measure': 'руб/т',
+                'params': 'Pb',
+                'basebalance': calc_customs_duty.at[0, 'before'],
+                'newbalance': calc_customs_duty.at[0, 'after'],
+                'status': calc_customs_duty.at[0, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '2',
+                'title': 'Вторая базовая цена',
+                'measure': 'долл/т',
+                'params': 'Pb2',
+                'basebalance': calc_customs_duty.at[1, 'before'],
+                'newbalance': calc_customs_duty.at[1, 'after'],
+                'status': calc_customs_duty.at[1, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '3',
+                'title': 'Третья базовая цена',
+                'measure': 'долл/т',
+                'params': 'Pb3',
+                'basebalance': calc_customs_duty.at[2, 'before'],
+                'newbalance': calc_customs_duty.at[2, 'after'],
+                'status': calc_customs_duty.at[2, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '4',
+                'title': 'Ставка к первой базовой цене',
+                'measure': '',
+                'params': 't1',
+                'basebalance': calc_customs_duty.at[3, 'before'],
+                'newbalance': calc_customs_duty.at[3, 'after'],
+                'status': calc_customs_duty.at[3, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '5',
+                'title': 'Ставка ко второй базовой цене',
+                'measure': '',
+                'params': 't2',
+                'basebalance': calc_customs_duty.at[4, 'before'],
+                'newbalance': calc_customs_duty.at[4, 'after'],
+                'status': calc_customs_duty.at[4, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '6',
+                'title': 'Ставка к третьей базовой цене',
+                'measure': '',
+                'params': 't3',
+                'basebalance': calc_customs_duty.at[5, 'before'],
+                'newbalance': calc_customs_duty.at[5, 'after'],
+                'status': calc_customs_duty.at[5, 'status'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '7',
+                'title': 'Вспомогательные расчеты',
+                'measure': '',
+                'params': 'tax_1',
+                'basebalance': calc_customs_duty.at[6, 'before'].round(decimals=2),
+                'newbalance': calc_customs_duty.at[6, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '8',
+                'title': 'Вспомогательные расчеты',
+                'measure': '',
+                'params': 'tax_2',
+                'basebalance': calc_customs_duty.at[7, 'before'].round(decimals=2),
+                'newbalance': calc_customs_duty.at[7, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '9',
+                'title': 'Вспомогательные расчеты',
+                'measure': '',
+                'params': 'tax_3',
+                'basebalance': calc_customs_duty.at[8, 'before'].round(decimals=2),
+                'newbalance': calc_customs_duty.at[8, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '10',
+                'title': 'Вывозная таможенная пошлина на пшеницу',
+                'measure': 'руб/т',
+                'params': 'tax',
+                'basebalance': calc_customs_duty.at[9, 'before'].round(decimals=2),
+                'newbalance': calc_customs_duty.at[9, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '11',
+                'title': 'Адвалорная ставка пошлины на пшеницу',
+                'measure': '',
+                'params': 't',
+                'basebalance': calc_customs_duty.at[10, 'before'].round(decimals=2),
+                'newbalance': calc_customs_duty.at[10, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            }
+        ],
+        'table3': [
+            {
+                'id': '1',
+                'title': 'Внутренняя цена пшеницы для потребителей',
+                'measure': 'руб/т',
+                'params': 'PI_A_cons',
+                'basebalance': int_prices_inc_dempfer.at[0, 'before'].round(decimals=2),
+                'newbalance': int_prices_inc_dempfer.at[0, 'after'].round(decimals=2),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '2',
+                'title': 'Ставка зернового демпфера',
+                'measure': '',
+                'params': 'demp',
+                'basebalance': int_prices_inc_dempfer.at[1, 'before'],
+                'newbalance': int_prices_inc_dempfer.at[1, 'after'],
+                'status': int_prices_inc_dempfer.at[1, 'status'],
+                'editBase': 'true',
+                'editNew': 'true'
+            },
+            {
+                'id': '3',
+                'title': 'Внутренняя цена пшеницы для производителей',
+                'measure': 'руб/т',
+                'params': 'PI_A_prod',
+                'basebalance': int_prices_inc_dempfer.at[2, 'before'].round(decimals=2),
+                'newbalance': int_prices_inc_dempfer.at[2, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            }
+        ],
+        'table4': [
+            {
+                'id': '1',
+                'title': 'Объем внутреннего производства пшеницы',
+                'measure': 'млн тонн',
+                'params': 'QSI_A',
+                'basebalance': int_prod_product_a.at[0, 'before'],
+                'newbalance': int_prod_product_a.at[0, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '2',
+                'title': 'Индекс превышения затрат на производство над ценами',
+                'measure': '',
+                'params': 'i_cost',
+                'basebalance': int_prod_product_a.at[1, 'before'],
+                'newbalance': int_prod_product_a.at[1, 'after'],
+                'status': int_prod_product_a.at[1, 'status'],
+                'editBase': 'true',
+                'editNew': 'true'
+            },
+            {
+                'id': '3',
+                'title': 'Экзогенный сдвиг во внутреннем предложении пшеницы',
+                'measure': '',
+                'params': 'shift_QSI_A',
+                'basebalance': int_prod_product_a.at[2, 'before'],
+                'newbalance': int_prod_product_a.at[2, 'after'],
+                'status': int_prod_product_a.at[2, 'status'],
+                'editBase': 'true',
+                'editNew': 'true'
+            },
+            {
+                'id': '4',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QSI_A',
+                'basebalance': int_prod_product_a.at[3, 'before'].round(decimals=2),
+                'newbalance': '',
+                'editBase': 'false',
+                'editNew': 'false'
+            }
+        ],
+        'table5': [
+            {
+                'id': '1',
+                'title': 'Внутренний спрос на хлеб',
+                'measure': 'млн тонн',
+                'params': 'QDI_С1',
+                'basebalance': int_prod_product_c1.at[0, 'before'],
+                'newbalance': int_prod_product_c1.at[0, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '2',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QDI_C1',
+                'basebalance': int_prod_product_c1.at[1, 'before'].round(decimals=2),
+                'newbalance': '',
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '3',
+                'title': 'Объем пшеницы на производство хлеба',
+                'measure': 'млн тонн',
+                'params': 'QDI_A_C1',
+                'basebalance': int_prod_product_c1.at[2, 'before'],
+                'newbalance': int_prod_product_c1.at[2, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '4',
+                'title': 'Использование единиц пшеницы на единицу хлеба (калибруемый параметр)',
+                'measure': 'млн тонн / млн тонн',
+                'params': 'd_A_C1',
+                'basebalance': int_prod_product_c1.at[3, 'before'].round(decimals=2),
+                'newbalance': int_prod_product_c1.at[3, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '5',
+                'title': 'Затраты на производство единицы хлеба кроме пшеницы (калибруемый параметр)',
+                'measure': 'руб/т',
+                'params': 'CI_C1_other',
+                'basebalance': int_prod_product_c1.at[4, 'before'].round(decimals=2),
+                'newbalance': int_prod_product_c1.at[4, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '6',
+                'title': 'Внутренние затраты потребителей на хлеб',
+                'measure': 'млн тонн * руб/т',
+                'params': 'SpI_C1',
+                'basebalance': int_prod_product_c1.at[5, 'before'],
+                'newbalance': int_prod_product_c1.at[5, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '7',
+                'title': 'Цена хлеба',
+                'measure': 'руб/т',
+                'params': 'PI_C1',
+                'basebalance': int_prod_product_c1.at[6, 'before'].round(decimals=2),
+                'newbalance': int_prod_product_c1.at[6, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            }
+        ],
+        'table6': [
+            {
+                'id': '1',
+                'title': 'Внутренний спрос на мясо',
+                'measure': 'млн тонн',
+                'params': 'QDI_С2',
+                'basebalance': int_prod_product_c2.at[0, 'before'],
+                'newbalance': int_prod_product_c2.at[0, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '2',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QDI_C2',
+                'basebalance': int_prod_product_c2.at[1, 'before'].round(decimals=2),
+                'newbalance': '',
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '3',
+                'title': 'Объем пшеницы на производство мяса',
+                'measure': 'млн тонн',
+                'params': 'QDI_A_C2',
+                'basebalance': int_prod_product_c2.at[2, 'before'],
+                'newbalance': int_prod_product_c2.at[2, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '4',
+                'title': 'Использование единиц пшеницы на единицу мяса (калибруемый параметр)',
+                'measure': 'млн тонн / млн тонн',
+                'params': 'd_A_C2',
+                'basebalance': int_prod_product_c2.at[3, 'before'].round(decimals=2),
+                'newbalance': int_prod_product_c2.at[3, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '5',
+                'title': 'Затраты на производство единицы мяса кроме пшеницы (калибруемый параметр)',
+                'measure': 'руб/т',
+                'params': 'CI_C2_other',
+                'basebalance': int_prod_product_c2.at[4, 'before'].round(decimals=2),
+                'newbalance': int_prod_product_c2.at[4, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '6',
+                'title': 'Внутренние затраты потребителей на мясо',
+                'measure': 'млн тонн * руб/т',
+                'params': 'SpI_C2',
+                'basebalance': int_prod_product_c2.at[5, 'before'],
+                'newbalance': int_prod_product_c2.at[5, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '7',
+                'title': 'Цена мяса',
+                'measure': 'руб/т',
+                'params': 'PI_C2',
+                'basebalance': int_prod_product_c2.at[6, 'before'].round(decimals=2),
+                'newbalance': int_prod_product_c2.at[6, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            }
+        ],
+        'table7': [
+            {
+                'id': '1',
+                'title': 'Объем прочего использования пшеницы',
+                'measure': 'млн тонн',
+                'params': 'Other_use_A',
+                'basebalance': other_use_prod_a.at[0, 'before'].round(decimals=2),
+                'newbalance': other_use_prod_a.at[0, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '2',
+                'title': 'Внутренний спрос на пшеницу',
+                'measure': 'млн тонн',
+                'params': 'QDI_A',
+                'basebalance': other_use_prod_a.at[1, 'before'].round(decimals=2),
+                'newbalance': other_use_prod_a.at[1, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '3',
+                'title': 'Экспортное предложение пшеницы со стороны России',
+                'measure': 'млн тонн',
+                'params': 'QSW_RUS_A',
+                'basebalance': other_use_prod_a.at[2, 'before'].round(decimals=2),
+                'newbalance': other_use_prod_a.at[2, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            }
+        ],
+        'table8': [
+            {
+                'id': '1',
+                'title': 'Производство пшеницы (остальной мир)',
+                'measure': 'млн тонн',
+                'params': 'QS_exRUS_A',
+                'basebalance': world_market_good_a.at[0, 'before'],
+                'newbalance': world_market_good_a.at[0, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '2',
+                'title': 'Глобальный спрос со стороны импортеров',
+                'measure': 'млн тонн',
+                'params': 'QD_A',
+                'basebalance': world_market_good_a.at[1, 'before'],
+                'newbalance': world_market_good_a.at[1, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '3',
+                'title': 'Внутренний спрос экспортеров (остальной мир)',
+                'measure': 'млн тонн',
+                'params': 'QD_exRUS_A',
+                'basebalance': world_market_good_a.at[2, 'before'],
+                'newbalance': world_market_good_a.at[2, 'after'].round(decimals=2),
+                'editBase': 'true',
+                'editNew': 'false'
+            },
+            {
+                'id': '4',
+                'title': 'Экспортное предложение пшеницы со стороны прочих стран',
+                'measure': 'млн тонн',
+                'params': 'QSW_exRUS_A',
+                'basebalance': world_market_good_a.at[3, 'before'].round(decimals=2),
+                'newbalance': world_market_good_a.at[3, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '5',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QS_exRUS_A',
+                'basebalance': world_market_good_a.at[4, 'before'].round(decimals=2),
+                'newbalance': '',
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '6',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QD_A',
+                'basebalance': world_market_good_a.at[5, 'before'].round(decimals=2),
+                'newbalance': '',
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '7',
+                'title': 'Калибруемый вспомогательный параметр',
+                'measure': '',
+                'params': 'Z_QD_exRUS_A',
+                'basebalance': world_market_good_a.at[6, 'before'].round(decimals=2),
+                'newbalance': '',
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '8',
+                'title': 'Совокупное предложение пшеницы на мировом рынке',
+                'measure': '',
+                'params': 'QSW_A',
+                'basebalance': world_market_good_a.at[7, 'before'].round(decimals=2),
+                'newbalance': world_market_good_a.at[7, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            },
+            {
+                'id': '9',
+                'title': 'Экзогенный сдвиг во внешнем предложении пшеницы',
+                'measure': '',
+                'params': 'shift_QSW_A',
+                'basebalance': world_market_good_a.at[8, 'before'],
+                'newbalance': world_market_good_a.at[8, 'after'],
+                'status': world_market_good_a.at[8, 'status'],
+                'editBase': 'true',
+                'editNew': 'true'
+            },
+            {
+                'id': '10',
+                'title': 'Индекс превышения затрат на производство над ценами в остальном мире',
+                'measure': '',
+                'params': 'i_cost_world',
+                'basebalance': world_market_good_a.at[9, 'before'],
+                'newbalance': world_market_good_a.at[9, 'after'],
+                'status': world_market_good_a.at[9, 'status'],
+                'editBase': 'true',
+                'editNew': 'true'
+
+            },
+            {
+                'id': '11',
+                'title': 'Баланс',
+                'measure': '',
+                'params': '',
+                'basebalance': world_market_good_a.at[10, 'before'].round(decimals=2),
+                'newbalance': world_market_good_a.at[10, 'after'].round(decimals=2),
+                'editBase': 'false',
+                'editNew': 'false'
+            }
+        ],
+        'fintable1': [
+            {
+                'id': '1',
+                'title': 'Мировая цена пшеницы',
+                'measure': 'долл США',
+                'basebalance': prices.at[0, 'before'].round(decimals=2),
+                'newbalance': prices.at[0, 'after'].round(decimals=2),
+                'growth': prices.at[0, 'increment'].round(decimals=3),
+                'growthpercent': prices.at[0, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '2',
+                'title': 'Внутренняя цена пшеницы для потребителей',
+                'measure': 'руб/т',
+                'basebalance': prices.at[1, 'before'].round(decimals=2),
+                'newbalance': prices.at[1, 'after'].round(decimals=2),
+                'growth': prices.at[1, 'increment'].round(decimals=3),
+                'growthpercent': prices.at[1, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '3',
+                'title': 'Внутренняя цена пшеницы для производителей',
+                'measure': 'руб/т',
+                'basebalance': prices.at[2, 'before'].round(decimals=2),
+                'newbalance': prices.at[2, 'after'].round(decimals=2),
+                'growth': prices.at[2, 'increment'].round(decimals=3),
+                'growthpercent': prices.at[2, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '4',
+                'title': 'Цена хлеба',
+                'measure': 'руб/т',
+                'basebalance': prices.at[3, 'before'].round(decimals=2),
+                'newbalance': prices.at[3, 'after'].round(decimals=2),
+                'growth': prices.at[3, 'increment'].round(decimals=3),
+                'growthpercent': prices.at[3, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '5',
+                'title': 'Цена мяса',
+                'measure': 'руб/т',
+                'basebalance': prices.at[4, 'before'].round(decimals=2),
+                'newbalance': prices.at[4, 'after'].round(decimals=2),
+                'growth': prices.at[4, 'increment'].round(decimals=3),
+                'growthpercent': prices.at[4, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '6',
+                'title': 'Изменение ИПЦ',
+                'measure': '',
+                'basebalance': '',
+                'newbalance': '',
+                'growth': prices.at[5, 'increment'].round(decimals=3),
+                'growthpercent': ''
+            }
+        ],
+        'fintable2': [
+            {
+                'id': '1',
+                'title': 'Внутреннее производство пшеницы',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[0, 'before'].round(decimals=2),
+                'newbalance': production_and_consumption.at[0, 'after'].round(decimals=2),
+                'growth': production_and_consumption.at[0, 'increment'].round(decimals=3),
+                'growthpercent': production_and_consumption.at[0, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '2',
+                'title': 'Внутреннее потребление пшеницы',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[1, 'before'].round(decimals=2),
+                'newbalance': production_and_consumption.at[1, 'after'].round(decimals=2),
+                'growth': production_and_consumption.at[1, 'increment'].round(decimals=3),
+                'growthpercent': production_and_consumption.at[1, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '3',
+                'title': 'Экспорт пшеницы',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[2, 'before'].round(decimals=2),
+                'newbalance': production_and_consumption.at[2, 'after'].round(decimals=2),
+                'growth': production_and_consumption.at[2, 'increment'].round(decimals=3),
+                'growthpercent': production_and_consumption.at[2, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '4',
+                'title': 'Производство/потребление хлеба',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[3, 'before'].round(decimals=2),
+                'newbalance': production_and_consumption.at[3, 'after'].round(decimals=2),
+                'growth': production_and_consumption.at[3, 'increment'].round(decimals=3),
+                'growthpercent': production_and_consumption.at[3, 'increment_pr'].round(decimals=3)
+            },
+            {
+                'id': '5',
+                'title': 'Производство/потребление мяса',
+                'measure': 'млн тонн',
+                'basebalance': production_and_consumption.at[4, 'before'].round(decimals=2),
+                'newbalance': production_and_consumption.at[4, 'after'].round(decimals=2),
+                'growth': production_and_consumption.at[4, 'increment'].round(decimals=3),
+                'growthpercent': production_and_consumption.at[4, 'increment_pr'].round(decimals=3)
+            }
+        ],
+        'fintable3': [
+            {
+                'id': '1',
+                'title': 'Эффект платежного баланса',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[0, 'before'].round(decimals=2),
+                'newbalance': cost_effects.at[0, 'after'].round(decimals=2),
+                'growth': cost_effects.at[0, 'increment'],
+                'growthpercent': cost_effects.at[0, 'increment_pr']
+            },
+            {
+                'id': '2',
+                'title': 'Эффект таможенных сборов',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[1, 'before'].round(decimals=2),
+                'newbalance': cost_effects.at[1, 'after'].round(decimals=2),
+                'growth': cost_effects.at[1, 'increment'].round(decimals=3),
+                'growthpercent': cost_effects.at[1, 'increment_pr']
+            }
+        ],
+        'fintable4': [
+            {
+                'id': '1',
+                'title': '- излишек производителя пшеницы',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[4, 'before'].round(decimals=2)
+            },
+            {
+                'id': '2',
+                'title': '- излишек косвенных потребителей пшеницы',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[5, 'before'].round(decimals=2)
+            },
+            {
+                'id': '3',
+                'title': '- в т.ч. потребителей хлеба',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[6, 'before'].round(decimals=2)
+            },
+            {
+                'id': '4',
+                'title': '- в т.ч. потребителей мяса',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[7, 'before'].round(decimals=2)
+            },
+            {
+                'id': '5',
+                'title': 'Эффект экономических потерь',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[8, 'before'].round(decimals=2)
+            }
+        ],
+        'fintable5': [
+            {
+                'id': '1',
+                'title': 'Изменение оборота производителей пшеницы:',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[10, 'before'].round(decimals=2)
+            },
+            {
+                'id': '2',
+                'title': '- изменение оборота из-за изменения цен',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[11, 'before'].round(decimals=2)
+            },
+            {
+                'id': '3',
+                'title': '- изменение объема производства',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[12, 'before'].round(decimals=2)
+            }
+        ],
+        'fintable6': [
+            {
+                'id': '1',
+                'title': 'Изменение оборота производителей хлеба:',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[14, 'before'].round(decimals=2)
+            },
+            {
+                'id': '2',
+                'title': '- изменение оборота из-за изменения цен',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[15, 'before'].round(decimals=2)
+            },
+            {
+                'id': '3',
+                'title': '- изменение объема производства',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[16, 'before'].round(decimals=2)
+            }
+        ],
+        'fintable7': [
+            {
+                'id': '1',
+                'title': 'Изменение суммы покупок потребителей хлеба:',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[18, 'before'].round(decimals=2)
+            },
+            {
+                'id': '2',
+                'title': '- переплата потребителей из-за изменения цен',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[19, 'before'].round(decimals=2)
+            },
+            {
+                'id': '3',
+                'title': '- изменение объема потребления',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[20, 'before'].round(decimals=2)
+            }
+        ],
+        'fintable8': [
+            {
+                'id': '15',
+                'title': 'Изменение оборота производителей мяса:',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[22, 'before'].round(decimals=2)
+            },
+            {
+                'id': '16',
+                'title': '- изменение оборота из-за изменения цен',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[23, 'before'].round(decimals=2)
+            },
+            {
+                'id': '17',
+                'title': '- изменение объема производства',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[24, 'before'].round(decimals=2)
+            }
+        ],
+        'fintable9': [
+            {
+                'id': '18',
+                'title': 'Изменение суммы покупок потребителей мяса:',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[26, 'before'].round(decimals=2)
+            },
+            {
+                'id': '19',
+                'title': '- переплата потребителей из-за изменения цен',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[27, 'before'].round(decimals=2)
+            },
+            {
+                'id': '20',
+                'title': '- изменение объема потребления',
+                'measure': 'млн руб',
+                'basebalance': cost_effects.at[28, 'before'].round(decimals=2)
+            },
+        ],
         'finding_solution': solution}
+
     return result_to_front
 
-input_data = InputDataBase(user_data)
-result = wheat_exports(input_data)
-print(result)

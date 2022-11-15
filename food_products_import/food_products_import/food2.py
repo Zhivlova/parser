@@ -8,9 +8,8 @@ example_data = {'Pc_before': 400.0, 'Pd_before': 240.0, 'Pcif_before': 3.0, 'Pci
                 'Qt_before': 800.0, 'Qt_after': 800.0, 'S_before': 4000.0, 'M_before': 500.0}
 
 user_data = {'Pc_before': 400.0, 'Pd_before': 240.0, 'Pcif_before': 3.0, 'Pcif_after': 3.0, 'ER_before': 75.0,
-                'ER_after': 75.0, 't_in_before': 0.1, 't_in_after': 0.1, 't_out_before': 0.3, 't_out_after': 0.3,
-                'Qt_before': 800.0, 'Qt_after': 800.0, 'S_before': 4000.0, 'M_before': 500.0}
-
+             'ER_after': 75.0, 't_in_before': 0.1, 't_in_after': 0.1, 't_out_before': 0.3, 't_out_after': 0.3,
+             'Qt_before': 800.0, 'Qt_after': 800.0, 'S_before': 4000.0, 'M_before': 500.0}
 
 
 class InputDataBase:
@@ -96,7 +95,6 @@ def food_products_import(input_data):
 
     """Перерасчет ячеек с новыми значениями"""
 
-
     # F7
     pricing_characteristics.at[4, 'increment_pr'] = pricing_characteristics.at[4, 'after'] / \
                                                     pricing_characteristics.at[4, 'before'] - 1
@@ -108,7 +106,7 @@ def food_products_import(input_data):
     # I16
     def func_i16(df, D9, D17, D11, J9, D10):
         return D9 + math.exp(min(0, (D17 - (D11 + 0.001)) / (D11 + 0.001) * J9)) / (
-                    1 + math.exp(-abs(D17 - (D11 + 0.001)) / (D11 + 0.001) * J9)) * (D10 - D9)
+                1 + math.exp(-abs(D17 - (D11 + 0.001)) / (D11 + 0.001) * J9)) * (D10 - D9)
 
     equations.at[4, 'formulas'] = equations['formulas'].pipe(func_i16, pricing_characteristics.at[6, 'before'],
                                                              quantitative_characteristics.at[2, 'before'],
@@ -116,8 +114,6 @@ def food_products_import(input_data):
                                                              parameter_values.at[6, 'values'],
                                                              pricing_characteristics.at[7, 'before']
                                                              )
-
-
 
     # D12
     pricing_characteristics.at[9, 'before'] = equations.at[4, 'formulas']
@@ -219,8 +215,28 @@ def food_products_import(input_data):
                                                                                    equations.at[1, 'formulas'])
 
     # F4
-    pricing_characteristics.at[1, 'increment_pr'] = pricing_characteristics.at[1, 'after'] / \
-                                                    pricing_characteristics.at[1, 'before'] - 1
+    def func_f4(df, E4, D4):
+        try:
+            res = E4 / D4 - 1
+            if math.isnan(res):
+                F4 = '-'
+                return F4
+            if math.isinf(res):
+                F4 = '-'
+                return F4
+        except ArithmeticError:
+            F4 = '-'
+        except ValueError:
+            F4 = '-'
+        else:
+            F4 = res
+        return F4
+
+    pricing_characteristics.at[1, 'increment_pr'] = pricing_characteristics['increment_pr'].pipe(func_f4,
+                                                                                                 pricing_characteristics.at[
+                                                                                                     1, 'after'],
+                                                                                                 pricing_characteristics.at[
+                                                                                                     1, 'before'])
 
     # I14
     def func_i14(df, I13, J4):
@@ -240,8 +256,28 @@ def food_products_import(input_data):
                                                                                                  2, 'formulas'])
 
     # F15
-    quantitative_characteristics.at[0, 'increment_pr'] = quantitative_characteristics.at[0, 'after'] / \
-                                                         quantitative_characteristics.at[0, 'before'] - 1
+    def func_f15(df, E15, D15):
+        try:
+            res = E15 / D15 - 1
+            if math.isnan(res):
+                F15 = '-'
+                return F15
+            if math.isinf(res):
+                F15 = '-'
+                return F15
+        except ArithmeticError:
+            F15 = '-'
+        except ValueError:
+            F15 = '-'
+        else:
+            F15 = res
+        return F15
+
+    quantitative_characteristics.at[0, 'increment_pr'] = quantitative_characteristics['increment_pr'].pipe(func_f15,
+                                                                                                           quantitative_characteristics.at[
+                                                                                                               0, 'after'],
+                                                                                                           quantitative_characteristics.at[
+                                                                                                               0, 'before'])
 
     # D16
     quantitative_characteristics.at[1, 'before'] = quantitative_characteristics.at[0, 'before']
@@ -268,8 +304,28 @@ def food_products_import(input_data):
     quantitative_characteristics.at[1, 'after'] = quantitative_characteristics.at[0, 'after']
 
     # F16
-    quantitative_characteristics.at[1, 'increment_pr'] = quantitative_characteristics.at[1, 'after'] / \
-                                                         quantitative_characteristics.at[1, 'before'] - 1
+    def func_f16(df, E16, D16):
+        try:
+            res = E16 / D16 - 1
+            if math.isnan(res):
+                F16 = '-'
+                return F16
+            if math.isinf(res):
+                F16 = '-'
+                return F16
+        except ArithmeticError:
+            F16 = '-'
+        except ValueError:
+            F16 = '-'
+        else:
+            F16 = res
+        return F16
+
+    quantitative_characteristics.at[1, 'increment_pr'] = quantitative_characteristics['increment_pr'].pipe(func_f16,
+                                                                                                           quantitative_characteristics.at[
+                                                                                                               1, 'after'],
+                                                                                                           quantitative_characteristics.at[
+                                                                                                               1, 'before'])
 
     # I15
     def func_i15(df, I14, J5, J8, I12):
@@ -291,12 +347,33 @@ def food_products_import(input_data):
                                                                                                  3, 'formulas'])
 
     # F17
-    quantitative_characteristics.at[2, 'increment_pr'] = quantitative_characteristics.at[2, 'after'] / \
-                                                         quantitative_characteristics.at[2, 'before'] - 1
+    def func_f17(df, E17, D17):
+        try:
+            res = E17 / D17 - 1
+            if math.isnan(res):
+                F17 = '-'
+                return F17
+            if math.isinf(res):
+                F17 = '-'
+                return F17
+        except ArithmeticError:
+            F17 = '-'
+        except ValueError:
+            F17 = '-'
+        else:
+            F17 = res
+        return F17
+
+    quantitative_characteristics.at[2, 'increment_pr'] = quantitative_characteristics['increment_pr'].pipe(func_f17,
+                                                                                                           quantitative_characteristics.at[
+                                                                                                               2, 'after'],
+                                                                                                           quantitative_characteristics.at[
+                                                                                                               2, 'before'])
 
     # J16
     def func_j16(df, E9, E17, E11, J9, E10):
-        return E9+math.exp(min(0, (E17-(E11+0.001))/(E11+0.001)*J9))/(1+math.exp(-abs(E17-(E11+0.001))/(E11+0.001)*J9))*(E10-E9)
+        return E9 + math.exp(min(0, (E17 - (E11 + 0.001)) / (E11 + 0.001) * J9)) / (
+                    1 + math.exp(-abs(E17 - (E11 + 0.001)) / (E11 + 0.001) * J9)) * (E10 - E9)
 
     equations.at[4, 'values'] = equations['values'].pipe(func_j16, pricing_characteristics.at[6, 'after'],
                                                          quantitative_characteristics.at[2, 'after'],
@@ -311,7 +388,8 @@ def food_products_import(input_data):
     def func_e6(df, E4, E16, E17, E5):
         return E4 * E16 / (E16 + E17) + E5 * E17 / (E16 + E17)
 
-    pricing_characteristics.at[3, 'after'] = pricing_characteristics['after'].pipe(func_e6, pricing_characteristics.at[1, 'after'],
+    pricing_characteristics.at[3, 'after'] = pricing_characteristics['after'].pipe(func_e6, pricing_characteristics.at[
+        1, 'after'],
                                                                                    quantitative_characteristics.at[
                                                                                        1, 'after'],
                                                                                    quantitative_characteristics.at[
@@ -336,8 +414,28 @@ def food_products_import(input_data):
                                                                                        3, 'after'])
 
     # F3
-    pricing_characteristics.at[0, 'increment_pr'] = pricing_characteristics.at[0, 'after'] / \
-                                                    pricing_characteristics.at[0, 'before'] - 1
+    def func_f3(df, E3, D3):
+        try:
+            res = E3 / D3 - 1
+            if math.isnan(res):
+                F3 = '-'
+                return F3
+            if math.isinf(res):
+                F3 = '-'
+                return F3
+        except ArithmeticError:
+            F3 = '-'
+        except ValueError:
+            F3 = '-'
+        else:
+            F3 = res
+        return F3
+
+    pricing_characteristics.at[0, 'increment_pr'] = pricing_characteristics['increment_pr'].pipe(func_f3,
+                                                                                                 pricing_characteristics.at[
+                                                                                                     0, 'after'],
+                                                                                                 pricing_characteristics.at[
+                                                                                                     0, 'before'])
 
     # E18
     quantitative_characteristics.at[3, 'after'] = quantitative_characteristics.at[1, 'after'] + \
@@ -349,13 +447,17 @@ def food_products_import(input_data):
 
     # E19
     def func_e19(df, E4, E15, E5, E17):
-        return E4*E15/(E4*E15+E5*E17)
+        return E4 * E15 / (E4 * E15 + E5 * E17)
 
     quantitative_characteristics.at[4, 'after'] = quantitative_characteristics['after'].pipe(func_e19,
-                                                                    pricing_characteristics.at[1, 'after'],
-                                                                    quantitative_characteristics.at[0, 'after'],
-                                                                    pricing_characteristics.at[2, 'after'],
-                                                                    quantitative_characteristics.at[2, 'after'])
+                                                                                             pricing_characteristics.at[
+                                                                                                 1, 'after'],
+                                                                                             quantitative_characteristics.at[
+                                                                                                 0, 'after'],
+                                                                                             pricing_characteristics.at[
+                                                                                                 2, 'after'],
+                                                                                             quantitative_characteristics.at[
+                                                                                                 2, 'after'])
 
     # E20
     quantitative_characteristics.at[5, 'after'] = 1 - quantitative_characteristics.at[4, 'after']
@@ -368,18 +470,58 @@ def food_products_import(input_data):
     # B24
     effects.at[0, 'meaning'] = quantitative_characteristics.at[0, 'after'] - quantitative_characteristics.at[
         0, 'before']
+
     # D24
-    effects.at[0, 'increment'] = effects.at[0, 'meaning'] / quantitative_characteristics.at[0, 'before']
+    def func_d24(df, B24, D15):
+        try:
+            res = B24 / D15
+            if math.isnan(res):
+                D24 = '-'
+                return D24
+            if math.isinf(res):
+                D24 = '-'
+                return D24
+        except ArithmeticError:
+            D24 = '-'
+        except ValueError:
+            D24 = '-'
+        else:
+            D24 = res
+        return D24
+
+    effects.at[0, 'increment'] = effects['increment'].pipe(func_d24, effects.at[0, 'meaning'],
+                                                           quantitative_characteristics.at[0, 'before'])
+
     # B25
     effects.at[1, 'meaning'] = quantitative_characteristics.at[3, 'after'] - quantitative_characteristics.at[
         3, 'before']
     # D25
     effects.at[1, 'increment'] = effects.at[1, 'meaning'] / quantitative_characteristics.at[3, 'before']
+
     # B26
     effects.at[2, 'meaning'] = quantitative_characteristics.at[2, 'after'] - quantitative_characteristics.at[
         2, 'before']
+
     # D26
-    effects.at[2, 'increment'] = effects.at[2, 'meaning'] / quantitative_characteristics.at[2, 'before']
+    def func_d26(df, B26, D17):
+        try:
+            res = B26 / D17
+            if math.isnan(res):
+                D26 = '-'
+                return D26
+            if math.isinf(res):
+                D26 = '-'
+                return D26
+        except ArithmeticError:
+            D26 = '-'
+        except ValueError:
+            D26 = '-'
+        else:
+            D26 = res
+        return D26
+
+    effects.at[2, 'increment'] = effects['increment'].pipe(func_d26, effects.at[2, 'meaning'],
+                                                           quantitative_characteristics.at[2, 'before'])
 
     # B29
     def func_b29(df, E7, E8, E17, D7, D8, D17):
@@ -394,7 +536,21 @@ def food_products_import(input_data):
 
     # D29
     def func_d29(df, B29, D7, D8, D17):
-        return B29 / (D7 * D8 * D17)
+        try:
+            res = B29 / (D7 * D8 * D17)
+            if math.isnan(res):
+                D29 = '-'
+                return D29
+            if math.isinf(res):
+                D29 = '-'
+                return D29
+        except ArithmeticError:
+            D29 = '-'
+        except ValueError:
+            D29 = '-'
+        else:
+            D29 = res
+        return D29
 
     effects.at[5, 'increment'] = effects['increment'].pipe(func_d29, effects.at[5, 'meaning'],
                                                            pricing_characteristics.at[4, 'before'],
@@ -414,7 +570,21 @@ def food_products_import(input_data):
 
     # D30
     def func_d30(df, B30, D5, D12, D17):
-        return B30 / (D5 * (1 - 1 / (1 + D12)) * D17)
+        try:
+            res = B30 / (D5 * (1 - 1 / (1 + D12)) * D17)
+            if math.isnan(res):
+                D30 = '-'
+                return D30
+            if math.isinf(res):
+                D30 = '-'
+                return D30
+        except ArithmeticError:
+            D30 = '-'
+        except ValueError:
+            D30 = '-'
+        else:
+            D30 = res
+        return D30
 
     effects.at[6, 'increment'] = effects['increment'].pipe(func_d30, effects.at[6, 'meaning'],
                                                            pricing_characteristics.at[2, 'before'],
@@ -491,310 +661,353 @@ def food_products_import(input_data):
 
     # B45
     effects.at[21, 'meaning'] = pricing_characteristics.at[0, 'after'] - pricing_characteristics.at[0, 'before']
+
     # D45
-    effects.at[21, 'increment'] = effects.at[21, 'meaning'] / pricing_characteristics.at[0, 'before']
+    def func_d45(df, B45, D3):
+        try:
+            res = B45 / D3
+            if math.isnan(res):
+                D45 = '-'
+                return D45
+            if math.isinf(res):
+                D45 = '-'
+                return D45
+        except ArithmeticError:
+            D45 = '-'
+        except ValueError:
+            D45 = '-'
+        else:
+            D45 = res
+        return D45
+
+    effects.at[21, 'increment'] = effects['increment'].pipe(func_d45, effects.at[21, 'meaning'],
+                                                            pricing_characteristics.at[0, 'before'])
 
     # B46
     def func_b46(df, D45, J10):
-        return D45 * J10 / 100
+        try:
+            res = D45 * J10 / 100
+            if math.isnan(res):
+                B46 = '-'
+                return B46
+            if math.isinf(res):
+                B46 = '-'
+                return B46
+        except ArithmeticError:
+            B46 = '-'
+        except ValueError:
+            B46 = '-'
+        except TypeError:
+            B46 = '-'
+        else:
+            B46 = res
+        return B46
 
     effects.at[22, 'meaning'] = effects['meaning'].pipe(func_b46, effects.at[21, 'increment'],
                                                         parameter_values.at[7, 'values'])
 
-    # result_to_front = {
-    #     'table1': [
-    #         {
-    #             'id': '1',
-    #             'title': pricing_characteristics.at[0, 'title'],
-    #             'params': pricing_characteristics.at[0, 'designation'],
-    #             'measure': pricing_characteristics.at[0, 'measure'],
-    #             'basebalance': pricing_characteristics.at[0, 'before'],
-    #             'newbalance': pricing_characteristics.at[0, 'after'].round(decimals=2),
-    #             'growthpercent': (pricing_characteristics.at[0, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'true',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '2',
-    #             'title': pricing_characteristics.at[1, 'title'],
-    #             'params': pricing_characteristics.at[1, 'designation'],
-    #             'measure': pricing_characteristics.at[1, 'measure'],
-    #             'basebalance': pricing_characteristics.at[1, 'before'],
-    #             'newbalance': pricing_characteristics.at[1, 'after'].round(decimals=2),
-    #             'growthpercent': (pricing_characteristics.at[1, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'true',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '3',
-    #             'title': pricing_characteristics.at[2, 'title'],
-    #             'params': pricing_characteristics.at[2, 'designation'],
-    #             'measure': pricing_characteristics.at[2, 'measure'],
-    #             'basebalance': pricing_characteristics.at[2, 'before'].round(decimals=2),
-    #             'newbalance': pricing_characteristics.at[2, 'after'].round(decimals=2),
-    #             'growthpercent': (pricing_characteristics.at[2, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '4',
-    #             'title': pricing_characteristics.at[3, 'title'],
-    #             'params': pricing_characteristics.at[3, 'designation'],
-    #             'measure': pricing_characteristics.at[3, 'measure'],
-    #             'basebalance': pricing_characteristics.at[3, 'before'].round(decimals=2),
-    #             'newbalance': pricing_characteristics.at[3, 'after'].round(decimals=2),
-    #             'growthpercent': (pricing_characteristics.at[3, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '5',
-    #             'title': pricing_characteristics.at[4, 'title'],
-    #             'params': pricing_characteristics.at[4, 'designation'],
-    #             'measure': pricing_characteristics.at[4, 'measure'],
-    #             'basebalance': pricing_characteristics.at[4, 'before'],
-    #             'newbalance': pricing_characteristics.at[4, 'after'],
-    #             'growthpercent': (pricing_characteristics.at[4, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'true',
-    #             "editNew": 'true'
-    #         },
-    #         {
-    #             'id': '6',
-    #             'title': pricing_characteristics.at[5, 'title'],
-    #             'params': pricing_characteristics.at[5, 'designation'],
-    #             'measure': pricing_characteristics.at[5, 'measure'],
-    #             'basebalance': pricing_characteristics.at[5, 'before'],
-    #             'newbalance': pricing_characteristics.at[5, 'after'],
-    #             'growthpercent': (pricing_characteristics.at[5, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'true',
-    #             "editNew": 'true'
-    #         },
-    #         {
-    #             'id': '7',
-    #             'title': pricing_characteristics.at[6, 'title'],
-    #             'params': pricing_characteristics.at[6, 'designation'],
-    #             'measure': '',
-    #             'basebalance': pricing_characteristics.at[6, 'before'],
-    #             'newbalance': pricing_characteristics.at[6, 'after'],
-    #             "editBase": 'true',
-    #             "editNew": 'true'
-    #         },
-    #         {
-    #             'id': '8',
-    #             'title': pricing_characteristics.at[7, 'title'],
-    #             'params': pricing_characteristics.at[7, 'designation'],
-    #             'measure': '',
-    #             'basebalance': pricing_characteristics.at[7, 'before'],
-    #             'newbalance': pricing_characteristics.at[7, 'after'],
-    #             "editBase": 'true',
-    #             "editNew": 'true'
-    #         },
-    #         {
-    #             'id': '9',
-    #             'title': pricing_characteristics.at[8, 'title'],
-    #             'params': pricing_characteristics.at[8, 'designation'],
-    #             'measure': pricing_characteristics.at[8, 'measure'],
-    #             'basebalance': pricing_characteristics.at[8, 'before'],
-    #             'newbalance': pricing_characteristics.at[8, 'after'],
-    #             "editBase": 'true',
-    #             "editNew": 'true'
-    #         },
-    #         {
-    #             'id': '10',
-    #             'title': pricing_characteristics.at[9, 'title'],
-    #             'params': pricing_characteristics.at[9, 'designation'],
-    #             'measure': '',
-    #             'basebalance': pricing_characteristics.at[9, 'before'].round(decimals=2),
-    #             'newbalance': pricing_characteristics.at[9, 'after'].round(decimals=2),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         }
-    #     ],
-    #     "table2": [
-    #         {
-    #             'id': '1',
-    #             'title': quantitative_characteristics.at[0, 'title'],
-    #             'params': quantitative_characteristics.at[0, 'designation'],
-    #             'measure': quantitative_characteristics.at[0, 'measure'],
-    #             'basebalance': quantitative_characteristics.at[0, 'before'],
-    #             'newbalance': quantitative_characteristics.at[0, 'after'].round(decimals=2),
-    #             'growthpercent': (quantitative_characteristics.at[0, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'true',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '2',
-    #             'title': quantitative_characteristics.at[1, 'title'],
-    #             'params': quantitative_characteristics.at[1, 'designation'],
-    #             'measure': quantitative_characteristics.at[1, 'measure'],
-    #             'basebalance': quantitative_characteristics.at[1, 'before'].round(decimals=2),
-    #             'newbalance': quantitative_characteristics.at[1, 'after'].round(decimals=2),
-    #             'growthpercent': (quantitative_characteristics.at[1, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '3',
-    #             'title': quantitative_characteristics.at[2, 'title'],
-    #             'params': quantitative_characteristics.at[2, 'designation'],
-    #             'measure': quantitative_characteristics.at[2, 'measure'],
-    #             'basebalance': quantitative_characteristics.at[2, 'before'],
-    #             'newbalance': quantitative_characteristics.at[2, 'after'].round(decimals=2),
-    #             'growthpercent': (quantitative_characteristics.at[2, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'true',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '4',
-    #             'title': quantitative_characteristics.at[3, 'title'],
-    #             'params': quantitative_characteristics.at[3, 'designation'],
-    #             'measure': quantitative_characteristics.at[3, 'measure'],
-    #             'basebalance': quantitative_characteristics.at[3, 'before'].round(decimals=2),
-    #             'newbalance': quantitative_characteristics.at[3, 'after'].round(decimals=2),
-    #             'growthpercent': (quantitative_characteristics.at[3, 'increment_pr'] * 100).round(decimals=3),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '5',
-    #             'title': quantitative_characteristics.at[4, 'title'],
-    #             'params': quantitative_characteristics.at[4, 'designation'],
-    #             'measure': '',
-    #             'basebalance': quantitative_characteristics.at[4, 'before'].round(decimals=2),
-    #             'newbalance': quantitative_characteristics.at[4, 'after'].round(decimals=2),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         },
-    #         {
-    #             'id': '6',
-    #             'title': quantitative_characteristics.at[5, 'title'],
-    #             'params': quantitative_characteristics.at[5, 'designation'],
-    #             'measure': '',
-    #             'basebalance': quantitative_characteristics.at[5, 'before'].round(decimals=2),
-    #             'newbalance': quantitative_characteristics.at[5, 'after'].round(decimals=2),
-    #             "editBase": 'false',
-    #             "editNew": 'false'
-    #         }
-    #     ],
-    #     "fintable1": [
-    #         {
-    #             "id": "1",
-    #             "title": effects.at[0, 'title'],
-    #             "growth": effects.at[0, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[0, 'measure'],
-    #             "growthpercent": (effects.at[0, 'increment'] * 100).round(decimals=3)
-    #         },
-    #         {
-    #             "id": "2",
-    #             "title": effects.at[1, 'title'],
-    #             "growth": effects.at[1, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[1, 'measure'],
-    #             "growthpercent": (effects.at[1, 'increment'] * 100).round(decimals=3)
-    #         },
-    #         {
-    #             "id": "3",
-    #             "title": effects.at[2, 'title'],
-    #             "growth": effects.at[2, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[2, 'measure'],
-    #             "growthpercent": (effects.at[2, 'increment'] * 100).round(decimals=3)
-    #         }
-    #     ],
-    #     "fintable2": [
-    #         {
-    #             "id": "1",
-    #             "title": effects.at[5, 'title'],
-    #             "growth": effects.at[5, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[5, 'measure'],
-    #             "growthpercent": (effects.at[5, 'increment'] * 100).round(decimals=3)
-    #         },
-    #         {
-    #             "id": "2",
-    #             "title": effects.at[6, 'title'],
-    #             "growth": effects.at[6, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[6, 'measure'],
-    #             "growthpercent": (effects.at[6, 'increment'] * 100).round(decimals=3)
-    #         }
-    #     ],
-    #     "fintable3": [
-    #         {
-    #             "id": "1",
-    #             "title": effects.at[8, 'title'],
-    #             "growth": effects.at[8, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[8, 'measure']
-    #         },
-    #         {
-    #             "id": "2",
-    #             "title": effects.at[9, 'title'],
-    #             "growth": effects.at[9, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[9, 'measure']
-    #         },
-    #         {
-    #             "id": "3",
-    #             "title": effects.at[10, 'title'],
-    #             "growth": effects.at[10, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[10, 'measure']
-    #         }
-    #     ],
-    #     "fintable4": [
-    #         {
-    #             "id": "1",
-    #             "title": effects.at[12, 'title'],
-    #             "growth": effects.at[12, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[12, 'measure']
-    #         },
-    #         {
-    #             "id": "2",
-    #             "title": effects.at[13, 'title'],
-    #             "growth": effects.at[13, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[13, 'measure']
-    #         },
-    #         {
-    #             "id": "3",
-    #             "title": effects.at[14, 'title'],
-    #             "growth": effects.at[14, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[14, 'measure']
-    #         }
-    #     ],
-    #     "fintable5": [
-    #         {
-    #             "id": "1",
-    #             "title": effects.at[16, 'title'],
-    #             "growth": effects.at[16, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[16, 'measure']
-    #         },
-    #         {
-    #             "id": "2",
-    #             "title": effects.at[17, 'title'],
-    #             "growth": effects.at[17, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[17, 'measure']
-    #         },
-    #         {
-    #             "id": "3",
-    #             "title": effects.at[18, 'title'],
-    #             "growth": effects.at[18, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[18, 'measure']
-    #         }
-    #     ],
-    #     "fintable6": [
-    #         {
-    #             "id": "1",
-    #             "title": effects.at[21, 'title'],
-    #             "growth": effects.at[21, 'meaning'].round(decimals=2),
-    #             "measure": effects.at[21, 'measure'],
-    #             "growthpercent": (effects.at[21, 'increment'] * 100).round(decimals=3)
-    #         },
-    #         {
-    #             "id": "2",
-    #             "title": effects.at[22, 'title'],
-    #             "growth": effects.at[22, 'meaning'].round(decimals=2)
-    #         }
-    #     ],
-    #     "finding_solution": solution
-    # }
-    print(pricing_characteristics.to_markdown())
-    print(effects.to_markdown())
+
+    if isinstance(pricing_characteristics.at[0, 'increment_pr'], float):
+        pricing_characteristics.at[0, 'increment_pr'] = round(pricing_characteristics.at[0, 'increment_pr'] * 100, 3)
 
 
+    if isinstance(pricing_characteristics.at[0, 'increment_pr'], int):
+        round(pricing_characteristics.at[0, 'increment_pr'] * 100, 3)
+    if isinstance(pricing_characteristics.at[0, 'increment_pr'], complex):
+        round(pricing_characteristics.at[0, 'increment_pr'] * 100, 3)
+    print(pricing_characteristics.at[0, 'increment_pr'])
+    result_to_front = {
+        'table1': [
+            {
+                'id': '1',
+                'title': pricing_characteristics.at[0, 'title'],
+                'params': pricing_characteristics.at[0, 'designation'],
+                'measure': pricing_characteristics.at[0, 'measure'],
+                'basebalance': pricing_characteristics.at[0, 'before'],
+                'newbalance': pricing_characteristics.at[0, 'after'],
+                'growthpercent': pricing_characteristics.at[0, 'increment_pr'],
+                "editBase": 'true',
+                "editNew": 'false'
+            },
+            {
+                'id': '2',
+                'title': pricing_characteristics.at[1, 'title'],
+                'params': pricing_characteristics.at[1, 'designation'],
+                'measure': pricing_characteristics.at[1, 'measure'],
+                'basebalance': pricing_characteristics.at[1, 'before'],
+                'newbalance': pricing_characteristics.at[1, 'after'],
+                'growthpercent': pricing_characteristics.at[1, 'increment_pr'],
+                "editBase": 'true',
+                "editNew": 'false'
+            },
+            {
+                'id': '3',
+                'title': pricing_characteristics.at[2, 'title'],
+                'params': pricing_characteristics.at[2, 'designation'],
+                'measure': pricing_characteristics.at[2, 'measure'],
+                'basebalance': pricing_characteristics.at[2, 'before'],
+                'newbalance': pricing_characteristics.at[2, 'after'],
+                'growthpercent': pricing_characteristics.at[2, 'increment_pr'],
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '4',
+                'title': pricing_characteristics.at[3, 'title'],
+                'params': pricing_characteristics.at[3, 'designation'],
+                'measure': pricing_characteristics.at[3, 'measure'],
+                'basebalance': pricing_characteristics.at[3, 'before'],
+                'newbalance': pricing_characteristics.at[3, 'after'],
+                'growthpercent': pricing_characteristics.at[3, 'increment_pr'],
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '5',
+                'title': pricing_characteristics.at[4, 'title'],
+                'params': pricing_characteristics.at[4, 'designation'],
+                'measure': pricing_characteristics.at[4, 'measure'],
+                'basebalance': pricing_characteristics.at[4, 'before'],
+                'newbalance': pricing_characteristics.at[4, 'after'],
+                'growthpercent': pricing_characteristics.at[4, 'increment_pr'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '6',
+                'title': pricing_characteristics.at[5, 'title'],
+                'params': pricing_characteristics.at[5, 'designation'],
+                'measure': pricing_characteristics.at[5, 'measure'],
+                'basebalance': pricing_characteristics.at[5, 'before'],
+                'newbalance': pricing_characteristics.at[5, 'after'],
+                'growthpercent': pricing_characteristics.at[5, 'increment_pr'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '7',
+                'title': pricing_characteristics.at[6, 'title'],
+                'params': pricing_characteristics.at[6, 'designation'],
+                'measure': '',
+                'basebalance': pricing_characteristics.at[6, 'before'],
+                'newbalance': pricing_characteristics.at[6, 'after'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '8',
+                'title': pricing_characteristics.at[7, 'title'],
+                'params': pricing_characteristics.at[7, 'designation'],
+                'measure': '',
+                'basebalance': pricing_characteristics.at[7, 'before'],
+                'newbalance': pricing_characteristics.at[7, 'after'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '9',
+                'title': pricing_characteristics.at[8, 'title'],
+                'params': pricing_characteristics.at[8, 'designation'],
+                'measure': pricing_characteristics.at[8, 'measure'],
+                'basebalance': pricing_characteristics.at[8, 'before'],
+                'newbalance': pricing_characteristics.at[8, 'after'],
+                "editBase": 'true',
+                "editNew": 'true'
+            },
+            {
+                'id': '10',
+                'title': pricing_characteristics.at[9, 'title'],
+                'params': pricing_characteristics.at[9, 'designation'],
+                'measure': '',
+                'basebalance': pricing_characteristics.at[9, 'before'],
+                'newbalance': pricing_characteristics.at[9, 'after'],
+                "editBase": 'false',
+                "editNew": 'false'
+            }
+        ],
+        "table2": [
+            {
+                'id': '1',
+                'title': quantitative_characteristics.at[0, 'title'],
+                'params': quantitative_characteristics.at[0, 'designation'],
+                'measure': quantitative_characteristics.at[0, 'measure'],
+                'basebalance': quantitative_characteristics.at[0, 'before'],
+                'newbalance': quantitative_characteristics.at[0, 'after'],
+                'growthpercent': quantitative_characteristics.at[0, 'increment_pr'],
+                "editBase": 'true',
+                "editNew": 'false'
+            },
+            {
+                'id': '2',
+                'title': quantitative_characteristics.at[1, 'title'],
+                'params': quantitative_characteristics.at[1, 'designation'],
+                'measure': quantitative_characteristics.at[1, 'measure'],
+                'basebalance': quantitative_characteristics.at[1, 'before'],
+                'newbalance': quantitative_characteristics.at[1, 'after'],
+                'growthpercent': quantitative_characteristics.at[1, 'increment_pr'],
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '3',
+                'title': quantitative_characteristics.at[2, 'title'],
+                'params': quantitative_characteristics.at[2, 'designation'],
+                'measure': quantitative_characteristics.at[2, 'measure'],
+                'basebalance': quantitative_characteristics.at[2, 'before'],
+                'newbalance': quantitative_characteristics.at[2, 'after'],
+                'growthpercent': quantitative_characteristics.at[2, 'increment_pr'],
+                "editBase": 'true',
+                "editNew": 'false'
+            },
+            {
+                'id': '4',
+                'title': quantitative_characteristics.at[3, 'title'],
+                'params': quantitative_characteristics.at[3, 'designation'],
+                'measure': quantitative_characteristics.at[3, 'measure'],
+                'basebalance': quantitative_characteristics.at[3, 'before'],
+                'newbalance': quantitative_characteristics.at[3, 'after'],
+                'growthpercent': quantitative_characteristics.at[3, 'increment_pr'],
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '5',
+                'title': quantitative_characteristics.at[4, 'title'],
+                'params': quantitative_characteristics.at[4, 'designation'],
+                'measure': '',
+                'basebalance': quantitative_characteristics.at[4, 'before'],
+                'newbalance': quantitative_characteristics.at[4, 'after'],
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '6',
+                'title': quantitative_characteristics.at[5, 'title'],
+                'params': quantitative_characteristics.at[5, 'designation'],
+                'measure': '',
+                'basebalance': quantitative_characteristics.at[5, 'before'],
+                'newbalance': quantitative_characteristics.at[5, 'after'],
+                "editBase": 'false',
+                "editNew": 'false'
+            }
+        ],
+        "fintable1": [
+            {
+                "id": "1",
+                "title": effects.at[0, 'title'],
+                "growth": effects.at[0, 'meaning'],
+                "measure": effects.at[0, 'measure'],
+                "growthpercent": effects.at[0, 'increment']
+            },
+            {
+                "id": "2",
+                "title": effects.at[1, 'title'],
+                "growth": effects.at[1, 'meaning'],
+                "measure": effects.at[1, 'measure'],
+                "growthpercent": effects.at[1, 'increment']
+            },
+            {
+                "id": "3",
+                "title": effects.at[2, 'title'],
+                "growth": effects.at[2, 'meaning'],
+                "measure": effects.at[2, 'measure'],
+                "growthpercent": effects.at[2, 'increment']
+            }
+        ],
+        "fintable2": [
+            {
+                "id": "1",
+                "title": effects.at[5, 'title'],
+                "growth": effects.at[5, 'meaning'],
+                "measure": effects.at[5, 'measure'],
+                "growthpercent": effects.at[5, 'increment']
+            },
+            {
+                "id": "2",
+                "title": effects.at[6, 'title'],
+                "growth": effects.at[6, 'meaning'],
+                "measure": effects.at[6, 'measure'],
+                "growthpercent": effects.at[6, 'increment']
+            }
+        ],
+        "fintable3": [
+            {
+                "id": "1",
+                "title": effects.at[8, 'title'],
+                "growth": effects.at[8, 'meaning'],
+                "measure": effects.at[8, 'measure']
+            },
+            {
+                "id": "2",
+                "title": effects.at[9, 'title'],
+                "growth": effects.at[9, 'meaning'],
+                "measure": effects.at[9, 'measure']
+            },
+            {
+                "id": "3",
+                "title": effects.at[10, 'title'],
+                "growth": effects.at[10, 'meaning'],
+                "measure": effects.at[10, 'measure']
+            }
+        ],
+        "fintable4": [
+            {
+                "id": "1",
+                "title": effects.at[12, 'title'],
+                "growth": effects.at[12, 'meaning'],
+                "measure": effects.at[12, 'measure']
+            },
+            {
+                "id": "2",
+                "title": effects.at[13, 'title'],
+                "growth": effects.at[13, 'meaning'],
+                "measure": effects.at[13, 'measure']
+            },
+            {
+                "id": "3",
+                "title": effects.at[14, 'title'],
+                "growth": effects.at[14, 'meaning'],
+                "measure": effects.at[14, 'measure']
+            }
+        ],
+        "fintable5": [
+            {
+                "id": "1",
+                "title": effects.at[16, 'title'],
+                "growth": effects.at[16, 'meaning'],
+                "measure": effects.at[16, 'measure']
+            },
+            {
+                "id": "2",
+                "title": effects.at[17, 'title'],
+                "growth": effects.at[17, 'meaning'],
+                "measure": effects.at[17, 'measure']
+            },
+            {
+                "id": "3",
+                "title": effects.at[18, 'title'],
+                "growth": effects.at[18, 'meaning'],
+                "measure": effects.at[18, 'measure']
+            }
+        ],
+        "fintable6": [
+            {
+                "id": "1",
+                "title": effects.at[21, 'title'],
+                "growth": effects.at[21, 'meaning'],
+                "measure": effects.at[21, 'measure'],
+                "growthpercent": effects.at[21, 'increment']
+            },
+            {
+                "id": "2",
+                "title": effects.at[22, 'title'],
+                "growth": effects.at[22, 'meaning']
+            }
+        ],
+        "finding_solution": solution
+    }
+
+    return result_to_front
 
 
 input_data = InputDataBase(user_data)
