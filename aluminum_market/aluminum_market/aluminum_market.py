@@ -10,7 +10,9 @@ example_data = {'ER_before': 72.795, 'ER_after': 72.795, 'WP_before': 2088.0, 'W
                 'DS_ADW_DEMAND_after': 0.0, 'SS_AXW_SUPPLY_after': 0.0, 'SS_AMD_SUPPLY_after': 0.0,
                 'DS_ATD_DEMAND_after': 0.0, 'IPD_pr': 32821.0, 'IPD_q': 8200000.0, 'IMD_q': 4722500.0,
                 'APD_pr': 173588.0, 'APD_g': 3800000.0, 'AXD_q': 3148500.0, 'ADW_q': 137000000.0,
-                'AMD_q': 19900.0}
+                'AMD_q': 19900.0, 'σ_AID': 2, 'σ_APD': 1.5, 'Ω_APD': 4.2, 'σ_ADW': 8.4, 'σ_ATD': 1.5,
+                'ε_IPD': 0.3, 'ε_IMD': 1.5, 'ε_AVD': 1, 'ε_ADW': -0.8, 'ε_AXW': 2, 'ε_AMD': 3, 'ε_ATD': -0.8}
+
 
 user_data = {'ER_before': 72.795, 'ER_after': 72.795, 'WP_before': 2088.0, 'WP_after': 2088.0,
                 'P_AXD_USD_before': 1842.0, 'P_AMD_USD_before': 2377.0, 'P_IMD_USD_before': 353.0, 'TAXD_before': 0.0,
@@ -19,7 +21,8 @@ user_data = {'ER_before': 72.795, 'ER_after': 72.795, 'WP_before': 2088.0, 'WP_a
                 'DS_ADW_DEMAND_after': 0.0, 'SS_AXW_SUPPLY_after': 0.0, 'SS_AMD_SUPPLY_after': 0.0,
                 'DS_ATD_DEMAND_after': 0.0, 'IPD_pr': 32821.0, 'IPD_q': 8200000.0, 'IMD_q': 4722500.0,
                 'APD_pr': 173588.0, 'APD_g': 3800000.0, 'AXD_q': 3148500.0, 'ADW_q': 137000000.0,
-                'AMD_q': 19900.0}
+                'AMD_q': 19900.0, 'σ_AID': 2, 'σ_APD': 1.5, 'Ω_APD': 4.2, 'σ_ADW': 8.4, 'σ_ATD': 1.5,
+                'ε_IPD': 0.3, 'ε_IMD': 1.5, 'ε_AVD': 1, 'ε_ADW': -0.8, 'ε_AXW': 2, 'ε_AMD': 3, 'ε_ATD': -0.8}
 
 
 class InputDataBase:
@@ -52,6 +55,18 @@ class InputDataBase:
         self.AXD_q = float(dict_from_frontend.get('AXD_q'))
         self.ADW_q = float(dict_from_frontend.get('ADW_q'))
         self.AMD_q = float(dict_from_frontend.get('AMD_q'))
+        self.σ_AID = float(dict_from_frontend.get('σ_AID'))
+        self.σ_APD = float(dict_from_frontend.get('σ_APD'))
+        self.Ω_APD = float(dict_from_frontend.get('Ω_APD'))
+        self.σ_ADW = float(dict_from_frontend.get('σ_ADW'))
+        self.σ_ATD = float(dict_from_frontend.get('σ_ATD'))
+        self.ε_IPD = float(dict_from_frontend.get('ε_IPD'))
+        self.ε_IMD = float(dict_from_frontend.get('ε_IMD'))
+        self.ε_AVD = float(dict_from_frontend.get('ε_AVD'))
+        self.ε_ADW = float(dict_from_frontend.get('ε_ADW'))
+        self.ε_AXW = float(dict_from_frontend.get('ε_AXW'))
+        self.ε_AMD = float(dict_from_frontend.get('ε_AMD'))
+        self.ε_ATD = float(dict_from_frontend.get('ε_ATD'))
 
 
 def aluminum_market(input_data):
@@ -67,7 +82,7 @@ def aluminum_market(input_data):
     model_control_actions = model_control_actions.rename(
         columns={'Управляющие воздействия модели': 'title', 'Unnamed: 1': 'designation',
                  'Базовое равновесие': 'before', 'Новое равновесие': 'after'})
-
+    print(model_control_actions.to_markdown())
     # Переменные
     variables = df.iloc[23:34, 0:9]
     variables = variables.rename(
@@ -119,6 +134,20 @@ def aluminum_market(input_data):
     variables.at[28, 'base_quan'] = input_data.AXD_q
     variables.at[30, 'base_quan'] = input_data.ADW_q
     variables.at[33, 'base_quan'] = input_data.AMD_q
+
+    parameters.at[0, 'values'] = input_data.σ_AID
+    parameters.at[1, 'values'] = input_data.σ_APD
+    parameters.at[2, 'values'] = input_data.Ω_APD
+    parameters.at[3, 'values'] = input_data.σ_ADW
+    parameters.at[4, 'values'] = input_data.σ_ATD
+    parameters.at[6, 'values'] = input_data.ε_IPD
+    parameters.at[7, 'values'] = input_data.ε_IMD
+    parameters.at[8, 'values'] = input_data.ε_AVD
+    parameters.at[9, 'values'] = input_data.ε_ADW
+    parameters.at[10, 'values'] = input_data.ε_AXW
+    parameters.at[11, 'values'] = input_data.ε_AMD
+    parameters.at[12, 'values'] = input_data.ε_ATD
+
 
     """Перерасчет ячеек с новыми значениями"""
 
@@ -314,6 +343,50 @@ def aluminum_market(input_data):
 
     parameters.at[12, 'rho'] = parameters['rho'].pipe(func_Z_ATD, variables.at[32, 'base_quan'],
                                                       variables.at[32, 'base_pr'], parameters.at[12, 'values'])
+    # K_IMD
+    def func_K_IMD(df, Q_IMD_0, Q_IPD_0, r_σ_AID, P_IMD_0, TIMD_0, P_IPD_0):
+        return ((Q_IMD_0/Q_IPD_0) ** (1-r_σ_AID))*(P_IMD_0*(1+TIMD_0)/P_IPD_0)
+
+    variables.at[24, 'relative_quality'] = variables['relative_quality'].pipe(func_K_IMD, variables.at[24, 'base_quan'],
+                                                variables.at[23, 'base_quan'], parameters.at[0, 'rho'],
+                                                variables.at[24, 'base_pr'], model_control_actions.at[8, 'before'],
+                                                                              variables.at[23, 'base_pr'])
+
+    # K_AVD
+    def func_K_AVD(df, Q_AVD_0, Q_AID_0, r_σ_APD, P_AVD_0, P_AID_0):
+        return (Q_AVD_0/Q_AID_0) ** (1-r_σ_APD)*(P_AVD_0/P_AID_0)
+
+    variables.at[26, 'relative_quality'] = variables['relative_quality'].pipe(func_K_AVD, variables.at[26, 'base_quan'],
+                                                                variables.at[25, 'base_quan'], parameters.at[1, 'rho'],
+                                                                variables.at[26, 'base_pr'],variables.at[25, 'base_pr'])
+
+    # K_AXD
+    def func_K_AXD(df, Q_AXD_0, Q_ASD_0, r_Ω_APD, P_AXD_0, P_ASD_0):
+        return (Q_AXD_0/Q_ASD_0) ** (1-r_Ω_APD)*(P_AXD_0/P_ASD_0)
+
+    variables.at[28, 'relative_quality'] = variables['relative_quality'].pipe(func_K_AXD, variables.at[28, 'base_quan'],
+                                                            variables.at[31, 'base_quan'], parameters.at[2, 'rho'],
+                                                            variables.at[28, 'base_pr'], variables.at[31, 'base_pr'])
+
+    # K_AXW
+    def func_K_AXW(df, Q_AXW_0, Q_AXD_0, r_σ_ADW, P_AXW_0, P_AXD_0, TAXD_0, K_AXD):
+        return (Q_AXW_0/Q_AXD_0) ** (1-r_σ_ADW)*(P_AXW_0/(P_AXD_0*(1+TAXD_0)))*K_AXD
+
+    variables.at[29, 'relative_quality'] = variables['relative_quality'].pipe(func_K_AXW, variables.at[29, 'base_quan'],
+                                                                variables.at[28, 'base_quan'], parameters.at[3, 'rho'],
+                                                                variables.at[29, 'base_pr'], variables.at[28, 'base_pr'],
+                                            model_control_actions.at[7, 'before'], variables.at[28, 'relative_quality'])
+
+    # K_AMD
+    def func_K_AMD(df, Q_AMD_0, Q_ASD_0, r_σ_ATD, P_AMD_0, TAMD_0, P_ASD_0):
+        return (Q_AMD_0/Q_ASD_0) ** (1-r_σ_ATD)*(P_AMD_0*(1+TAMD_0)/P_ASD_0)
+
+    variables.at[33, 'relative_quality'] = variables['relative_quality'].pipe(func_K_AMD, variables.at[33, 'base_quan'],
+                                                                variables.at[31, 'base_quan'], parameters.at[4, 'rho'],
+                                                    variables.at[33, 'base_pr'], model_control_actions.at[10, 'before'],
+                                                                              variables.at[31, 'base_pr'])
+
+
 
     # # D7
     # def func_D7(df, P_AXD_1, ER_1):
