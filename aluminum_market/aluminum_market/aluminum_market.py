@@ -105,26 +105,26 @@ def aluminum_market(input_data):
 
     """Вводим новые значения"""
 
-    model_control_actions.at[0, 'before'] = input_data.ER_before
-    model_control_actions.at[0, 'after'] = input_data.ER_after
-    model_control_actions.at[2, 'before'] = input_data.WP_before
-    model_control_actions.at[2, 'after'] = input_data.WP_after
-    model_control_actions.at[4, 'before'] = input_data.P_AXD_USD_before
-    model_control_actions.at[5, 'before'] = input_data.P_AMD_USD_before
-    model_control_actions.at[6, 'before'] = input_data.P_IMD_USD_before
-    model_control_actions.at[7, 'before'] = input_data.TAXD_before
-    model_control_actions.at[7, 'after'] = input_data.TAXD_after
-    model_control_actions.at[8, 'before'] = input_data.TIMD_before
-    model_control_actions.at[8, 'after'] = input_data.TIMD_after
-    model_control_actions.at[9, 'before'] = input_data.TAMD_before
-    model_control_actions.at[9, 'after'] = input_data.TAMD_after
-    model_control_actions.at[11, 'after'] = input_data.SS_IPD_SUPPLY_after
-    model_control_actions.at[12, 'after'] = input_data.DS_IMD_SUPPLY_after
-    model_control_actions.at[13, 'after'] = input_data.SS_AVD_SUPPLY_after
-    model_control_actions.at[14, 'after'] = input_data.DS_ADW_DEMAND_after
-    model_control_actions.at[15, 'after'] = input_data.SS_AXW_SUPPLY_after
-    model_control_actions.at[16, 'after'] = input_data.SS_AMD_SUPPLY_after
-    model_control_actions.at[17, 'after'] = input_data.DS_ATD_DEMAND_after
+    model_control_actions.at[1, 'before'] = input_data.ER_before
+    model_control_actions.at[1, 'after'] = input_data.ER_after
+    model_control_actions.at[3, 'before'] = input_data.WP_before
+    model_control_actions.at[3, 'after'] = input_data.WP_after
+    model_control_actions.at[5, 'before'] = input_data.P_AXD_USD_before
+    model_control_actions.at[6, 'before'] = input_data.P_AMD_USD_before
+    model_control_actions.at[7, 'before'] = input_data.P_IMD_USD_before
+    model_control_actions.at[8, 'before'] = input_data.TAXD_before
+    model_control_actions.at[8, 'after'] = input_data.TAXD_after
+    model_control_actions.at[9, 'before'] = input_data.TIMD_before
+    model_control_actions.at[9, 'after'] = input_data.TIMD_after
+    model_control_actions.at[10, 'before'] = input_data.TAMD_before
+    model_control_actions.at[10, 'after'] = input_data.TAMD_after
+    model_control_actions.at[12, 'after'] = input_data.SS_IPD_SUPPLY_after
+    model_control_actions.at[13, 'after'] = input_data.DS_IMD_SUPPLY_after
+    model_control_actions.at[14, 'after'] = input_data.SS_AVD_SUPPLY_after
+    model_control_actions.at[15, 'after'] = input_data.DS_ADW_DEMAND_after
+    model_control_actions.at[16, 'after'] = input_data.SS_AXW_SUPPLY_after
+    model_control_actions.at[17, 'after'] = input_data.SS_AMD_SUPPLY_after
+    model_control_actions.at[18, 'after'] = input_data.DS_ATD_DEMAND_after
 
     variables.at[23, 'base_pr'] = input_data.IPD_pr
     variables.at[23, 'base_quan'] = input_data.IPD_q
@@ -155,24 +155,26 @@ def aluminum_market(input_data):
     def func_DER_1(df, ER_1, ER_0):
         return ER_1 / ER_0 - 1
 
-    model_control_actions.at[1, 'after'] = model_control_actions['after'].pipe(func_DER_1,
-                                                                               model_control_actions.at[0, 'after'],
-                                                                               model_control_actions.at[0, 'before'])
+    model_control_actions.at[2, 'after'] = model_control_actions['after'].pipe(func_DER_1,
+                                                                               model_control_actions.at[1, 'after'],
+                                                                               model_control_actions.at[1, 'before'])
 
     # DWP_CEL_1
     def func_DWP_CEL_1(df, WP_1, WP_0):
         return WP_1 / WP_0 - 1
 
-    model_control_actions.at[3, 'after'] = model_control_actions['after'].pipe(func_DWP_CEL_1,
-                                                                               model_control_actions.at[2, 'after'],
-                                                                               model_control_actions.at[2, 'before'])
+    model_control_actions.at[4, 'after'] = model_control_actions['after'].pipe(func_DWP_CEL_1,
+                                                                               model_control_actions.at[3, 'after'],
+                                                                               model_control_actions.at[3, 'before'])
+
 
     # P_IMD_0
     def func_P_IMD_0(df, P_IMD_USD_0, ER_0):
         return P_IMD_USD_0 * ER_0
 
-    variables.at[24, 'base_pr'] = variables['base_pr'].pipe(func_P_IMD_0, model_control_actions.at[6, 'before'],
-                                                            model_control_actions.at[0, 'before'])
+    variables.at[24, 'base_pr'] = variables['base_pr'].pipe(func_P_IMD_0, model_control_actions.at[7, 'before'],
+                                                            model_control_actions.at[1, 'before'])
+
     # Q_AID_0
     def func_Q_AID_0(df, Q_IPD_0, Q_IMD_0):
         return Q_IPD_0 + Q_IMD_0
@@ -200,8 +202,9 @@ def aluminum_market(input_data):
     def func_P_AXD_0(df, P_AXD_USD_0, ER_0):
         return P_AXD_USD_0 * ER_0
 
-    variables.at[28, 'base_pr'] = variables['base_pr'].pipe(func_P_AXD_0, model_control_actions.at[4, 'before'],
-                                                            model_control_actions.at[0, 'before'])
+    variables.at[28, 'base_pr'] = variables['base_pr'].pipe(func_P_AXD_0, model_control_actions.at[5, 'before'],
+                                                            model_control_actions.at[1, 'before'])
+
 
     # Q_AXW_0
     def func_Q_AXW_0(df, Q_ADW_0, Q_AXD_0):
@@ -214,8 +217,8 @@ def aluminum_market(input_data):
     def func_P_ADW_0(df, WP_0, ER_0):
         return WP_0*ER_0
 
-    variables.at[30, 'base_pr'] = variables['base_pr'].pipe(func_P_ADW_0, model_control_actions.at[2, 'before'],
-                                                            model_control_actions.at[0, 'before'])
+    variables.at[30, 'base_pr'] = variables['base_pr'].pipe(func_P_ADW_0, model_control_actions.at[3, 'before'],
+                                                            model_control_actions.at[1, 'before'])
 
     # P_AXW_0
     def func_P_AXW_0(df, P_ADW_0, Q_ADW_0, P_AXD_0, TAXD_0, Q_AXD_0, Q_AXW_0):
@@ -223,7 +226,7 @@ def aluminum_market(input_data):
 
     variables.at[29, 'base_pr'] = variables['base_pr'].pipe(func_P_AXW_0, variables.at[30, 'base_pr'],
                                                             variables.at[30, 'base_quan'], variables.at[28, 'base_pr'],
-                                                            model_control_actions.at[7, 'before'],
+                                                            model_control_actions.at[8, 'before'],
                                                             variables.at[28, 'base_quan'], variables.at[29, 'base_quan'])
 
     # Q_ASD_0
@@ -251,8 +254,8 @@ def aluminum_market(input_data):
     def func_P_AMD_0(df, P_AMD_USD_0, ER_0):
         return P_AMD_USD_0*ER_0
 
-    variables.at[33, 'base_pr'] = variables['base_pr'].pipe(func_P_AMD_0, model_control_actions.at[5, 'before'],
-                                                            model_control_actions.at[0, 'before'])
+    variables.at[33, 'base_pr'] = variables['base_pr'].pipe(func_P_AMD_0, model_control_actions.at[6, 'before'],
+                                                            model_control_actions.at[1, 'before'])
 
     # P_ATD_0
     def func_P_ATD_0(df, P_ASD_0, Q_ASD_0, P_AMD_0, TAMD_0, Q_AMD_0, Q_ATD_0):
@@ -260,7 +263,7 @@ def aluminum_market(input_data):
 
     variables.at[32, 'base_pr'] = variables['base_pr'].pipe(func_P_ATD_0, variables.at[31, 'base_pr'],
                                                             variables.at[31, 'base_quan'], variables.at[33, 'base_pr'],
-                                                            model_control_actions.at[9, 'before'],
+                                                            model_control_actions.at[10, 'before'],
                                                             variables.at[33, 'base_quan'], variables.at[32, 'base_quan'])
 
     # r_σ_AID
@@ -304,7 +307,7 @@ def aluminum_market(input_data):
         return Q_IMD_0/((P_IMD_0/ER_0) ** ε_IMD)
 
     parameters.at[7, 'rho'] = parameters['rho'].pipe(func_Z_IMD, variables.at[24, 'base_quan'],
-                                                     variables.at[24, 'base_pr'], model_control_actions.at[0, 'before'],
+                                                     variables.at[24, 'base_pr'], model_control_actions.at[1, 'before'],
                                                      parameters.at[7, 'values'])
 
     # Z_AVD
@@ -319,14 +322,14 @@ def aluminum_market(input_data):
         return Q_ADW_0/(P_ADW_0/ER_0) ** ε_ADW
 
     parameters.at[9, 'rho'] = parameters['rho'].pipe(func_Z_ADW, variables.at[30, 'base_quan'], variables.at[30, 'base_pr'],
-                                                     model_control_actions.at[0, 'before'], parameters.at[9, 'values'])
+                                                     model_control_actions.at[1, 'before'], parameters.at[9, 'values'])
 
     # Z_AXW
     def func_Z_AXW(df, Q_AXW_0, P_AXW_0, ER_0, ε_AXW):
         return Q_AXW_0/(P_AXW_0/ER_0) ** ε_AXW
 
     parameters.at[10, 'rho'] = parameters['rho'].pipe(func_Z_AXW, variables.at[29, 'base_quan'],
-                                                      variables.at[29, 'base_pr'], model_control_actions.at[0, 'before'],
+                                                      variables.at[29, 'base_pr'], model_control_actions.at[1, 'before'],
                                                       parameters.at[10, 'values'])
 
     # Z_AMD
@@ -334,7 +337,7 @@ def aluminum_market(input_data):
         return Q_AMD_0/(P_AMD_0/ER_0) ** ε_AMD
 
     parameters.at[11, 'rho'] = parameters['rho'].pipe(func_Z_AMD, variables.at[33, 'base_quan'],
-                                                      variables.at[33, 'base_pr'], model_control_actions.at[0, 'before'],
+                                                      variables.at[33, 'base_pr'], model_control_actions.at[1, 'before'],
                                                       parameters.at[11, 'values'])
 
     # Z_ATD
@@ -343,13 +346,14 @@ def aluminum_market(input_data):
 
     parameters.at[12, 'rho'] = parameters['rho'].pipe(func_Z_ATD, variables.at[32, 'base_quan'],
                                                       variables.at[32, 'base_pr'], parameters.at[12, 'values'])
+
     # K_IMD
     def func_K_IMD(df, Q_IMD_0, Q_IPD_0, r_σ_AID, P_IMD_0, TIMD_0, P_IPD_0):
         return ((Q_IMD_0/Q_IPD_0) ** (1-r_σ_AID))*(P_IMD_0*(1+TIMD_0)/P_IPD_0)
 
     variables.at[24, 'relative_quality'] = variables['relative_quality'].pipe(func_K_IMD, variables.at[24, 'base_quan'],
                                                 variables.at[23, 'base_quan'], parameters.at[0, 'rho'],
-                                                variables.at[24, 'base_pr'], model_control_actions.at[8, 'before'],
+                                                variables.at[24, 'base_pr'], model_control_actions.at[9, 'before'],
                                                                               variables.at[23, 'base_pr'])
 
     # K_AVD
@@ -358,7 +362,7 @@ def aluminum_market(input_data):
 
     variables.at[26, 'relative_quality'] = variables['relative_quality'].pipe(func_K_AVD, variables.at[26, 'base_quan'],
                                                                 variables.at[25, 'base_quan'], parameters.at[1, 'rho'],
-                                                                variables.at[26, 'base_pr'],variables.at[25, 'base_pr'])
+                                                                variables.at[26, 'base_pr'], variables.at[25, 'base_pr'])
 
     # K_AXD
     def func_K_AXD(df, Q_AXD_0, Q_ASD_0, r_Ω_APD, P_AXD_0, P_ASD_0):
@@ -375,7 +379,7 @@ def aluminum_market(input_data):
     variables.at[29, 'relative_quality'] = variables['relative_quality'].pipe(func_K_AXW, variables.at[29, 'base_quan'],
                                                                 variables.at[28, 'base_quan'], parameters.at[3, 'rho'],
                                                                 variables.at[29, 'base_pr'], variables.at[28, 'base_pr'],
-                                            model_control_actions.at[7, 'before'], variables.at[28, 'relative_quality'])
+                                            model_control_actions.at[8, 'before'], variables.at[28, 'relative_quality'])
 
     # K_AMD
     def func_K_AMD(df, Q_AMD_0, Q_ASD_0, r_σ_ATD, P_AMD_0, TAMD_0, P_ASD_0):
@@ -385,6 +389,54 @@ def aluminum_market(input_data):
                                                                 variables.at[31, 'base_quan'], parameters.at[4, 'rho'],
                                                     variables.at[33, 'base_pr'], model_control_actions.at[10, 'before'],
                                                                               variables.at[31, 'base_pr'])
+
+    def func(z):
+        Q_IPD_1 = z[0]
+        P_IPD_1 = z[1]
+        Q_IMD_1 = z[2]
+        P_IMD_1 = z[3]
+        P_AID_1 = z[4]
+        Q_AID_1 = z[5]
+        K_IPD = z[6]
+        Q_AVD_1 = z[7]
+        P_AVD_1 = z[8]
+        P_APD_1 = z[9]
+        Q_APD_1 = z[10]
+        K_AID = z[11]
+        A_APD = z[12]
+        P_AXD_1 = z[13]
+        Q_AXD_1 = z[14]
+        P_ASD_1 = z[15]
+        Q_ASD_1 = z[16]
+        K_ASD = z[17]
+        P_ADW_1 = z[18]
+        Q_ADW_1 = z[19]
+        P_AXW_1 = z[20]
+        Q_AXW_1 = z[21]
+        P_ATD_1 = z[22]
+        Q_ATD_1 = z[23]
+        P_AMD_1 = z[24]
+        Q_AMD_1 = z[25]
+
+        IPD_SUPPLY = Q_IPD_1 - parameters.at[6, 'rho'] * (1 + model_control_actions.at[12, 'after']) * (P_IPD_1) ** parameters.at[6, 'values']
+        IMD_SUPPLY = Q_IMD_1 - parameters.at[7, 'rho'] * (1 + model_control_actions.at[13, 'after']) * (P_IMD_1 / (model_control_actions.at[0, 'after'])) ** parameters.at[7, 'values']
+
+    print(model_control_actions.at[0, 'after'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
