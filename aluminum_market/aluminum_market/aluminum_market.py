@@ -484,238 +484,238 @@ def aluminum_market(input_data):
                AVD_SUPPLY, APD_BUD_CET, APD_CET, APD_BAL_CET, ADW_BUD_CES, ADW_CES, ADW_BAL_CES, AXW_SUPPLY, ADW_DEMAND, \
                ATD_BUD_CES, ATD_CES, ATD_BAL_CES, AMD_SUPPLY, ADW_DEMAND, WP_EXO
 
-        z0 = [Q_IPD_1, P_IPD_1, Q_IMD_1, P_IMD_1, P_AID_1, Q_AID_1, K_IPD, Q_AVD_1, P_AVD_1, P_APD_1, Q_APD_1, K_AID,
+    z0 = [Q_IPD_1, P_IPD_1, Q_IMD_1, P_IMD_1, P_AID_1, Q_AID_1, K_IPD, Q_AVD_1, P_AVD_1, P_APD_1, Q_APD_1, K_AID,
               A_APD, P_AXD_1, Q_AXD_1, P_ASD_1, Q_ASD_1, K_ASD, P_ADW_1, Q_ADW_1, P_AXW_1, Q_AXW_1, P_ATD_1, Q_ATD_1,
               P_AMD_1, Q_AMD_1]
 
-        solved_value = fsolve(func, z0)
+    solved_value = fsolve(func, z0)
 
-        # Q_IPD_1
-        variables.at[23, 'new_quan'] = solved_value[0]
+    # Q_IPD_1
+    variables.at[23, 'new_quan'] = solved_value[0]
 
-        # P_IPD_1
-        variables.at[23, 'new_pr'] = solved_value[1]
+    # P_IPD_1
+    variables.at[23, 'new_pr'] = solved_value[1]
 
-        # Q_IMD_1
-        variables.at[24, 'new_quan'] = solved_value[2]
+    # Q_IMD_1
+    variables.at[24, 'new_quan'] = solved_value[2]
 
-        # P_IMD_1
-        variables.at[24, 'new_pr'] = solved_value[3]
+    # P_IMD_1
+    variables.at[24, 'new_pr'] = solved_value[3]
 
-        # P_AID_1
-        variables.at[25, 'new_pr'] = solved_value[4]
+    # P_AID_1
+    variables.at[25, 'new_pr'] = solved_value[4]
 
-        # Q_AID_1
-        variables.at[25, 'new_quan'] = solved_value[5]
+    # Q_AID_1
+    variables.at[25, 'new_quan'] = solved_value[5]
 
-        # K_IPD
-        variables.at[23, 'relative_quality'] = solved_value[6]
+    # K_IPD
+    variables.at[23, 'relative_quality'] = solved_value[6]
 
-        # Q_AVD_1
-        variables.at[26, 'new_quan'] = solved_value[7]
+    # Q_AVD_1
+    variables.at[26, 'new_quan'] = solved_value[7]
 
-        # P_AVD_1
-        variables.at[26, 'new_pr'] = solved_value[8]
+    # P_AVD_1
+    variables.at[26, 'new_pr'] = solved_value[8]
 
-        # P_APD_1
-        variables.at[27, 'new_pr'] = solved_value[9]
+    # P_APD_1
+    variables.at[27, 'new_pr'] = solved_value[9]
 
-        # Q_APD_1
-        variables.at[27, 'new_quan'] = solved_value[10]
+    # Q_APD_1
+    variables.at[27, 'new_quan'] = solved_value[10]
 
-        # K_AID
-        variables.at[25, 'relative_quality'] = solved_value[11]
+    # K_AID
+    variables.at[25, 'relative_quality'] = solved_value[11]
 
-        # A_APD
-        A_APD = solved_value[12]
+    # A_APD
+    A_APD = solved_value[12]
 
-        def func_A_APD(df, Q_APD_0, K_AID, Q_AID_0, r_σ_APD, K_AVD, Q_AVD_0):
-            return Q_APD_0 / (K_AID * Q_AID_0 ** r_σ_APD + K_AVD * Q_AVD_0 ** r_σ_APD) ** (1 / r_σ_APD)
+    def func_A_APD(df, Q_APD_0, K_AID, Q_AID_0, r_σ_APD, K_AVD, Q_AVD_0):
+        return Q_APD_0 / (K_AID * Q_AID_0 ** r_σ_APD + K_AVD * Q_AVD_0 ** r_σ_APD) ** (1 / r_σ_APD)
 
-        variables.at[27, 'relative_quality'] = variables['relative_quality'].pipe(func_A_APD,
-                                                                                  variables.at[27, 'base_quan'],
-                                                                                  variables.at[25, 'relative_quality'],
-                                                                                  variables.at[25, 'base_quan'],
-                                                                                  parameters.at[1, 'rho'],
-                                                                                  variables.at[26, 'relative_quality'],
-                                                                                  variables.at[26, 'base_quan'])
+    variables.at[27, 'relative_quality'] = variables['relative_quality'].pipe(func_A_APD,
+                                                                              variables.at[27, 'base_quan'],
+                                                                              variables.at[25, 'relative_quality'],
+                                                                              variables.at[25, 'base_quan'],
+                                                                              parameters.at[1, 'rho'],
+                                                                              variables.at[26, 'relative_quality'],
+                                                                              variables.at[26, 'base_quan'])
 
-        # P_AXD_1
-        variables.at[28, 'new_pr'] = solved_value[13]
+    # P_AXD_1
+    variables.at[28, 'new_pr'] = solved_value[13]
 
-        # Q_AXD_1
-        variables.at[28, 'new_quan'] = solved_value[14]
+    # Q_AXD_1
+    variables.at[28, 'new_quan'] = solved_value[14]
 
-        # P_ASD_1
-        variables.at[31, 'new_pr'] = solved_value[15]
+    # P_ASD_1
+    variables.at[31, 'new_pr'] = solved_value[15]
 
-        # Q_ASD_1
-        variables.at[31, 'new_quan'] = solved_value[16]
+    # Q_ASD_1
+    variables.at[31, 'new_quan'] = solved_value[16]
 
-        # K_ASD
-        variables.at[31, 'relative_quality'] = solved_value[17]
+    # K_ASD
+    variables.at[31, 'relative_quality'] = solved_value[17]
 
-        # P_ADW_1
-        variables.at[30, 'new_pr'] = solved_value[18]
+    # P_ADW_1
+    variables.at[30, 'new_pr'] = solved_value[18]
 
-        # Q_ADW_1
-        variables.at[30, 'new_quan'] = solved_value[19]
+    # Q_ADW_1
+    variables.at[30, 'new_quan'] = solved_value[19]
 
-        # P_AXW_1
-        variables.at[29, 'new_pr'] = solved_value[20]
+    # P_AXW_1
+    variables.at[29, 'new_pr'] = solved_value[20]
 
-        # Q_AXW_1
-        variables.at[29, 'new_quan'] = solved_value[21]
+    # Q_AXW_1
+    variables.at[29, 'new_quan'] = solved_value[21]
 
-        # P_ATD_1
-        variables.at[32, 'new_pr'] = solved_value[22]
+    # P_ATD_1
+    variables.at[32, 'new_pr'] = solved_value[22]
 
-        # Q_ATD_1
-        variables.at[32, 'new_quan'] = solved_value[23]
+    # Q_ATD_1
+    variables.at[32, 'new_quan'] = solved_value[23]
 
-        # P_AMD_1
-        variables.at[33, 'new_pr'] = solved_value[24]
+    # P_AMD_1
+    variables.at[33, 'new_pr'] = solved_value[24]
 
-        # Q_AMD_1
-        variables.at[33, 'new_quan'] = solved_value[25]
+    # Q_AMD_1
+    variables.at[33, 'new_quan'] = solved_value[25]
 
-        eqs = []
+    eqs = []
 
-        IPD_SUPPLY = variables.at[23, 'new_quan'] - parameters.at[6, 'rho'] * (
-                    1 + model_control_actions.at[12, 'after']) * (variables.at[23, 'new_pr']) ** \
-                     parameters.at[6, 'values']
-        eqs.append(IPD_SUPPLY)
+    IPD_SUPPLY = variables.at[23, 'new_quan'] - parameters.at[6, 'rho'] * (
+                1 + model_control_actions.at[12, 'after']) * (variables.at[23, 'new_pr']) ** \
+                 parameters.at[6, 'values']
+    eqs.append(IPD_SUPPLY)
 
-        IMD_SUPPLY = variables.at[24, 'new_quan'] - parameters.at[7, 'rho'] * (
-                    1 + model_control_actions.at[13, 'after']) * (
-                             variables.at[24, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
-                         7, 'values']
-        eqs.append(IMD_SUPPLY)
+    IMD_SUPPLY = variables.at[24, 'new_quan'] - parameters.at[7, 'rho'] * (
+                1 + model_control_actions.at[13, 'after']) * (
+                         variables.at[24, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
+                     7, 'values']
+    eqs.append(IMD_SUPPLY)
 
-        AID_BUD_CES = variables.at[25, 'new_pr'] * variables.at[25, 'new_quan'] - variables.at[24, 'new_pr'] * (
-                1 + model_control_actions.at[9, 'after']) * variables.at[24, 'new_quan'] - variables.at[23, 'new_pr'] * \
-                      variables.at[23, 'new_quan']
-        eqs.append(AID_BUD_CES)
+    AID_BUD_CES = variables.at[25, 'new_pr'] * variables.at[25, 'new_quan'] - variables.at[24, 'new_pr'] * (
+            1 + model_control_actions.at[9, 'after']) * variables.at[24, 'new_quan'] - variables.at[23, 'new_pr'] * \
+                  variables.at[23, 'new_quan']
+    eqs.append(AID_BUD_CES)
 
-        AID_CES = variables.at[23, 'new_quan'] / variables.at[24, 'new_quan'] - ((variables.at[23, 'new_pr'] / (
-                    variables.at[24, 'new_pr'] * (1 + model_control_actions.at[9, 'after']))) * (
-                                                                                         variables.at[
-                                                                                             24, 'relative_quality'] /
-                                                                                         variables.at[
-                                                                                             23, 'relative_quality'])) ** (
-                              1 / (parameters.at[0, 'rho'] - 1))
-        eqs.append(AID_CES)
+    AID_CES = variables.at[23, 'new_quan'] / variables.at[24, 'new_quan'] - ((variables.at[23, 'new_pr'] / (
+                variables.at[24, 'new_pr'] * (1 + model_control_actions.at[9, 'after']))) * (
+                                                                                     variables.at[
+                                                                                         24, 'relative_quality'] /
+                                                                                     variables.at[
+                                                                                         23, 'relative_quality'])) ** (
+                          1 / (parameters.at[0, 'rho'] - 1))
+    eqs.append(AID_CES)
 
-        AID_BAL_CES = variables.at[25, 'new_quan'] - variables.at[23, 'new_quan'] - variables.at[24, 'new_quan']
-        eqs.append(AID_BAL_CES)
+    AID_BAL_CES = variables.at[25, 'new_quan'] - variables.at[23, 'new_quan'] - variables.at[24, 'new_quan']
+    eqs.append(AID_BAL_CES)
 
-        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (
-                    1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
-                     parameters.at[8, 'values']
-        eqs.append(AVD_SUPPLY)
+    AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (
+                1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
+                 parameters.at[8, 'values']
+    eqs.append(AVD_SUPPLY)
 
-        APD_BUD_CES = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[25, 'new_pr'] * variables.at[
-            25, 'new_quan'] - variables.at[26, 'new_pr'] * variables.at[26, 'new_quan']
-        eqs.append(APD_BUD_CES)
+    APD_BUD_CES = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[25, 'new_pr'] * variables.at[
+        25, 'new_quan'] - variables.at[26, 'new_pr'] * variables.at[26, 'new_quan']
+    eqs.append(APD_BUD_CES)
 
-        APD_CES = variables.at[26, 'new_quan'] / variables.at[25, 'new_quan'] - (
-                    (variables.at[26, 'new_pr'] / (variables.at[25, 'new_pr'])) * (
-                        variables.at[25, 'relative_quality'] / variables.at[26, 'relative_quality'])) ** (
-                          1 / (parameters.at[1, 'rho'] - 1))
-        eqs.append(APD_CES)
+    APD_CES = variables.at[26, 'new_quan'] / variables.at[25, 'new_quan'] - (
+                (variables.at[26, 'new_pr'] / (variables.at[25, 'new_pr'])) * (
+                    variables.at[25, 'relative_quality'] / variables.at[26, 'relative_quality'])) ** (
+                      1 / (parameters.at[1, 'rho'] - 1))
+    eqs.append(APD_CES)
 
-        APD_BAL_CES = variables.at[27, 'new_quan'] - variables.at[27, 'relative_quality'] * (
-                variables.at[25, 'relative_quality'] * variables.at[25, 'new_quan'] ** parameters.at[1, 'rho'] +
-                variables.at[26, 'relative_quality'] * variables.at[26, 'new_quan'] **
-                parameters.at[1, 'rho']) ** (1 / parameters.at[1, 'rho'])
-        eqs.append(APD_BAL_CES)
+    APD_BAL_CES = variables.at[27, 'new_quan'] - variables.at[27, 'relative_quality'] * (
+            variables.at[25, 'relative_quality'] * variables.at[25, 'new_quan'] ** parameters.at[1, 'rho'] +
+            variables.at[26, 'relative_quality'] * variables.at[26, 'new_quan'] **
+            parameters.at[1, 'rho']) ** (1 / parameters.at[1, 'rho'])
+    eqs.append(APD_BAL_CES)
 
-        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (
-                    1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
-                     parameters.at[8, 'values']
-        eqs.append(AVD_SUPPLY)
+    AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (
+                1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
+                 parameters.at[8, 'values']
+    eqs.append(AVD_SUPPLY)
 
-        APD_BUD_CET = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[28, 'new_pr'] * variables.at[
-            28, 'new_quan'] - variables.at[31, 'new_pr'] * variables.at[31, 'new_quan']
-        eqs.append(APD_BUD_CET)
+    APD_BUD_CET = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[28, 'new_pr'] * variables.at[
+        28, 'new_quan'] - variables.at[31, 'new_pr'] * variables.at[31, 'new_quan']
+    eqs.append(APD_BUD_CET)
 
-        APD_CET = variables.at[28, 'new_quan'] / variables.at[31, 'new_quan'] - (
-                    (variables.at[28, 'new_pr'] / (variables.at[31, 'new_pr'])) * (
-                        variables.at[31, 'relative_quality'] / variables.at[28, 'relative_quality'])) ** (
-                          1 / (parameters.at[2, 'rho'] - 1))
-        eqs.append(APD_CET)
+    APD_CET = variables.at[28, 'new_quan'] / variables.at[31, 'new_quan'] - (
+                (variables.at[28, 'new_pr'] / (variables.at[31, 'new_pr'])) * (
+                    variables.at[31, 'relative_quality'] / variables.at[28, 'relative_quality'])) ** (
+                      1 / (parameters.at[2, 'rho'] - 1))
+    eqs.append(APD_CET)
 
-        APD_BAL_CET = variables.at[27, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[31, 'new_quan']
-        eqs.append(APD_BAL_CET)
+    APD_BAL_CET = variables.at[27, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[31, 'new_quan']
+    eqs.append(APD_BAL_CET)
 
-        ADW_BUD_CES = variables.at[30, 'new_pr'] * variables.at[30, 'new_quan'] - variables.at[28, 'new_pr'] * (
-                1 + model_control_actions.at[8, 'after']) * variables.at[28, 'new_quan'] - variables.at[29, 'new_pr'] * \
-                      variables.at[29, 'new_quan']
-        eqs.append(ADW_BUD_CES)
+    ADW_BUD_CES = variables.at[30, 'new_pr'] * variables.at[30, 'new_quan'] - variables.at[28, 'new_pr'] * (
+            1 + model_control_actions.at[8, 'after']) * variables.at[28, 'new_quan'] - variables.at[29, 'new_pr'] * \
+                  variables.at[29, 'new_quan']
+    eqs.append(ADW_BUD_CES)
 
-        ADW_CES = variables.at[29, 'new_quan'] / variables.at[28, 'new_quan'] - (((variables.at[29, 'new_pr']) / (
-                    variables.at[28, 'new_pr'] * (1 + model_control_actions.at[8, 'after']))) * (
-                                                                                         variables.at[
-                                                                                             28, 'relative_quality'] /
-                                                                                         variables.at[
-                                                                                             29, 'relative_quality'])) ** (
-                          1 / (parameters.at[3, 'rho'] - 1))
-        eqs.append(ADW_CES)
+    ADW_CES = variables.at[29, 'new_quan'] / variables.at[28, 'new_quan'] - (((variables.at[29, 'new_pr']) / (
+                variables.at[28, 'new_pr'] * (1 + model_control_actions.at[8, 'after']))) * (
+                                                                                     variables.at[
+                                                                                         28, 'relative_quality'] /
+                                                                                     variables.at[
+                                                                                         29, 'relative_quality'])) ** (
+                      1 / (parameters.at[3, 'rho'] - 1))
+    eqs.append(ADW_CES)
 
-        ADW_BAL_CES = variables.at[30, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[29, 'new_quan']
-        eqs.append(ADW_BAL_CES)
+    ADW_BAL_CES = variables.at[30, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[29, 'new_quan']
+    eqs.append(ADW_BAL_CES)
 
-        AXW_SUPPLY = variables.at[29, 'new_quan'] - parameters.at[10, 'rho'] * (
-                    1 + model_control_actions.at[16, 'after']) * (
-                             P_AXW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
-        eqs.append(AXW_SUPPLY)
+    AXW_SUPPLY = variables.at[29, 'new_quan'] - parameters.at[10, 'rho'] * (
+                1 + model_control_actions.at[16, 'after']) * (
+                         P_AXW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
+    eqs.append(AXW_SUPPLY)
 
-        ADW_DEMAND = variables.at[30, 'new_quan'] - parameters.at[9, 'rho'] * (
-                    1 + model_control_actions.at[15, 'after']) * (
-                             variables.at[30, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
-                         9, 'values']
-        eqs.append(ADW_DEMAND)
+    ADW_DEMAND = variables.at[30, 'new_quan'] - parameters.at[9, 'rho'] * (
+                1 + model_control_actions.at[15, 'after']) * (
+                         variables.at[30, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
+                     9, 'values']
+    eqs.append(ADW_DEMAND)
 
-        ATD_BUD_CES = variables.at[32, 'new_pr'] * variables.at[32, 'new_quan'] - variables.at[33, 'new_pr'] * (
-                1 + model_control_actions.at[10, 'after']) * variables.at[33, 'new_quan'] - variables.at[31, 'new_pr'] * \
-                      variables.at[31, 'new_quan']
-        eqs.append(ATD_BUD_CES)
+    ATD_BUD_CES = variables.at[32, 'new_pr'] * variables.at[32, 'new_quan'] - variables.at[33, 'new_pr'] * (
+            1 + model_control_actions.at[10, 'after']) * variables.at[33, 'new_quan'] - variables.at[31, 'new_pr'] * \
+                  variables.at[31, 'new_quan']
+    eqs.append(ATD_BUD_CES)
 
-        ATD_CES = variables.at[31, 'new_quan'] / variables.at[33, 'new_quan'] - ((variables.at[31, 'new_pr'] / (
-                    variables.at[33, 'new_pr'] * (1 + model_control_actions.at[10, 'after']))) * (
-                                                                                         variables.at[
-                                                                                             33, 'relative_quality'] /
-                                                                                         variables.at[
-                                                                                             31, 'relative_quality'])) ** (
-                              1 / (parameters.at[4, 'rho'] - 1))
-        eqs.append(ATD_CES)
+    ATD_CES = variables.at[31, 'new_quan'] / variables.at[33, 'new_quan'] - ((variables.at[31, 'new_pr'] / (
+                variables.at[33, 'new_pr'] * (1 + model_control_actions.at[10, 'after']))) * (
+                                                                                     variables.at[
+                                                                                         33, 'relative_quality'] /
+                                                                                     variables.at[
+                                                                                         31, 'relative_quality'])) ** (
+                          1 / (parameters.at[4, 'rho'] - 1))
+    eqs.append(ATD_CES)
 
-        ATD_BAL_CES = variables.at[32, 'new_quan'] - variables.at[31, 'new_quan'] - variables.at[33, 'new_quan']
-        eqs.append(ATD_BAL_CES)
+    ATD_BAL_CES = variables.at[32, 'new_quan'] - variables.at[31, 'new_quan'] - variables.at[33, 'new_quan']
+    eqs.append(ATD_BAL_CES)
 
-        AMD_SUPPLY = variables.at[33, 'new_quan'] - parameters.at[11, 'rho'] * (
-                    1 + model_control_actions.at[17, 'after']) * (
-                             variables.at[33, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
-                         11, 'values']
-        eqs.append(AMD_SUPPLY)
+    AMD_SUPPLY = variables.at[33, 'new_quan'] - parameters.at[11, 'rho'] * (
+                1 + model_control_actions.at[17, 'after']) * (
+                         variables.at[33, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
+                     11, 'values']
+    eqs.append(AMD_SUPPLY)
 
-        ADW_DEMAND = variables.at[32, 'new_quan'] - parameters.at[12, 'rho'] * (
-                    1 + model_control_actions.at[18, 'after']) * (variables.at[32, 'new_pr']) ** \
-                     parameters.at[12, 'values']
-        eqs.append(ADW_DEMAND)
+    ADW_DEMAND = variables.at[32, 'new_quan'] - parameters.at[12, 'rho'] * (
+                1 + model_control_actions.at[18, 'after']) * (variables.at[32, 'new_pr']) ** \
+                 parameters.at[12, 'values']
+    eqs.append(ADW_DEMAND)
 
-        sqrt_eq = []
+    sqrt_eq = []
 
-        for item in eqs:
-            sqrt_eq.append(item ** 2)
+    for item in eqs:
+        sqrt_eq.append(item ** 2)
 
-        eq_result = sqrt(fsum(sqrt_eq))
+    eq_result = sqrt(fsum(sqrt_eq))
 
-        if eq_result < 0.000001:
-            solution = True
+    if eq_result < 0.000001:
+        solution = True
 
-        else:
-            solution = False
+    else:
+        solution = False
 
     # D7
     def func_D7(df, P_AXD_1, ER_1):
