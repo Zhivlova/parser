@@ -681,19 +681,13 @@ def aluminum_market(input_data):
             solution = False
 
 
+    # D7
+    def func_D7(df, P_AXD_1, ER_1):
+        return P_AXD_1 / ER_1
 
-
-
-
-
-
-    # # D7
-    # def func_D7(df, P_AXD_1, ER_1):
-    #     return P_AXD_1 / ER_1
-    #
-    # model_control_actions.at[4, 'after'] = model_control_actions['after'].pipe(func_D7,
-    #                                                                         variables.at[28, 'new_pr'],
-    #                                                                         model_control_actions.at[0, 'after'])
+    model_control_actions.at[5, 'after'] = model_control_actions['after'].pipe(func_D7,
+                                                                            variables.at[28, 'new_pr'],
+                                                                            model_control_actions.at[1, 'after'])
 
 
 input_data = InputDataBase(user_data)
