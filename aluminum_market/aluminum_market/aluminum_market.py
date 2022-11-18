@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from scipy.optimize import fsolve
+from math import fsum, sqrt
 import pandas as pd
 import os
 
@@ -82,7 +83,7 @@ def aluminum_market(input_data):
     model_control_actions = model_control_actions.rename(
         columns={'Управляющие воздействия модели': 'title', 'Unnamed: 1': 'designation',
                  'Базовое равновесие': 'before', 'Новое равновесие': 'after'})
-    print(model_control_actions.to_markdown())
+
     # Переменные
     variables = df.iloc[23:34, 0:9]
     variables = variables.rename(
@@ -90,7 +91,7 @@ def aluminum_market(input_data):
                  'Базовое равновесие': 'base_pr',
                  'Новое равновесие': 'base_quan', 'Unnamed: 4': 'relative_quality', 'Unnamed: 5': 'new_pr',
                  'Unnamed: 6': 'new_quan', 'Параметры': 'perc_change_price', 'Unnamed: 8': 'perc_change_quantity'})
-    print(variables.to_markdown())
+
     # Уравнения
     equations = df.iloc[36:61, 0:2]
     equations = equations.rename(
@@ -100,8 +101,6 @@ def aluminum_market(input_data):
     parameters = df.iloc[0:13, 7:10]
     parameters = parameters.rename(
         columns={'Параметры': 'designation', 'Unnamed: 8': 'values'})
-
-    print(parameters.to_markdown())
 
     """Вводим новые значения"""
 
@@ -486,8 +485,8 @@ def aluminum_market(input_data):
                ATD_BUD_CES, ATD_CES, ATD_BAL_CES, AMD_SUPPLY, ADW_DEMAND, WP_EXO
 
         z0 = [Q_IPD_1, P_IPD_1, Q_IMD_1, P_IMD_1, P_AID_1, Q_AID_1, K_IPD, Q_AVD_1, P_AVD_1, P_APD_1, Q_APD_1, K_AID,
-         A_APD, P_AXD_1, Q_AXD_1, P_ASD_1, Q_ASD_1, K_ASD, P_ADW_1, Q_ADW_1, P_AXW_1, Q_AXW_1, P_ATD_1, Q_ATD_1,
-        P_AMD_1, Q_AMD_1]
+              A_APD, P_AXD_1, Q_AXD_1, P_ASD_1, Q_ASD_1, K_ASD, P_ADW_1, Q_ADW_1, P_AXW_1, Q_AXW_1, P_ATD_1, Q_ATD_1,
+              P_AMD_1, Q_AMD_1]
 
         solved_value = fsolve(func, z0)
 
@@ -531,12 +530,15 @@ def aluminum_market(input_data):
         A_APD = solved_value[12]
 
         def func_A_APD(df, Q_APD_0, K_AID, Q_AID_0, r_σ_APD, K_AVD, Q_AVD_0):
-            return Q_APD_0/(K_AID*Q_AID_0 ** r_σ_APD+K_AVD*Q_AVD_0 ** r_σ_APD) ** (1/r_σ_APD)
+            return Q_APD_0 / (K_AID * Q_AID_0 ** r_σ_APD + K_AVD * Q_AVD_0 ** r_σ_APD) ** (1 / r_σ_APD)
 
         variables.at[27, 'relative_quality'] = variables['relative_quality'].pipe(func_A_APD,
-                                                variables.at[27, 'base_quan'], variables.at[25, 'relative_quality'],
-                                                variables.at[25, 'base_quan'], parameters.at[1, 'rho'],
-                                                variables.at[26, 'relative_quality'], variables.at[26, 'base_quan'])
+                                                                                  variables.at[27, 'base_quan'],
+                                                                                  variables.at[25, 'relative_quality'],
+                                                                                  variables.at[25, 'base_quan'],
+                                                                                  parameters.at[1, 'rho'],
+                                                                                  variables.at[26, 'relative_quality'],
+                                                                                  variables.at[26, 'base_quan'])
 
         # P_AXD_1
         variables.at[28, 'new_pr'] = solved_value[13]
@@ -579,91 +581,126 @@ def aluminum_market(input_data):
 
         eqs = []
 
-        IPD_SUPPLY = variables.at[23, 'new_quan'] - parameters.at[6, 'rho'] * (1 + model_control_actions.at[12, 'after']) * (variables.at[23, 'new_pr']) ** \
+        IPD_SUPPLY = variables.at[23, 'new_quan'] - parameters.at[6, 'rho'] * (
+                    1 + model_control_actions.at[12, 'after']) * (variables.at[23, 'new_pr']) ** \
                      parameters.at[6, 'values']
         eqs.append(IPD_SUPPLY)
 
-        IMD_SUPPLY = variables.at[24, 'new_quan'] - parameters.at[7, 'rho'] * (1 + model_control_actions.at[13, 'after']) * (
-                variables.at[24, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[7, 'values']
+        IMD_SUPPLY = variables.at[24, 'new_quan'] - parameters.at[7, 'rho'] * (
+                    1 + model_control_actions.at[13, 'after']) * (
+                             variables.at[24, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
+                         7, 'values']
         eqs.append(IMD_SUPPLY)
 
         AID_BUD_CES = variables.at[25, 'new_pr'] * variables.at[25, 'new_quan'] - variables.at[24, 'new_pr'] * (
-                1 + model_control_actions.at[9, 'after']) * variables.at[24, 'new_quan'] - variables.at[23, 'new_pr'] * variables.at[23, 'new_quan']
+                1 + model_control_actions.at[9, 'after']) * variables.at[24, 'new_quan'] - variables.at[23, 'new_pr'] * \
+                      variables.at[23, 'new_quan']
         eqs.append(AID_BUD_CES)
 
-        AID_CES = variables.at[23, 'new_quan'] / variables.at[24, 'new_quan'] - ((variables.at[23, 'new_pr'] / (variables.at[24, 'new_pr'] * (1 + model_control_actions.at[9, 'after']))) * (
-                variables.at[24, 'relative_quality'] / variables.at[23, 'relative_quality'])) ** (1 / (parameters.at[0, 'rho'] - 1))
+        AID_CES = variables.at[23, 'new_quan'] / variables.at[24, 'new_quan'] - ((variables.at[23, 'new_pr'] / (
+                    variables.at[24, 'new_pr'] * (1 + model_control_actions.at[9, 'after']))) * (
+                                                                                         variables.at[
+                                                                                             24, 'relative_quality'] /
+                                                                                         variables.at[
+                                                                                             23, 'relative_quality'])) ** (
+                              1 / (parameters.at[0, 'rho'] - 1))
         eqs.append(AID_CES)
 
         AID_BAL_CES = variables.at[25, 'new_quan'] - variables.at[23, 'new_quan'] - variables.at[24, 'new_quan']
         eqs.append(AID_BAL_CES)
 
-        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
+        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (
+                    1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
                      parameters.at[8, 'values']
         eqs.append(AVD_SUPPLY)
 
-        APD_BUD_CES = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[25, 'new_pr'] * variables.at[25, 'new_quan'] - variables.at[26, 'new_pr'] * variables.at[26, 'new_quan']
+        APD_BUD_CES = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[25, 'new_pr'] * variables.at[
+            25, 'new_quan'] - variables.at[26, 'new_pr'] * variables.at[26, 'new_quan']
         eqs.append(APD_BUD_CES)
 
-        APD_CES = variables.at[26, 'new_quan'] / variables.at[25, 'new_quan'] - ((variables.at[26, 'new_pr'] / (variables.at[25, 'new_pr'])) * (variables.at[25, 'relative_quality'] / variables.at[26, 'relative_quality'])) ** (
-                1 / (parameters.at[1, 'rho'] - 1))
+        APD_CES = variables.at[26, 'new_quan'] / variables.at[25, 'new_quan'] - (
+                    (variables.at[26, 'new_pr'] / (variables.at[25, 'new_pr'])) * (
+                        variables.at[25, 'relative_quality'] / variables.at[26, 'relative_quality'])) ** (
+                          1 / (parameters.at[1, 'rho'] - 1))
         eqs.append(APD_CES)
-        
+
         APD_BAL_CES = variables.at[27, 'new_quan'] - variables.at[27, 'relative_quality'] * (
-                variables.at[25, 'relative_quality'] * variables.at[25, 'new_quan'] ** parameters.at[1, 'rho'] + variables.at[26, 'relative_quality'] * variables.at[26, 'new_quan'] **
+                variables.at[25, 'relative_quality'] * variables.at[25, 'new_quan'] ** parameters.at[1, 'rho'] +
+                variables.at[26, 'relative_quality'] * variables.at[26, 'new_quan'] **
                 parameters.at[1, 'rho']) ** (1 / parameters.at[1, 'rho'])
         eqs.append(APD_BAL_CES)
 
-        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
+        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (
+                    1 + model_control_actions.at[14, 'after']) * (variables.at[26, 'new_pr']) ** \
                      parameters.at[8, 'values']
         eqs.append(AVD_SUPPLY)
 
-        APD_BUD_CET = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[28, 'new_pr'] * variables.at[28, 'new_quan'] - variables.at[31, 'new_pr'] * variables.at[31, 'new_quan']
+        APD_BUD_CET = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[28, 'new_pr'] * variables.at[
+            28, 'new_quan'] - variables.at[31, 'new_pr'] * variables.at[31, 'new_quan']
         eqs.append(APD_BUD_CET)
 
-        APD_CET = variables.at[28, 'new_quan'] / variables.at[31, 'new_quan'] - ((variables.at[28, 'new_pr'] / (variables.at[31, 'new_pr'])) * (variables.at[31, 'relative_quality'] / variables.at[28, 'relative_quality'])) ** (
-                1 / (parameters.at[2, 'rho'] - 1))
+        APD_CET = variables.at[28, 'new_quan'] / variables.at[31, 'new_quan'] - (
+                    (variables.at[28, 'new_pr'] / (variables.at[31, 'new_pr'])) * (
+                        variables.at[31, 'relative_quality'] / variables.at[28, 'relative_quality'])) ** (
+                          1 / (parameters.at[2, 'rho'] - 1))
         eqs.append(APD_CET)
 
         APD_BAL_CET = variables.at[27, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[31, 'new_quan']
         eqs.append(APD_BAL_CET)
 
         ADW_BUD_CES = variables.at[30, 'new_pr'] * variables.at[30, 'new_quan'] - variables.at[28, 'new_pr'] * (
-                1 + model_control_actions.at[8, 'after']) * variables.at[28, 'new_quan'] - variables.at[29, 'new_pr'] * variables.at[29, 'new_quan']
+                1 + model_control_actions.at[8, 'after']) * variables.at[28, 'new_quan'] - variables.at[29, 'new_pr'] * \
+                      variables.at[29, 'new_quan']
         eqs.append(ADW_BUD_CES)
 
-        ADW_CES = variables.at[29, 'new_quan'] / variables.at[28, 'new_quan'] - (((variables.at[29, 'new_pr']) / (variables.at[28, 'new_pr'] * (1 + model_control_actions.at[8, 'after']))) * (
-                variables.at[28, 'relative_quality'] / variables.at[29, 'relative_quality'])) ** (
+        ADW_CES = variables.at[29, 'new_quan'] / variables.at[28, 'new_quan'] - (((variables.at[29, 'new_pr']) / (
+                    variables.at[28, 'new_pr'] * (1 + model_control_actions.at[8, 'after']))) * (
+                                                                                         variables.at[
+                                                                                             28, 'relative_quality'] /
+                                                                                         variables.at[
+                                                                                             29, 'relative_quality'])) ** (
                           1 / (parameters.at[3, 'rho'] - 1))
         eqs.append(ADW_CES)
 
         ADW_BAL_CES = variables.at[30, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[29, 'new_quan']
         eqs.append(ADW_BAL_CES)
 
-        AXW_SUPPLY = variables.at[29, 'new_quan'] - parameters.at[10, 'rho'] * (1 + model_control_actions.at[16, 'after']) * (
-                P_AXW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
+        AXW_SUPPLY = variables.at[29, 'new_quan'] - parameters.at[10, 'rho'] * (
+                    1 + model_control_actions.at[16, 'after']) * (
+                             P_AXW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
         eqs.append(AXW_SUPPLY)
 
-        ADW_DEMAND = variables.at[30, 'new_quan'] - parameters.at[9, 'rho'] * (1 + model_control_actions.at[15, 'after']) * (
-                variables.at[30, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[9, 'values']
+        ADW_DEMAND = variables.at[30, 'new_quan'] - parameters.at[9, 'rho'] * (
+                    1 + model_control_actions.at[15, 'after']) * (
+                             variables.at[30, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
+                         9, 'values']
         eqs.append(ADW_DEMAND)
-        
+
         ATD_BUD_CES = variables.at[32, 'new_pr'] * variables.at[32, 'new_quan'] - variables.at[33, 'new_pr'] * (
-                1 + model_control_actions.at[10, 'after']) * variables.at[33, 'new_quan'] - variables.at[31, 'new_pr'] * variables.at[31, 'new_quan']
+                1 + model_control_actions.at[10, 'after']) * variables.at[33, 'new_quan'] - variables.at[31, 'new_pr'] * \
+                      variables.at[31, 'new_quan']
         eqs.append(ATD_BUD_CES)
 
-        ATD_CES = variables.at[31, 'new_quan'] / variables.at[33, 'new_quan'] - ((variables.at[31, 'new_pr'] / (variables.at[33, 'new_pr'] * (1 + model_control_actions.at[10, 'after']))) * (
-                variables.at[33, 'relative_quality'] / variables.at[31, 'relative_quality'])) ** (1 / (parameters.at[4, 'rho'] - 1))
+        ATD_CES = variables.at[31, 'new_quan'] / variables.at[33, 'new_quan'] - ((variables.at[31, 'new_pr'] / (
+                    variables.at[33, 'new_pr'] * (1 + model_control_actions.at[10, 'after']))) * (
+                                                                                         variables.at[
+                                                                                             33, 'relative_quality'] /
+                                                                                         variables.at[
+                                                                                             31, 'relative_quality'])) ** (
+                              1 / (parameters.at[4, 'rho'] - 1))
         eqs.append(ATD_CES)
 
         ATD_BAL_CES = variables.at[32, 'new_quan'] - variables.at[31, 'new_quan'] - variables.at[33, 'new_quan']
         eqs.append(ATD_BAL_CES)
 
-        AMD_SUPPLY = variables.at[33, 'new_quan'] - parameters.at[11, 'rho'] * (1 + model_control_actions.at[17, 'after']) * (
-                variables.at[33, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[11, 'values']
+        AMD_SUPPLY = variables.at[33, 'new_quan'] - parameters.at[11, 'rho'] * (
+                    1 + model_control_actions.at[17, 'after']) * (
+                             variables.at[33, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[
+                         11, 'values']
         eqs.append(AMD_SUPPLY)
 
-        ADW_DEMAND = variables.at[32, 'new_quan'] - parameters.at[12, 'rho'] * (1 + model_control_actions.at[18, 'after']) * (variables.at[32, 'new_pr']) ** \
+        ADW_DEMAND = variables.at[32, 'new_quan'] - parameters.at[12, 'rho'] * (
+                    1 + model_control_actions.at[18, 'after']) * (variables.at[32, 'new_pr']) ** \
                      parameters.at[12, 'values']
         eqs.append(ADW_DEMAND)
 
@@ -680,14 +717,200 @@ def aluminum_market(input_data):
         else:
             solution = False
 
-
     # D7
     def func_D7(df, P_AXD_1, ER_1):
         return P_AXD_1 / ER_1
 
     model_control_actions.at[5, 'after'] = model_control_actions['after'].pipe(func_D7,
-                                                                            variables.at[28, 'new_pr'],
-                                                                            model_control_actions.at[1, 'after'])
+                                                                               variables.at[28, 'new_pr'],
+                                                                               model_control_actions.at[1, 'after'])
+
+    # D8
+    def func_D8(df, P_AMD_1, ER_1):
+        return P_AMD_1 / ER_1
+
+    model_control_actions.at[6, 'after'] = model_control_actions['after'].pipe(func_D8, variables.at[33, 'new_pr'],
+                                                                               model_control_actions.at[1, 'after'])
+
+    # D9
+    def func_D9(df, P_IMD_1, ER_1):
+        return P_IMD_1 / ER_1
+
+    model_control_actions.at[7, 'after'] = model_control_actions['after'].pipe(func_D9, variables.at[24, 'new_pr'],
+                                                                               model_control_actions.at[1, 'after'])
+
+    # H25
+    def func_H25(df, P_IPD_1, P_IPD_0):
+        return P_IPD_1 / P_IPD_0 - 1
+
+    variables.at[23, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H25, variables.at[23, 'new_pr'],
+                                                                                variables.at[23, 'base_pr'])
+
+    # I25
+    def func_I25(df, Q_IPD_1, Q_IPD_0):
+        return Q_IPD_1 / Q_IPD_0 - 1
+
+    variables.at[23, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I25,
+                                                                                      variables.at[23, 'new_quan'],
+                                                                                      variables.at[23, 'base_quan'])
+
+    # H26
+    def func_H26(df, P_IMD_1, P_IMD_0):
+        return P_IMD_1 / P_IMD_0 - 1
+
+    variables.at[24, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H26, variables.at[24, 'new_pr'],
+                                                                                variables.at[24, 'base_pr'])
+
+    # I26
+    def func_I26(df, Q_IMD_1, Q_IMD_0):
+        return Q_IMD_1 / Q_IMD_0 - 1
+
+    variables.at[24, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I26,
+                                                                                      variables.at[24, 'new_quan'],
+                                                                                      variables.at[24, 'base_quan'])
+
+    # H27
+    def func_H27(df, P_AID_1, P_AID_0):
+        return P_AID_1 / P_AID_0 - 1
+
+    variables.at[25, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H27, variables.at[25, 'new_pr'],
+                                                                                variables.at[25, 'base_pr'])
+
+    # I27
+    def func_I27(df, Q_AID_1, Q_AID_0):
+        return Q_AID_1 / Q_AID_0 - 1
+
+    variables.at[25, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I27,
+                                                                                      variables.at[25, 'new_quan'],
+                                                                                      variables.at[25, 'base_quan'])
+
+    # H28
+    def func_H28(df, P_AVD_1, P_AVD_0):
+        return P_AVD_1 / P_AVD_0 - 1
+
+    variables.at[26, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H28, variables.at[26, 'new_pr'],
+                                                                                variables.at[26, 'base_pr'])
+
+    # I28
+    def func_I28(df, Q_AVD_1, Q_AVD_0):
+        return Q_AVD_1 / Q_AVD_0 - 1
+
+    variables.at[26, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I28,
+                                                                                      variables.at[26, 'new_quan'],
+                                                                                      variables.at[26, 'base_quan'])
+
+    # H29
+    def func_H29(df, P_APD_1, P_APD_0):
+        return P_APD_1 / P_APD_0 - 1
+
+    variables.at[27, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H29, variables.at[27, 'new_pr'],
+                                                                                variables.at[27, 'base_pr'])
+
+    # I29
+    def func_I29(df, Q_APD_1, Q_APD_0):
+        return Q_APD_1 / Q_APD_0 - 1
+
+    variables.at[27, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I29,
+                                                                                      variables.at[27, 'new_quan'],
+                                                                                      variables.at[27, 'base_quan'])
+
+    # H30
+    def func_H30(df, P_AXD_1, P_AXD_0):
+        return P_AXD_1 / P_AXD_0 - 1
+
+    variables.at[28, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H30, variables.at[28, 'new_pr'],
+                                                                                variables.at[28, 'base_pr'])
+
+    # I30
+    def func_I30(df, Q_AXD_1, Q_AXD_0):
+        return Q_AXD_1 / Q_AXD_0 - 1
+
+    variables.at[28, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I30,
+                                                                                      variables.at[28, 'new_quan'],
+                                                                                      variables.at[28, 'base_quan'])
+
+    # H31
+    def func_H31(df, P_AXW_1, P_AXW_0):
+        return P_AXW_1 / P_AXW_0 - 1
+
+    variables.at[29, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H31, variables.at[29, 'new_pr'],
+                                                                                variables.at[29, 'base_pr'])
+
+    # I31
+    def func_I31(df, Q_AXW_1, Q_AXW_0):
+        return Q_AXW_1 / Q_AXW_0 - 1
+
+    variables.at[29, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I31,
+                                                                                      variables.at[29, 'new_quan'],
+                                                                                      variables.at[29, 'base_quan'])
+
+    # H32
+    def func_H32(df, P_ADW_1, P_ADW_0):
+        return P_ADW_1 / P_ADW_0 - 1
+
+    variables.at[30, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H32, variables.at[30, 'new_pr'],
+                                                                                variables.at[30, 'base_pr'])
+
+    # I32
+    def func_I32(df, Q_ADW_1, Q_ADW_0):
+        return Q_ADW_1 / Q_ADW_0 - 1
+
+    variables.at[30, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I32,
+                                                                                      variables.at[30, 'new_quan'],
+                                                                                      variables.at[30, 'base_quan'])
+
+    # H33
+    def func_H33(df, P_ASD_1, P_ASD_0):
+        return P_ASD_1 / P_ASD_0 - 1
+
+    variables.at[31, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H33, variables.at[31, 'new_pr'],
+                                                                                variables.at[31, 'base_pr'])
+
+    # I33
+    def func_I33(df, Q_ASD_1, Q_ASD_0):
+        return Q_ASD_1 / Q_ASD_0 - 1
+
+    variables.at[31, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I33,
+                                                                                      variables.at[31, 'new_quan'],
+                                                                                      variables.at[31, 'base_quan'])
+
+    # H34
+    def func_H34(df, P_ATD_1, P_ATD_0):
+        return P_ATD_1 / P_ATD_0 - 1
+
+    variables.at[32, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H34, variables.at[32, 'new_pr'],
+                                                                                variables.at[32, 'base_pr'])
+
+    # I34
+    def func_I34(df, Q_ATD_1, Q_ATD_0):
+        return Q_ATD_1 / Q_ATD_0 - 1
+
+    variables.at[32, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I34,
+                                                                                      variables.at[32, 'new_quan'],
+                                                                                      variables.at[32, 'base_quan'])
+
+    # H35
+    def func_H35(df, P_AMD_1, P_AMD_0):
+        return P_AMD_1 / P_AMD_0 - 1
+
+    variables.at[33, 'perc_change_price'] = variables['perc_change_price'].pipe(func_H35, variables.at[33, 'new_pr'],
+                                                                                variables.at[33, 'base_pr'])
+
+    # I35
+    def func_I35(df, Q_AMD_1, Q_AMD_0):
+        return Q_AMD_1 / Q_AMD_0 - 1
+
+    variables.at[33, 'perc_change_quantity'] = variables['perc_change_quantity'].pipe(func_I35,
+                                                                                      variables.at[33, 'new_quan'],
+                                                                                      variables.at[33, 'base_quan'])
+
+    print(model_control_actions.to_markdown())
+    print(variables.to_markdown())
+    print(parameters.to_markdown())
+    print(solution)
+    result_to_front = {}
+    return result_to_front
+
 
 
 input_data = InputDataBase(user_data)
