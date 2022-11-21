@@ -15,16 +15,6 @@ example_data = {'ER_before': 72.795, 'ER_after': 72.795, 'WP_before': 2088.0, 'W
                 'AMD_q': 19900.0, 'σ_AID': 2, 'σ_APD': 1.5, 'Ω_APD': 4.2, 'σ_ADW': 8.4, 'σ_ATD': 1.5,
                 'ε_IPD': 0.3, 'ε_IMD': 1.5, 'ε_AVD': 1, 'ε_ADW': -0.8, 'ε_AXW': 2, 'ε_AMD': 3, 'ε_ATD': -0.8}
 
-user_data = {'ER_before': 72.795, 'ER_after': 72.795, 'WP_before': 2088.0, 'WP_after': 2088.0,
-             'P_AXD_USD_before': 1842.0, 'P_AMD_USD_before': 2377.0, 'P_IMD_USD_before': 353.0, 'TAXD_before': 0.0,
-             'TAXD_after': 0.3, 'TIMD_before': 0.0, 'TIMD_after': 0.0, 'TAMD_before': 0.0, 'TAMD_after': 0.0,
-             'SS_IPD_SUPPLY_after': 0.0, 'DS_IMD_SUPPLY_after': 0.0, 'SS_AVD_SUPPLY_after': 0.0,
-             'DS_ADW_DEMAND_after': 0.0, 'SS_AXW_SUPPLY_after': 0.0, 'SS_AMD_SUPPLY_after': 0.0,
-             'DS_ATD_DEMAND_after': 0.0, 'IPD_pr': 32821.0, 'IPD_q': 8200000.0, 'IMD_q': 4722500.0,
-             'APD_pr': 173588.0, 'APD_g': 3800000.0, 'AXD_q': 3148500.0, 'ADW_q': 137000000.0,
-             'AMD_q': 19900.0, 'σ_AID': 2, 'σ_APD': 1.5, 'Ω_APD': 4.2, 'σ_ADW': 8.4, 'σ_ATD': 1.5,
-             'ε_IPD': 0.3, 'ε_IMD': 1.5, 'ε_AVD': 1, 'ε_ADW': -0.8, 'ε_AXW': 2, 'ε_AMD': 3, 'ε_ATD': -0.8}
-
 
 class InputDataBase:
     def __init__(self, dict_from_frontend):
@@ -374,6 +364,18 @@ def aluminum_market(input_data):
                                                                               variables.at[26, 'base_pr'],
                                                                               variables.at[25, 'base_pr'])
 
+    # A_APD
+    def func_A_APD(df, Q_APD_0, K_AID, Q_AID_0, r_σ_APD, K_AVD, Q_AVD_0):
+        return Q_APD_0 / (K_AID * Q_AID_0 ** r_σ_APD + K_AVD * Q_AVD_0 ** r_σ_APD) ** (1 / r_σ_APD)
+
+    variables.at[27, 'relative_quality'] = variables['relative_quality'].pipe(func_A_APD,
+                                                                              variables.at[27, 'base_quan'],
+                                                                              variables.at[25, 'relative_quality'],
+                                                                              variables.at[25, 'base_quan'],
+                                                                              parameters.at[1, 'rho'],
+                                                                              variables.at[26, 'relative_quality'],
+                                                                              variables.at[26, 'base_quan'])
+
     # K_AXD
     def func_K_AXD(df, Q_AXD_0, Q_ASD_0, r_Ω_APD, P_AXD_0, P_ASD_0):
         return (Q_AXD_0 / Q_ASD_0) ** (1 - r_Ω_APD) * (P_AXD_0 / P_ASD_0)
@@ -408,85 +410,127 @@ def aluminum_market(input_data):
                                                                               variables.at[31, 'base_pr'])
 
     def func(z):
-        Q_IPD_1 = z[0]
-        P_IPD_1 = z[1]
-        Q_IMD_1 = z[2]
-        P_IMD_1 = z[3]
-        P_AID_1 = z[4]
-        Q_AID_1 = z[5]
-        K_IPD = z[6]
-        Q_AVD_1 = z[7]
-        P_AVD_1 = z[8]
-        P_APD_1 = z[9]
-        Q_APD_1 = z[10]
-        K_AID = z[11]
-        A_APD = z[12]
-        P_AXD_1 = z[13]
-        Q_AXD_1 = z[14]
-        P_ASD_1 = z[15]
-        Q_ASD_1 = z[16]
-        K_ASD = z[17]
-        P_ADW_1 = z[18]
-        Q_ADW_1 = z[19]
-        P_AXW_1 = z[20]
-        Q_AXW_1 = z[21]
-        P_ATD_1 = z[22]
-        Q_ATD_1 = z[23]
-        P_AMD_1 = z[24]
-        Q_AMD_1 = z[25]
+        variables.at[23, 'new_quan'] = z[0]
+        variables.at[23, 'new_pr'] = z[1]
+        variables.at[24, 'new_quan'] = z[2]
+        variables.at[24, 'new_pr'] = z[3]
+        variables.at[25, 'new_pr'] = z[4]
+        variables.at[25, 'new_quan'] = z[5]
+        variables.at[26, 'new_quan'] = z[6]
+        variables.at[26, 'new_pr'] = z[7]
+        variables.at[27, 'new_pr'] = z[8]
+        variables.at[27, 'new_quan'] = z[9]
+        variables.at[28, 'new_pr'] = z[10]
+        variables.at[28, 'new_quan'] = z[11]
+        variables.at[31, 'new_pr'] = z[12]
+        variables.at[31, 'new_quan'] = z[12]
+        variables.at[30, 'new_pr'] = z[14]
+        variables.at[30, 'new_quan'] = z[15]
+        variables.at[29, 'new_pr'] = z[16]
+        variables.at[29, 'new_quan'] = z[17]
+        variables.at[32, 'new_pr'] = z[18]
+        variables.at[32, 'new_quan'] = z[19]
+        variables.at[33, 'new_pr'] = z[20]
+        variables.at[33, 'new_quan'] = z[21]
+        variables.at[32, 'relative_quality'] = z[22]
 
-        IPD_SUPPLY = Q_IPD_1 - parameters.at[6, 'rho'] * (1 + model_control_actions.at[12, 'after']) * (P_IPD_1) ** \
+        IPD_SUPPLY = variables.at[23, 'new_quan'] - parameters.at[6, 'rho'] * (1 + model_control_actions.at[12, 'after']) \
+                     * (variables.at[23, 'new_pr']) ** \
                      parameters.at[6, 'values']
-        IMD_SUPPLY = Q_IMD_1 - parameters.at[7, 'rho'] * (1 + model_control_actions.at[13, 'after']) * (
-                P_IMD_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[7, 'values']
-        AID_BUD_CES = P_AID_1 * Q_AID_1 - P_IMD_1 * (
-                1 + model_control_actions.at[9, 'after']) * Q_IMD_1 - P_IPD_1 * Q_IPD_1
-        AID_CES = Q_IPD_1 / Q_IMD_1 - ((P_IPD_1 / (P_IMD_1 * (1 + model_control_actions.at[9, 'after']))) * (
-                variables.at[24, 'relative_quality'] / K_IPD)) ** (1 / (parameters.at[0, 'rho'] - 1))
-        AID_BAL_CES = Q_AID_1 - Q_IPD_1 - Q_IMD_1
-        AVD_SUPPLY = Q_AVD_1 - parameters.at[8, 'rho'] * (1 + model_control_actions.at[14, 'after']) * (P_AVD_1) ** \
+
+        IMD_SUPPLY = variables.at[24, 'new_quan'] - parameters.at[7, 'rho'] * (1 + model_control_actions.at[13, 'after']) * (
+                variables.at[24, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[7, 'values']
+
+        AID_BUD_CES = variables.at[25, 'new_pr'] * variables.at[25, 'new_quan'] - variables.at[24, 'new_pr'] * (
+                1 + model_control_actions.at[9, 'after']) * variables.at[24, 'new_quan'] - variables.at[23, 'new_pr'] \
+                      * variables.at[23, 'new_quan']
+
+        AID_CES = variables.at[23, 'new_quan'] / variables.at[24, 'new_quan'] - ((variables.at[23, 'new_pr'] /
+                                        (variables.at[24, 'new_pr'] * (1 + model_control_actions.at[9, 'after']))) * (
+                variables.at[24, 'relative_quality'] / variables.at[23, 'relative_quality'])) ** (
+                          1 / (parameters.at[0, 'rho'] - 1))
+
+        AID_BAL_CES = variables.at[25, 'new_quan'] - variables.at[23, 'new_quan'] - variables.at[24, 'new_quan']
+
+        AVD_SUPPLY = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (1 + model_control_actions.at[14, 'after']) \
+                     * (variables.at[26, 'new_pr']) ** \
                      parameters.at[8, 'values']
-        APD_BUD_CES = P_APD_1 * Q_APD_1 - P_AID_1 * Q_AID_1 - P_AVD_1 * Q_AVD_1
-        APD_CES = Q_AVD_1 / Q_AID_1 - ((P_AVD_1 / (P_AID_1)) * (K_AID / variables.at[26, 'relative_quality'])) ** (
-                1 / (parameters.at[1, 'rho'] - 1))
-        APD_BAL_CES = Q_APD_1 - A_APD * (
-                K_AID * Q_AID_1 ** parameters.at[1, 'rho'] + variables.at[26, 'relative_quality'] * Q_AVD_1 **
+
+        APD_BUD_CES = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[25, 'new_pr'] \
+                      * variables.at[25, 'new_quan'] - variables.at[26, 'new_pr'] * variables.at[26, 'new_quan']
+
+        APD_CES = variables.at[26, 'new_quan'] / variables.at[25, 'new_quan'] - ((variables.at[26, 'new_pr'] /
+                                                                                  (variables.at[25, 'new_pr'])) * (
+                variables.at[25, 'relative_quality'] / variables.at[26, 'relative_quality'])) ** (
+                          1 / (parameters.at[1, 'rho'] - 1))
+
+        APD_BAL_CES = variables.at[27, 'new_quan'] - variables.at[27, 'relative_quality'] * (
+                variables.at[25, 'relative_quality'] * variables.at[25, 'new_quan'] ** parameters.at[1, 'rho'] + variables.at[
+            26, 'relative_quality'] * variables.at[26, 'new_quan'] **
                 parameters.at[1, 'rho']) ** (1 / parameters.at[1, 'rho'])
-        AVD_SUPPLY = Q_AVD_1 - parameters.at[8, 'rho'] * (1 + model_control_actions.at[14, 'after']) * (P_AVD_1) ** \
+
+        AVD_SUPPLY_2 = variables.at[26, 'new_quan'] - parameters.at[8, 'rho'] * (1 + model_control_actions.at[14, 'after']) \
+                     * (variables.at[26, 'new_pr']) ** \
                      parameters.at[8, 'values']
-        APD_BUD_CET = P_APD_1 * Q_APD_1 - P_AXD_1 * Q_AXD_1 - P_ASD_1 * Q_ASD_1
-        APD_CET = Q_AXD_1 / Q_ASD_1 - ((P_AXD_1 / (P_ASD_1)) * (K_ASD / variables.at[28, 'relative_quality'])) ** (
-                1 / (parameters.at[2, 'rho'] - 1))
-        APD_BAL_CET = Q_APD_1 - Q_AXD_1 - Q_ASD_1
-        ADW_BUD_CES = P_ADW_1 * Q_ADW_1 - P_AXD_1 * (
-                1 + model_control_actions.at[8, 'after']) * Q_AXD_1 - P_AXW_1 * Q_AXW_1
-        ADW_CES = Q_AXW_1 / Q_AXD_1 - (((P_AXW_1) / (P_AXD_1 * (1 + model_control_actions.at[8, 'after']))) * (
+
+        APD_BUD_CET = variables.at[27, 'new_pr'] * variables.at[27, 'new_quan'] - variables.at[28, 'new_pr'] * \
+                      variables.at[28, 'new_quan'] - variables.at[31, 'new_pr'] * variables.at[31, 'new_quan']
+
+        APD_CET = variables.at[28, 'new_quan'] / variables.at[31, 'new_quan'] - ((variables.at[28, 'new_pr'] /
+                                                                                  (variables.at[31, 'new_pr'])) * (
+                variables.at[31, 'relative_quality'] / variables.at[28, 'relative_quality'])) ** (
+                          1 / (parameters.at[2, 'rho'] - 1))
+
+        APD_BAL_CET = variables.at[27, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[31, 'new_quan']
+
+        ADW_BUD_CES = variables.at[30, 'new_pr'] * variables.at[30, 'new_quan'] - variables.at[28, 'new_pr'] * (
+                1 + model_control_actions.at[8, 'after']) * variables.at[28, 'new_quan'] - variables.at[29, 'new_pr'] * \
+                      variables.at[29, 'new_quan']
+
+        ADW_CES = variables.at[29, 'new_quan'] / variables.at[28, 'new_quan'] - (((variables.at[29, 'new_pr']) /
+                                                                                  (variables.at[28, 'new_pr'] *
+                                                                    (1 + model_control_actions.at[8, 'after']))) * (
                 variables.at[28, 'relative_quality'] / variables.at[29, 'relative_quality'])) ** (
                           1 / (parameters.at[3, 'rho'] - 1))
-        ADW_BAL_CES = Q_ADW_1 - Q_AXD_1 - Q_AXW_1
-        AXW_SUPPLY = Q_AXW_1 - parameters.at[10, 'rho'] * (1 + model_control_actions.at[16, 'after']) * (
-                P_AXW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
-        ADW_DEMAND = Q_ADW_1 - parameters.at[9, 'rho'] * (1 + model_control_actions.at[15, 'after']) * (
-                P_ADW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[9, 'values']
-        ATD_BUD_CES = P_ATD_1 * Q_ATD_1 - P_AMD_1 * (
-                1 + model_control_actions.at[10, 'after']) * Q_AMD_1 - P_ASD_1 * Q_ASD_1
-        ATD_CES = Q_ASD_1 / Q_AMD_1 - ((P_ASD_1 / (P_AMD_1 * (1 + model_control_actions.at[10, 'after']))) * (
-                variables.at[33, 'relative_quality'] / K_ASD)) ** (1 / (parameters.at[4, 'rho'] - 1))
-        ATD_BAL_CES = Q_ATD_1 - Q_ASD_1 - Q_AMD_1
-        AMD_SUPPLY = Q_AMD_1 - parameters.at[11, 'rho'] * (1 + model_control_actions.at[17, 'after']) * (
-                P_AMD_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[11, 'values']
-        ADW_DEMAND = Q_ATD_1 - parameters.at[12, 'rho'] * (1 + model_control_actions.at[18, 'after']) * (P_ATD_1) ** \
-                     parameters.at[12, 'values']
-        WP_EXO = P_ADW_1 / model_control_actions.at[1, 'after'] - variables.at[30, 'base_pr'] * (
-                model_control_actions.at[4, 'after'] + 1) / model_control_actions.at[1, 'before']
+
+        ADW_BAL_CES = variables.at[30, 'new_quan'] - variables.at[28, 'new_quan'] - variables.at[29, 'new_quan']
+
+        AXW_SUPPLY = variables.at[29, 'new_quan'] - parameters.at[10, 'rho'] * (1 + model_control_actions.at[16, 'after']) * (
+                variables.at[29, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
+
+        ADW_DEMAND = variables.at[30, 'new_quan'] - parameters.at[9, 'rho'] * (1 + model_control_actions.at[15, 'after']) * (
+                variables.at[30, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[9, 'values']
+
+        ATD_BUD_CES = variables.at[32, 'new_pr'] * variables.at[32, 'new_quan'] - variables.at[33, 'new_pr'] * (
+                1 + model_control_actions.at[10, 'after']) * variables.at[33, 'new_quan'] - variables.at[31, 'new_pr'] \
+                      * variables.at[31, 'new_quan']
+
+        ATD_CES = variables.at[31, 'new_quan'] / variables.at[33, 'new_quan'] - ((variables.at[31, 'new_pr'] /
+                                    (variables.at[33, 'new_pr'] * (1 + model_control_actions.at[10, 'after']))) * (
+                variables.at[33, 'relative_quality'] / variables.at[31, 'relative_quality'])) ** (
+                          1 / (parameters.at[4, 'rho'] - 1))
+
+        ATD_BAL_CES = variables.at[32, 'new_quan'] - variables.at[31, 'new_quan'] - variables.at[33, 'new_quan']
+
+        AMD_SUPPLY = variables.at[33, 'new_quan'] - parameters.at[11, 'rho'] * (1 + model_control_actions.at[17, 'after']) * (
+                variables.at[33, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[11, 'values']
+
+        ADW_DEMAND_2 = variables.at[32, 'new_quan'] - parameters.at[12, 'rho'] * \
+                       (1 + model_control_actions.at[18, 'after']) * (variables.at[32, 'new_pr']) ** \
+                       parameters.at[12, 'values']
 
         return IPD_SUPPLY, IMD_SUPPLY, AID_BUD_CES, AID_CES, AID_BAL_CES, AVD_SUPPLY, APD_BUD_CES, APD_CES, APD_BAL_CES, \
-               AVD_SUPPLY, APD_BUD_CET, APD_CET, APD_BAL_CET, ADW_BUD_CES, ADW_CES, ADW_BAL_CES, AXW_SUPPLY, ADW_DEMAND, \
-               ATD_BUD_CES, ATD_CES, ATD_BAL_CES, AMD_SUPPLY, ADW_DEMAND, WP_EXO
+            AVD_SUPPLY_2, APD_BUD_CET, APD_CET, APD_BAL_CET, ADW_BUD_CES, ADW_CES, ADW_BAL_CES, AXW_SUPPLY, ADW_DEMAND, \
+            ATD_BUD_CES, ATD_CES, ATD_BAL_CES, AMD_SUPPLY, ADW_DEMAND_2
 
-    z0 = [Q_IPD_1, P_IPD_1, Q_IMD_1, P_IMD_1, P_AID_1, Q_AID_1, K_IPD, Q_AVD_1, P_AVD_1, P_APD_1, Q_APD_1, K_AID,
-              A_APD, P_AXD_1, Q_AXD_1, P_ASD_1, Q_ASD_1, K_ASD, P_ADW_1, Q_ADW_1, P_AXW_1, Q_AXW_1, P_ATD_1, Q_ATD_1,
-              P_AMD_1, Q_AMD_1]
+    z0 = [variables.at[23, 'new_quan'], variables.at[23, 'new_pr'], variables.at[24, 'new_quan'],
+          variables.at[24, 'new_pr'], variables.at[25, 'new_pr'], variables.at[25, 'new_quan'],
+          variables.at[26, 'new_quan'], variables.at[26, 'new_pr'], variables.at[27, 'new_pr'],
+          variables.at[27, 'new_quan'], variables.at[28, 'new_pr'], variables.at[28, 'new_quan'],
+          variables.at[31, 'new_pr'], variables.at[31, 'new_quan'], variables.at[30, 'new_pr'],
+          variables.at[30, 'new_quan'], variables.at[29, 'new_pr'], variables.at[29, 'new_quan'],
+          variables.at[32, 'new_pr'], variables.at[32, 'new_quan'], variables.at[33, 'new_pr'],
+          variables.at[33, 'new_quan'], variables.at[32, 'relative_quality']]
 
     solved_value = fsolve(func, z0)
 
@@ -508,76 +552,55 @@ def aluminum_market(input_data):
     # Q_AID_1
     variables.at[25, 'new_quan'] = solved_value[5]
 
-    # K_IPD
-    variables.at[23, 'relative_quality'] = solved_value[6]
-
     # Q_AVD_1
-    variables.at[26, 'new_quan'] = solved_value[7]
+    variables.at[26, 'new_quan'] = solved_value[6]
 
     # P_AVD_1
-    variables.at[26, 'new_pr'] = solved_value[8]
+    variables.at[26, 'new_pr'] = solved_value[7]
 
     # P_APD_1
-    variables.at[27, 'new_pr'] = solved_value[9]
+    variables.at[27, 'new_pr'] = solved_value[8]
 
     # Q_APD_1
-    variables.at[27, 'new_quan'] = solved_value[10]
-
-    # K_AID
-    variables.at[25, 'relative_quality'] = solved_value[11]
-
-    # A_APD
-    A_APD = solved_value[12]
-
-    def func_A_APD(df, Q_APD_0, K_AID, Q_AID_0, r_σ_APD, K_AVD, Q_AVD_0):
-        return Q_APD_0 / (K_AID * Q_AID_0 ** r_σ_APD + K_AVD * Q_AVD_0 ** r_σ_APD) ** (1 / r_σ_APD)
-
-    variables.at[27, 'relative_quality'] = variables['relative_quality'].pipe(func_A_APD,
-                                                                              variables.at[27, 'base_quan'],
-                                                                              variables.at[25, 'relative_quality'],
-                                                                              variables.at[25, 'base_quan'],
-                                                                              parameters.at[1, 'rho'],
-                                                                              variables.at[26, 'relative_quality'],
-                                                                              variables.at[26, 'base_quan'])
+    variables.at[27, 'new_quan'] = solved_value[9]
 
     # P_AXD_1
-    variables.at[28, 'new_pr'] = solved_value[13]
+    variables.at[28, 'new_pr'] = solved_value[10]
 
     # Q_AXD_1
-    variables.at[28, 'new_quan'] = solved_value[14]
+    variables.at[28, 'new_quan'] = solved_value[11]
 
     # P_ASD_1
-    variables.at[31, 'new_pr'] = solved_value[15]
+    variables.at[31, 'new_pr'] = solved_value[12]
 
     # Q_ASD_1
-    variables.at[31, 'new_quan'] = solved_value[16]
-
-    # K_ASD
-    variables.at[31, 'relative_quality'] = solved_value[17]
+    variables.at[31, 'new_quan'] = solved_value[13]
 
     # P_ADW_1
-    variables.at[30, 'new_pr'] = solved_value[18]
+    variables.at[30, 'new_pr'] = solved_value[14]
 
     # Q_ADW_1
-    variables.at[30, 'new_quan'] = solved_value[19]
+    variables.at[30, 'new_quan'] = solved_value[15]
 
     # P_AXW_1
-    variables.at[29, 'new_pr'] = solved_value[20]
+    variables.at[29, 'new_pr'] = solved_value[16]
 
     # Q_AXW_1
-    variables.at[29, 'new_quan'] = solved_value[21]
+    variables.at[29, 'new_quan'] = solved_value[17]
 
     # P_ATD_1
-    variables.at[32, 'new_pr'] = solved_value[22]
+    variables.at[32, 'new_pr'] = solved_value[18]
 
     # Q_ATD_1
-    variables.at[32, 'new_quan'] = solved_value[23]
+    variables.at[32, 'new_quan'] = solved_value[19]
 
     # P_AMD_1
-    variables.at[33, 'new_pr'] = solved_value[24]
+    variables.at[33, 'new_pr'] = solved_value[20]
 
     # Q_AMD_1
-    variables.at[33, 'new_quan'] = solved_value[25]
+    variables.at[33, 'new_quan'] = solved_value[21]
+
+    variables.at[32, 'relative_quality'] = solved_value[22]
 
     eqs = []
 
@@ -667,7 +690,7 @@ def aluminum_market(input_data):
 
     AXW_SUPPLY = variables.at[29, 'new_quan'] - parameters.at[10, 'rho'] * (
                 1 + model_control_actions.at[16, 'after']) * (
-                         P_AXW_1 / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
+                         variables.at[29, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[10, 'values']
     eqs.append(AXW_SUPPLY)
 
     ADW_DEMAND = variables.at[30, 'new_quan'] - parameters.at[9, 'rho'] * (
@@ -908,11 +931,388 @@ def aluminum_market(input_data):
     print(variables.to_markdown())
     print(parameters.to_markdown())
     print(solution)
-    result_to_front = {}
-    return result_to_front
+    #
+    # result_to_front = {
+    #     'table1': [
+    #         {
+    #             'id': '1',
+    #             'title': model_control_actions.at[1, 'title'],
+    #             'params': model_control_actions.at[1, 'designation'],
+    #             'basebalance': model_control_actions.at[1, 'before'],
+    #             'newbalance': model_control_actions.at[1, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '2',
+    #             'title': model_control_actions.at[2, 'title'],
+    #             'params': model_control_actions.at[2, 'designation'],
+    #             'basebalance': model_control_actions.at[2, 'before'],
+    #             'newbalance': model_control_actions.at[2, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '3',
+    #             'title': model_control_actions.at[3, 'title'],
+    #             'params': model_control_actions.at[3, 'designation'],
+    #             'basebalance': model_control_actions.at[3, 'before'],
+    #             'newbalance': model_control_actions.at[3, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '4',
+    #             'title': model_control_actions.at[4, 'title'],
+    #             'params': model_control_actions.at[4, 'designation'],
+    #             'basebalance': model_control_actions.at[4, 'before'],
+    #             'newbalance': model_control_actions.at[4, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '5',
+    #             'title': model_control_actions.at[5, 'title'],
+    #             'params': model_control_actions.at[5, 'designation'],
+    #             'basebalance': model_control_actions.at[5, 'before'],
+    #             'newbalance': model_control_actions.at[5, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '6',
+    #             'title': model_control_actions.at[6, 'title'],
+    #             'params': model_control_actions.at[6, 'designation'],
+    #             'basebalance': model_control_actions.at[6, 'before'],
+    #             'newbalance': model_control_actions.at[6, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '7',
+    #             'title': model_control_actions.at[7, 'title'],
+    #             'params': model_control_actions.at[7, 'designation'],
+    #             'basebalance': model_control_actions.at[7, 'before'],
+    #             'newbalance': model_control_actions.at[7, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '8',
+    #             'title': model_control_actions.at[8, 'title'],
+    #             'params': model_control_actions.at[8, 'designation'],
+    #             'basebalance': model_control_actions.at[8, 'before'],
+    #             'newbalance': model_control_actions.at[8, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '9',
+    #             'title': model_control_actions.at[9, 'title'],
+    #             'params': model_control_actions.at[9, 'designation'],
+    #             'basebalance': model_control_actions.at[9, 'before'],
+    #             'newbalance': model_control_actions.at[9, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '10',
+    #             'title': model_control_actions.at[10, 'title'],
+    #             'params': model_control_actions.at[10, 'designation'],
+    #             'basebalance': model_control_actions.at[10, 'before'],
+    #             'newbalance': model_control_actions.at[10, 'after'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '11',
+    #             'title': model_control_actions.at[12, 'title'],
+    #             'params': model_control_actions.at[12, 'designation'],
+    #             'basebalance': model_control_actions.at[12, 'before'],
+    #             'newbalance': model_control_actions.at[12, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '12',
+    #             'title': model_control_actions.at[13, 'title'],
+    #             'params': model_control_actions.at[13, 'designation'],
+    #             'basebalance': model_control_actions.at[13, 'before'],
+    #             'newbalance': model_control_actions.at[13, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '13',
+    #             'title': model_control_actions.at[14, 'title'],
+    #             'params': model_control_actions.at[14, 'designation'],
+    #             'basebalance': model_control_actions.at[14, 'before'],
+    #             'newbalance': model_control_actions.at[14, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '14',
+    #             'title': model_control_actions.at[15, 'title'],
+    #             'params': model_control_actions.at[15, 'designation'],
+    #             'basebalance': model_control_actions.at[15, 'before'],
+    #             'newbalance': model_control_actions.at[15, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '15',
+    #             'title': model_control_actions.at[16, 'title'],
+    #             'params': model_control_actions.at[16, 'designation'],
+    #             'basebalance': model_control_actions.at[16, 'before'],
+    #             'newbalance': model_control_actions.at[16, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '16',
+    #             'title': model_control_actions.at[17, 'title'],
+    #             'params': model_control_actions.at[17, 'designation'],
+    #             'basebalance': model_control_actions.at[17, 'before'],
+    #             'newbalance': model_control_actions.at[17, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '17',
+    #             'title': model_control_actions.at[18, 'title'],
+    #             'params': model_control_actions.at[18, 'designation'],
+    #             'basebalance': model_control_actions.at[18, 'before'],
+    #             'newbalance': model_control_actions.at[18, 'after'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         }
+    #     ],
+    #     'finding_solution': 'solution',
+    #     'table2': [
+    #         {
+    #             'id': '1',
+    #             'title': variables.at[23, 'title'],
+    #             'params': variables.at[23, 'designation'],
+    #             'basebalance_pr': variables.at[23, 'base_pr'],
+    #             'basebalance_quan': variables.at[23, 'base_quan'],
+    #             'newbalance_pr': variables.at[23, 'new_pr'],
+    #             'newbalance_quan': variables.at[23, 'new_quan'],
+    #             'perc_change_price': variables.at[23, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[23, 'perc_change_quantity'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '2',
+    #             'title': variables.at[24, 'title'],
+    #             'params': variables.at[24, 'designation'],
+    #             'basebalance_pr': variables.at[24, 'base_pr'],
+    #             'basebalance_quan': variables.at[24, 'base_quan'],
+    #             'newbalance_pr': variables.at[24, 'new_pr'],
+    #             'newbalance_quan': variables.at[24, 'new_quan'],
+    #             'perc_change_price': variables.at[24, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[24, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '3',
+    #             'title': variables.at[25, 'title'],
+    #             'params': variables.at[25, 'designation'],
+    #             'basebalance_pr': variables.at[25, 'base_pr'],
+    #             'basebalance_quan': variables.at[25, 'base_quan'],
+    #             'newbalance_pr': variables.at[25, 'new_pr'],
+    #             'newbalance_quan': variables.at[25, 'new_quan'],
+    #             'perc_change_price': variables.at[25, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[25, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '4',
+    #             'title': variables.at[26, 'title'],
+    #             'params': variables.at[26, 'designation'],
+    #             'basebalance_pr': variables.at[26, 'base_pr'],
+    #             'basebalance_quan': variables.at[26, 'base_quan'],
+    #             'newbalance_pr': variables.at[26, 'new_pr'],
+    #             'newbalance_quan': variables.at[26, 'new_quan'],
+    #             'perc_change_price': variables.at[26, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[26, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '5',
+    #             'title': variables.at[27, 'title'],
+    #             'params': variables.at[27, 'designation'],
+    #             'basebalance_pr': variables.at[27, 'base_pr'],
+    #             'basebalance_quan': variables.at[27, 'base_quan'],
+    #             'newbalance_pr': variables.at[27, 'new_pr'],
+    #             'newbalance_quan': variables.at[27, 'new_quan'],
+    #             'perc_change_price': variables.at[27, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[27, 'perc_change_quantity'],
+    #             "editBase": 'true',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '6',
+    #             'title': variables.at[28, 'title'],
+    #             'params': variables.at[28, 'designation'],
+    #             'basebalance_pr': variables.at[28, 'base_pr'],
+    #             'basebalance_quan': variables.at[28, 'base_quan'],
+    #             'newbalance_pr': variables.at[28, 'new_pr'],
+    #             'newbalance_quan': variables.at[28, 'new_quan'],
+    #             'perc_change_price': variables.at[28, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[28, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '7',
+    #             'title': variables.at[29, 'title'],
+    #             'params': variables.at[29, 'designation'],
+    #             'basebalance_pr': variables.at[29, 'base_pr'],
+    #             'basebalance_quan': variables.at[29, 'base_quan'],
+    #             'newbalance_pr': variables.at[29, 'new_pr'],
+    #             'newbalance_quan': variables.at[29, 'new_quan'],
+    #             'perc_change_price': variables.at[29, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[29, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '8',
+    #             'title': variables.at[30, 'title'],
+    #             'params': variables.at[30, 'designation'],
+    #             'basebalance_pr': variables.at[30, 'base_pr'],
+    #             'basebalance_quan': variables.at[30, 'base_quan'],
+    #             'newbalance_pr': variables.at[30, 'new_pr'],
+    #             'newbalance_quan': variables.at[30, 'new_quan'],
+    #             'perc_change_price': variables.at[30, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[30, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         },
+    #         {
+    #             'id': '9',
+    #             'title': variables.at[31, 'title'],
+    #             'params': variables.at[31, 'designation'],
+    #             'basebalance_pr': variables.at[31, 'base_pr'],
+    #             'basebalance_quan': variables.at[31, 'base_quan'],
+    #             'newbalance_pr': variables.at[31, 'new_pr'],
+    #             'newbalance_quan': variables.at[31, 'new_quan'],
+    #             'perc_change_price': variables.at[31, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[31, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '10',
+    #             'title': variables.at[32, 'title'],
+    #             'params': variables.at[32, 'designation'],
+    #             'basebalance_pr': variables.at[32, 'base_pr'],
+    #             'basebalance_quan': variables.at[32, 'base_quan'],
+    #             'newbalance_pr': variables.at[32, 'new_pr'],
+    #             'newbalance_quan': variables.at[32, 'new_quan'],
+    #             'perc_change_price': variables.at[32, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[32, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'false'
+    #         },
+    #         {
+    #             'id': '11',
+    #             'title': variables.at[33, 'title'],
+    #             'params': variables.at[33, 'designation'],
+    #             'basebalance_pr': variables.at[33, 'base_pr'],
+    #             'basebalance_quan': variables.at[33, 'base_quan'],
+    #             'newbalance_pr': variables.at[33, 'new_pr'],
+    #             'newbalance_quan': variables.at[33, 'new_quan'],
+    #             'perc_change_price': variables.at[33, 'perc_change_price'],
+    #             'perc_change_quantity': variables.at[33, 'perc_change_quantity'],
+    #             "editBase": 'false',
+    #             "editNew": 'true'
+    #         }
+    #     ],
+    #     'table3': [
+    #         {
+    #             'id': '1',
+    #             'params': parameters.at[0, 'designation'],
+    #             'value': parameters.at[0, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '2',
+    #             'params': parameters.at[1, 'designation'],
+    #             'value': parameters.at[1, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '3',
+    #             'params': parameters.at[2, 'designation'],
+    #             'value': parameters.at[2, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '4',
+    #             'params': parameters.at[3, 'designation'],
+    #             'value': parameters.at[3, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '5',
+    #             'params': parameters.at[4, 'designation'],
+    #             'value': parameters.at[4, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '6',
+    #             'params': parameters.at[6, 'designation'],
+    #             'value': parameters.at[6, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '7',
+    #             'params': parameters.at[7, 'designation'],
+    #             'value': parameters.at[7, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '8',
+    #             'params': parameters.at[8, 'designation'],
+    #             'value': parameters.at[8, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '9',
+    #             'params': parameters.at[9, 'designation'],
+    #             'value': parameters.at[9, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '10',
+    #             'params': parameters.at[10, 'designation'],
+    #             'value': parameters.at[10, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '11',
+    #             'params': parameters.at[11, 'designation'],
+    #             'value': parameters.at[11, 'values'],
+    #             "edit": 'true'
+    #         },
+    #         {
+    #             'id': '12',
+    #             'params': parameters.at[12, 'designation'],
+    #             'value': parameters.at[12, 'values'],
+    #             "edit": 'true'
+    #         }
+    #     ]
+    # }
+    #
+    # return result_to_front
 
 
-
-input_data = InputDataBase(user_data)
+input_data = InputDataBase(example_data)
 result = aluminum_market(input_data)
 # print(result)
