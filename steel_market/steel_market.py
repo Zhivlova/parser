@@ -556,6 +556,250 @@ def steel_market(input_data):
                                                                               variables.at[38, 'relative_quality'],
                                                                               variables.at[38, 'base_quan'])
 
+    def func(z):
+        variables.at[25, 'new_quan'] = z[0]
+        variables.at[25, 'new_pr'] = z[1]
+        variables.at[26, 'new_pr'] = z[2]
+        variables.at[26, 'new_quan'] = z[3]
+        variables.at[27, 'new_pr'] = z[4]
+        variables.at[27, 'new_quan'] = z[5]
+        variables.at[28, 'new_quan'] = z[6]
+        variables.at[28, 'new_pr'] = z[7]
+        variables.at[29, 'new_pr'] = z[8]
+        variables.at[29, 'new_quan'] = z[9]
+        variables.at[30, 'new_pr'] = z[10]
+        variables.at[30, 'new_quan'] = z[11]
+        variables.at[33, 'new_pr'] = z[12]
+        variables.at[33, 'new_quan'] = z[13]
+        variables.at[32, 'new_pr'] = z[14]
+        variables.at[32, 'new_quan'] = z[15]
+        variables.at[31, 'new_pr'] = z[16]
+        variables.at[31, 'new_quan'] = z[17]
+        variables.at[34, 'new_pr'] = z[18]
+        variables.at[34, 'new_quan'] = z[19]
+        variables.at[35, 'new_pr'] = z[20]
+        variables.at[35, 'new_quan'] = z[21]
+        variables.at[36, 'new_pr'] = z[22]
+        variables.at[36, 'new_quan'] = z[23]
+        variables.at[37, 'new_pr'] = z[24]
+        variables.at[37, 'new_quan'] = z[25]
+        variables.at[39, 'new_pr'] = z[26]
+        variables.at[39, 'new_quan'] = z[27]
+        variables.at[38, 'new_pr'] = z[28]
+        variables.at[38, 'new_quan'] = z[29]
+
+
+        IPD_SUPPLY = variables.at[25, 'new_quan'] - parameters.at[8, 'rho']*(1+model_control_actions.at[12, 'after']) * \
+                     (variables.at[25, 'new_pr']) ** parameters.at[8, 'values']
+
+        IPD_BUD_CET = variables.at[25, 'new_pr'] * variables.at[25, 'new_quan'] - variables.at[26, 'new_pr'] * \
+                    variables.at[26, 'new_quan'] - variables.at[27, 'new_pr'] * variables.at[27, 'new_quan']
+
+        IPD_CET = variables.at[26, 'new_quan']/variables.at[27, 'new_quan']-((variables.at[26, 'new_pr']/
+                    (variables.at[27, 'new_pr']))*(variables.at[27, 'relative_quality'] /
+                                        variables.at[26, 'relative_quality'])) ** (1/(parameters.at[0, 'rho']-1))
+
+        IPD_BAL_CET = variables.at[25, 'new_quan'] - variables.at[27, 'new_quan'] - variables.at[26, 'new_quan']
+
+        IXD_DEMAND = variables.at[26, 'new_quan'] - parameters.at[9, 'rho']*(1+model_control_actions.at[13, 'after'])*\
+                     (variables.at[26, 'new_pr']*(1+model_control_actions.at[9, 'after'])/
+                      (model_control_actions.at[1, 'after'])) ** parameters.at[9, 'values']
+
+        AVD_SUPPLY = variables.at[28, 'new_quan']-parameters.at[10, 'rho']*(1+model_control_actions.at[14, 'after'])*\
+                     (variables.at[28, 'new_pr']) ** parameters.at[10, 'values']
+
+        APD_BUD_CES = variables.at[29, 'new_pr']*variables.at[29, 'new_quan']-variables.at[27, 'new_pr']*\
+                      variables.at[27, 'new_quan']-variables.at[28, 'new_pr']*variables.at[28, 'new_quan']
+
+        APD_CES = variables.at[28, 'new_quan']/variables.at[27, 'new_quan']-((variables.at[28, 'new_pr']/
+                    (variables.at[27, 'new_pr']))*(variables.at[27, 'relative_quality']/
+                                                   variables.at[28, 'relative_quality'])) ** (1/(parameters.at[1, 'rho']-1))
+
+        APD_BAL_CES = variables.at[29, 'new_quan']-variables.at[29, 'relative_quality']*\
+                      (variables.at[27, 'relative_quality']* variables.at[27, 'new_quan'] **
+                       parameters.at[1, 'rho']+variables.at[28, 'relative_quality']*variables.at[28, 'new_quan'] **
+                       parameters.at[1, 'rho']) ** (1/parameters.at[1, 'rho'])
+
+        APD_BUD_CET = variables.at[29, 'new_pr']*variables.at[29, 'new_quan']-variables.at[30, 'new_pr']*\
+                      variables.at[30, 'new_quan']-variables.at[33, 'new_pr']*variables.at[33, 'new_quan']
+
+        APD_CET = variables.at[30, 'new_quan']/variables.at[33, 'new_quan']-((variables.at[30, 'new_pr']/
+                            (variables.at[33, 'new_pr']))*(variables.at[33, 'relative_quality']/
+                                                variables.at[30, 'relative_quality'])) ** (1/(parameters.at[2, 'rho']-1))
+
+        APD_BAL_CET = variables.at[29, 'new_quan']-variables.at[30, 'new_quan']-variables.at[33, 'new_quan']
+
+        ADW_BUD_CES = variables.at[32, 'new_pr']*variables.at[32, 'new_quan']-variables.at[30, 'new_pr']*\
+                      (1+model_control_actions.at[8, 'after'])*variables.at[30, 'new_quan']-variables.at[31, 'new_pr']*\
+                      variables.at[31, 'new_quan']
+
+        ADW_CES = variables.at[31, 'new_quan']/variables.at[30, 'new_quan']-(((variables.at[31, 'new_pr'])/
+                            (variables.at[30, 'new_pr']*(1+model_control_actions.at[8, 'after'])))*
+                            (variables.at[30, 'relative_quality']/variables.at[31, 'relative_quality'])) ** \
+                            (1/(parameters.at[3, 'rho']-1))
+
+        ADW_BAL_CES = variables.at[32, 'new_quan'] - variables.at[30, 'new_quan'] - variables.at[31, 'new_quan']
+
+        AXW_SUPPLY = variables.at[31, 'new_quan']-parameters.at[12, 'rho']*(1+model_control_actions.at[16, 'after'])*\
+                     (variables.at[31, 'new_pr']/(model_control_actions.at[1, 'after'])) ** parameters.at[12, 'values']
+
+        ADW_DEMAND = variables.at[32, 'new_quan']-parameters.at[11, 'rho']*(1+model_control_actions.at[15, 'after'])*\
+                     (variables.at[32, 'new_pr']/(model_control_actions.at[1, 'after'])) ** parameters.at[11, 'values']
+
+        ATD_BUD_CES = variables.at[34, 'new_pr']* variables.at[34, 'new_quan']-variables.at[35, 'new_pr']*\
+                      (1+model_control_actions.at[10, 'after'])*variables.at[35, 'new_quan']-variables.at[33, 'new_pr']*\
+                      variables.at[33, 'new_quan']
+
+        ATD_CES = variables.at[33, 'new_quan']/variables.at[35, 'new_quan']-((variables.at[33, 'new_pr']/
+                        (variables.at[35, 'new_pr']*(1+model_control_actions.at[10, 'after'])))*
+                        (variables.at[35, 'relative_quality']/variables.at[33, 'relative_quality']))**\
+                  (1/(parameters.at[4, 'rho']-1))
+
+        ATD_BAL_CES = variables.at[34, 'new_quan']-variables.at[33, 'new_quan']-variables.at[35, 'new_quan']
+
+        AMD_SUPPLY = variables.at[35, 'new_quan']-parameters.at[13, 'rho']*(1+model_control_actions.at[17, 'after'])*\
+                     (variables.at[35, 'new_pr'] / (model_control_actions.at[1, 'after'])) ** parameters.at[13, 'values']
+
+        ATD_BUD_CET = variables.at[34, 'new_pr']*variables.at[34, 'new_quan']-variables.at[36, 'new_pr']*\
+                      variables.at[36, 'new_quan']-variables.at[37, 'new_pr']*variables.at[37, 'new_quan']
+
+        ATD_CET = variables.at[36, 'new_quan']/variables.at[37, 'new_quan']-((variables.at[36, 'new_pr']/
+                            (variables.at[37, 'new_pr']))*(variables.at[37, 'relative_quality']/
+                            variables.at[36, 'relative_quality'])) ** (1/(parameters.at[5, 'rho']-1))
+
+        ATD_BAL_CET = variables.at[34, 'new_quan']-variables.at[37, 'new_quan']-variables.at[36, 'new_quan']
+
+        ADD_DEMAND = variables.at[36, 'new_quan']-parameters.at[14, 'rho']*(1+model_control_actions.at[18, 'after'])*\
+                     (variables.at[36, 'new_pr']) ** parameters.at[14, 'values']
+
+        BDD_BUD_CES = variables.at[39, 'new_pr']*variables.at[39, 'new_quan']-variables.at[37, 'new_pr']*\
+                      variables.at[37, 'new_quan']-variables.at[38, 'new_pr']*variables.at[38, 'new_quan']
+
+        BDD_CES = variables.at[38, 'new_quan']/variables.at[37, 'new_quan']-((variables.at[38, 'new_pr']/
+                    (variables.at[37, 'new_pr']))*(variables.at[37, 'relative_quality']/
+                    variables.at[38, 'relative_quality'])) ** (1/(parameters.at[6, 'rho']-1))
+
+        BDD_BAL_CES = variables.at[39, 'new_quan']-variables.at[39, 'relative_quality']*\
+                      (variables.at[37, 'relative_quality']*variables.at[37, 'new_quan']**
+                       parameters.at[6, 'rho']+variables.at[38, 'relative_quality'] *variables.at[38, 'new_quan']**
+                       parameters.at[6, 'rho']) ** (1/parameters.at[6, 'rho'])
+
+        BDD_DEMAND = variables.at[39, 'new_quan']-parameters.at[15, 'rho']*(1+model_control_actions.at[19, 'after'])*\
+                     (variables.at[39, 'new_pr']) ** parameters.at[15, 'values']
+
+        BVD_SUPPLY = variables.at[38, 'new_quan']-parameters.at[16, 'rho']*(1+model_control_actions.at[20, 'after'])*\
+                     (variables.at[38, 'new_pr'])**parameters.at[16, 'values']
+
+        return IPD_SUPPLY, IPD_BUD_CET, IPD_CET, IPD_BAL_CET, IXD_DEMAND, AVD_SUPPLY, APD_BUD_CES, APD_CES, APD_BAL_CES,\
+               APD_BUD_CET, APD_CET, APD_BAL_CET, ADW_BUD_CES, ADW_CES, ADW_BAL_CES, AXW_SUPPLY, ADW_DEMAND, ATD_BUD_CES,\
+               ATD_CES, ATD_BAL_CES, AMD_SUPPLY, ATD_BUD_CET, ATD_CET, ATD_BAL_CET, ADD_DEMAND, BDD_BUD_CES, BDD_CES, \
+               BDD_BAL_CES, BDD_DEMAND, BVD_SUPPLY
+
+    z0 = [variables.at[25, 'base_quan'], variables.at[25, 'base_pr'], variables.at[26, 'base_pr'],
+          variables.at[26, 'base_quan'], variables.at[27, 'base_pr'], variables.at[27, 'base_quan'],
+          variables.at[28, 'base_quan'], variables.at[28, 'base_pr'], variables.at[29, 'base_pr'],
+          variables.at[29, 'base_quan'], variables.at[30, 'base_pr'], variables.at[30, 'base_quan'],
+          variables.at[33, 'base_pr'], variables.at[33, 'base_quan'], variables.at[32, 'base_pr'],
+          variables.at[32, 'base_quan'], variables.at[31, 'base_pr'], variables.at[31, 'base_quan'],
+          variables.at[34, 'base_pr'], variables.at[34, 'base_quan'], variables.at[35, 'base_pr'],
+          variables.at[35, 'base_quan'], variables.at[36, 'base_pr'], variables.at[36, 'base_quan'],
+          variables.at[37, 'base_pr'], variables.at[37, 'base_quan'], variables.at[39, 'base_pr'],
+          variables.at[39, 'base_quan'], variables.at[38, 'base_pr'], variables.at[38, 'base_quan']]
+
+    solved_value = fsolve(func, z0)
+
+    # Q_IPD_1
+    variables.at[25, 'new_quan'] = solved_value[0]
+    print(variables.at[25, 'new_quan'])
+    # P_IPD_1
+    variables.at[25, 'new_pr'] = solved_value[1]
+    print(variables.at[25, 'new_pr'])
+    # P_IXD_1
+    variables.at[26, 'new_pr'] = solved_value[2]
+
+    # Q_IXD_1
+    variables.at[26, 'new_quan'] = solved_value[3]
+
+    # P_AID_1
+    variables.at[27, 'new_pr'] = solved_value[4]
+
+    # Q_AID_1
+    variables.at[27, 'new_quan'] = solved_value[5]
+
+    # Q_AVD_1
+    variables.at[28, 'new_quan'] = solved_value[6]
+
+    # P_AVD_1
+    variables.at[28, 'new_pr'] = solved_value[7]
+
+    # P_APD_1
+    variables.at[29, 'new_pr'] = solved_value[8]
+
+    # Q_APD_1
+    variables.at[29, 'new_quan'] = solved_value[9]
+
+    # P_AXD_1
+    variables.at[30, 'new_pr'] = solved_value[10]
+
+    # Q_AXD_1
+    variables.at[30, 'new_quan'] = solved_value[11]
+
+    # P_ASD_1
+    variables.at[33, 'new_pr'] = solved_value[12]
+
+    # Q_ASD_1
+    variables.at[33, 'new_quan'] = solved_value[13]
+
+    # P_ADW_1
+    variables.at[32, 'new_pr'] = solved_value[14]
+
+    # Q_ADW_1
+    variables.at[32, 'new_quan'] = solved_value[15]
+
+    # P_AXW_1
+    variables.at[31, 'new_pr'] = solved_value[16]
+
+    # Q_AXW_1
+    variables.at[31, 'new_quan'] = solved_value[17]
+
+    # P_ATD_1
+    variables.at[34, 'new_pr'] = solved_value[18]
+
+    # Q_ATD_1
+    variables.at[34, 'new_quan'] = solved_value[19]
+
+    # P_AMD_1
+    variables.at[35, 'new_pr'] = solved_value[20]
+
+    # Q_AMD_1
+    variables.at[35, 'new_quan'] = solved_value[21]
+
+    # P_ADD_1
+    variables.at[36, 'new_pr'] = solved_value[22]
+
+    # Q_ADD_1
+    variables.at[36, 'new_quan'] = solved_value[23]
+
+    # P_BID_1
+    variables.at[37, 'new_pr'] = solved_value[24]
+
+    # Q_BID_1
+    variables.at[37, 'new_quan'] = solved_value[25]
+
+    # P_BDD_1
+    variables.at[39, 'new_pr'] = solved_value[26]
+
+    # Q_BDD_1
+    variables.at[39, 'new_quan'] = solved_value[27]
+
+    # P_BVD_1
+    variables.at[38, 'new_pr'] = solved_value[28]
+
+    # Q_BVD_1
+    variables.at[38, 'new_quan'] = solved_value[29]
+
+
+
 
 
 
