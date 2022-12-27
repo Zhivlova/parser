@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AluminumMarketConfig(AppConfig):
+class SteelMarketConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "aluminum_market"
+    name = "steel_market"

@@ -307,7 +307,8 @@ def wheat_exports(input_data):
     prices_on_world_market.at[2, 'after'] = prices_on_world_market['after'].pipe(func_i5,
                                                                                  prices_on_world_market.at[1, 'after'],
                                                                                  prices_on_world_market.at[0, 'after'])
-
+    print(prices_on_world_market.at[2, 'after'])
+    print(prices_on_world_market.to_markdown())
     # I7
     prices_on_world_market.at[4, 'after'] = prices_on_world_market.at[4, 'before']
 
