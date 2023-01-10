@@ -251,8 +251,6 @@ def wood_market(input_data):
         APD_BAL_CES = np.abs(Q_APD_1) - A_APD * (
                 K_AID * np.abs(Q_AID_1) ** r_σ_APD + K_AVD * np.abs(Q_AVD_1) ** r_σ_APD) ** (1 / r_σ_APD)
 
-        AVD_SUPPLY = np.abs(Q_AVD_1) - Z_AVD * (1 + SS_AVD_SUPPLY_1) * (np.abs(P_AVD_1)) ** ε_AVD
-
         APD_BUD_CET = np.abs(P_APD_1) * np.abs(Q_APD_1) - np.abs(P_AXD_1) * np.abs(Q_AXD_1) - np.abs(P_ASD_1) * np.abs(
             Q_ASD_1)
 
@@ -285,57 +283,138 @@ def wood_market(input_data):
 
         ATD_DEMAND = np.abs(Q_ATD_1) - Z_ATD * (1 + DS_ATD_DEMAND_1) * (np.abs(P_ATD_1)) ** ε_ATD
 
-    ###############################################
+        return IPD_SUPPLY, IPD_BUD_CET, IPD_CET, IPD_BAL_CET, IXD_DEMAND, AVD_SUPPLY, APD_BUD_CES, APD_CES, \
+               APD_BAL_CES, APD_BUD_CET, APD_CET, APD_BAL_CET, ADW_BUD_CES, ADW_CES, ADW_BAL_CES, \
+               AXW_SUPPLY, ADW_DEMAND, ATD_BUD_CES, ATD_CES, ATD_BAL_CES, AMD_SUPPLY, ATD_DEMAND
 
-    # P_AXD_USD_1 = P_AXD_1/ER_1
+    Q_IPD_1 = Q_IPD_0
+    P_IPD_1 = P_IPD_0
+    P_IXD_1 = P_IXD_0
+    Q_IXD_1 = Q_IXD_0
+    P_AID_1 = P_AID_0
+    Q_AID_1 = Q_AID_0
+    Q_AVD_1 = Q_AVD_0
+    P_AVD_1 = P_AVD_0
+    P_APD_1 = P_APD_0
+    Q_APD_1 = Q_APD_0
+    P_AXD_1 = P_AXD_0
+    Q_AXD_1 = Q_AXD_0
+    P_ASD_1 = P_ASD_0
+    Q_ASD_1 = Q_ASD_0
+    P_ADW_1 = P_ADW_0
+    Q_ADW_1 = Q_ADW_0
+    P_AXW_1 = P_AXW_0
+    Q_AXW_1 = Q_AXW_0
+    P_ATD_1 = P_ATD_0
+    Q_ATD_1 = Q_ATD_0
+    P_AMD_1 = P_AMD_0
+    Q_AMD_1 = Q_AMD_0
 
-    # P_AMD_USD_1 = P_AMD_1/ER_1
+    solved_value: list = []
+    max_eq = 0.1
 
-    # P_IXD_USD_1 = P_IXD_1/ER_1
+    z0 = [Q_IPD_1, P_IPD_1, P_IXD_1, Q_IXD_1, P_AID_1, Q_AID_1, Q_AVD_1, P_AVD_1, P_APD_1, Q_APD_1, P_AXD_1,
+          Q_AXD_1, P_ASD_1, Q_ASD_1, P_ADW_1, Q_ADW_1, P_AXW_1, Q_AXW_1, P_ATD_1, Q_ATD_1, P_AMD_1, Q_AMD_1]
 
-    # H25 = P_IPD_1 / P_IPD_0 - 1
+    solved = root(func, z0, method='lm')
+    solved_value = solved.x
+    accuracy = solved.fun
 
-    # H26 = P_IXD_1 / P_IXD_0 - 1
+    Q_IPD_1 = np.abs(solved_value[0])
+    P_IPD_1 = np.abs(solved_value[1])
+    P_IXD_1 = np.abs(solved_value[2])
+    Q_IXD_1 = np.abs(solved_value[3])
+    P_AID_1 = np.abs(solved_value[4])
+    Q_AID_1 = np.abs(solved_value[5])
+    Q_AVD_1 = np.abs(solved_value[6])
+    P_AVD_1 = np.abs(solved_value[7])
+    P_APD_1 = np.abs(solved_value[8])
+    Q_APD_1 = np.abs(solved_value[9])
+    P_AXD_1 = np.abs(solved_value[10])
+    Q_AXD_1 = np.abs(solved_value[11])
+    P_ASD_1 = np.abs(solved_value[12])
+    Q_ASD_1 = np.abs(solved_value[13])
+    P_ADW_1 = np.abs(solved_value[14])
+    Q_ADW_1 = np.abs(solved_value[15])
+    P_AXW_1 = np.abs(solved_value[16])
+    Q_AXW_1 = np.abs(solved_value[17])
+    P_ATD_1 = np.abs(solved_value[18])
+    Q_ATD_1 = np.abs(solved_value[19])
+    P_AMD_1 = np.abs(solved_value[20])
+    Q_AMD_1 = np.abs(solved_value[21])
 
-    # H27 = P_AID_1 / P_AID_0 - 1
+    eqs = []
+    for item in accuracy:
+        eqs.append(item)
 
-    # H28 = P_AVD_1 / P_AVD_0 - 1
+    qrt_eq = []
+    for item in eqs:
+        qrt_eq.append(item ** 2)
+    eq_result = sqrt(fsum(qrt_eq))
 
-    # H29 = P_APD_1 / P_APD_0 - 1
+    if eq_result <= max_eq:
+        solution = True
+    else:
+        solution = False
 
-    # H30 = P_AXD_1 / P_AXD_0 - 1
+    if Q_IPD_0 == Q_IPD_1:
+        solution = False
 
-    # H31 = P_AXW_1 / P_AXW_0 - 1
+    solution = solution
 
-    # H32 = P_ADW_1 / P_ADW_0 - 1
+    # if solution == False:
 
-    # H33 = P_ASD_1 / P_ASD_0 - 1
 
-    # H34 = P_ATD_1 / P_ATD_0 - 1
 
-    # H35 = P_AMD_1 / P_AMD_0 - 1
+    P_AXD_USD_1 = P_AXD_1/ER_1
 
-    # I25 = Q_IPD_1 / Q_IPD_0 - 1
+    P_AMD_USD_1 = P_AMD_1/ER_1
 
-    # I26 = Q_IXD_1 / Q_IXD_0 - 1
+    P_IXD_USD_1 = P_IXD_1/ER_1
 
-    # I27 = Q_AID_1 / Q_AID_0 - 1
+    H25 = P_IPD_1 / P_IPD_0 - 1
 
-    # I28 = Q_AVD_1 / Q_AVD_0 - 1
+    H26 = P_IXD_1 / P_IXD_0 - 1
 
-    # I29 = Q_APD_1 / Q_APD_0 - 1
+    H27 = P_AID_1 / P_AID_0 - 1
 
-    # I30 = Q_AXD_1 / Q_AXD_0 - 1
+    H28 = P_AVD_1 / P_AVD_0 - 1
 
-    # I31 = Q_AXW_1 / Q_AXW_0 - 1
+    H29 = P_APD_1 / P_APD_0 - 1
 
-    # I32 = Q_ADW_1 / Q_ADW_0 - 1
+    H30 = P_AXD_1 / P_AXD_0 - 1
 
-    # I33 = Q_ASD_1 / Q_ASD_0 - 1
+    H31 = P_AXW_1 / P_AXW_0 - 1
 
-    # I34 = Q_ATD_1 / Q_ATD_0 - 1
+    H32 = P_ADW_1 / P_ADW_0 - 1
 
-    # I35 = Q_AMD_1 / Q_AMD_0 - 1
+    H33 = P_ASD_1 / P_ASD_0 - 1
+
+    H34 = P_ATD_1 / P_ATD_0 - 1
+
+    H35 = P_AMD_1 / P_AMD_0 - 1
+
+    I25 = Q_IPD_1 / Q_IPD_0 - 1
+
+    I26 = Q_IXD_1 / Q_IXD_0 - 1
+
+    I27 = Q_AID_1 / Q_AID_0 - 1
+
+    I28 = Q_AVD_1 / Q_AVD_0 - 1
+
+    I29 = Q_APD_1 / Q_APD_0 - 1
+
+    I30 = Q_AXD_1 / Q_AXD_0 - 1
+
+    I31 = Q_AXW_1 / Q_AXW_0 - 1
+
+    I32 = Q_ADW_1 / Q_ADW_0 - 1
+
+    I33 = Q_ASD_1 / Q_ASD_0 - 1
+
+    I34 = Q_ATD_1 / Q_ATD_0 - 1
+
+    I35 = Q_AMD_1 / Q_AMD_0 - 1
 
 
 input_data = InputDataBase(example_data)
