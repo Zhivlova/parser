@@ -19,7 +19,7 @@ for row in range(3, 21):
     model_control_actions['before'].append(before)
     after = sheet[row][3].value
     model_control_actions['after'].append(after)
-# print(model_control_actions)
+print(model_control_actions)
 
 parameters = {"name": [], "before": [], "after": []}
 for row in range(2, 15):
@@ -29,7 +29,7 @@ for row in range(2, 15):
     parameters['before'].append(before)
     after = sheet[row][9].value
     parameters['after'].append(after)
-# print(parameters)
+print(parameters)
 
 variables = {"name": [], "designation": [], "base_pr": [], "base_q": [], "quality": [], "new_pr": [], "new_q": [],
              "price_change": [], "q_change": []}
@@ -52,7 +52,7 @@ for row in range(25, 37):
     variables['price_change'].append(price_change)
     q_change = sheet[row][8].value
     variables['q_change'].append(q_change)
-# print(variables)
+print(variables)
 
 equations = {"name": [], "value": []}
 for row in range(39, 63):
