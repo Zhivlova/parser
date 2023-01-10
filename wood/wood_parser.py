@@ -1,9 +1,8 @@
 import os
 from openpyxl import Workbook, load_workbook
 
-
-mydir = '/Users/natalazivlova/Desktop/parser/steel_market/'
-myfile = 'PE_сталь_основной.xlsm'
+mydir = '/Users/natalazivlova/Desktop/parser/wood/'
+myfile = 'PE_древесина.xlsm'
 file = os.path.join(mydir, myfile)
 
 wb = load_workbook(file, data_only=True)
@@ -11,7 +10,7 @@ wb = load_workbook(file, data_only=True)
 sheet = wb.worksheets[0]
 
 model_control_actions = {"name": [], "designation": [], "before": [], "after": []}
-for row in range(3, 23):
+for row in range(3, 21):
     name = sheet[row][0].value
     model_control_actions['name'].append(name)
     designation = sheet[row][1].value
@@ -20,21 +19,21 @@ for row in range(3, 23):
     model_control_actions['before'].append(before)
     after = sheet[row][3].value
     model_control_actions['after'].append(after)
-print(model_control_actions)
+# print(model_control_actions)
 
 parameters = {"name": [], "before": [], "after": []}
-for row in range(2, 19):
+for row in range(2, 15):
     name = sheet[row][7].value
     parameters['name'].append(name)
     before = sheet[row][8].value
     parameters['before'].append(before)
     after = sheet[row][9].value
     parameters['after'].append(after)
-print(parameters)
+# print(parameters)
 
 variables = {"name": [], "designation": [], "base_pr": [], "base_q": [], "quality": [], "new_pr": [], "new_q": [],
              "price_change": [], "q_change": []}
-for row in range(27, 43):
+for row in range(25, 37):
     name = sheet[row][0].value
     variables['name'].append(name)
     designation = sheet[row][1].value
@@ -53,12 +52,12 @@ for row in range(27, 43):
     variables['price_change'].append(price_change)
     q_change = sheet[row][8].value
     variables['q_change'].append(q_change)
-print(variables)
+# print(variables)
 
-equations = {"name": [], "formule": []}
-for row in range(45, 76):
+equations = {"name": [], "value": []}
+for row in range(39, 63):
     name = sheet[row][0].value
     equations['name'].append(name)
-    formule = sheet[row][1].value
-    equations['formule'].append(formule)
+    value = sheet[row][1].value
+    equations['value'].append(value)
 print(equations)
