@@ -21,7 +21,7 @@ example_data = {'ER_before': 73.65,
                 'DS_ADW_DEMAND_after': 0.0,
                 'SS_AXW_SUPPLY_after': 0.0,
                 'SS_AMD_SUPPLY_after': 0.0,
-                'DS_ATD_DEMAND': 0.0,
+                'DS_ATD_DEMAND_after': 0.0,
                 'IPD_pr': 2811000.0,
                 'IPD_q': 118715.6,
                 'IXD_q': 5510.0,
@@ -113,38 +113,54 @@ def wood_market(input_data):
     """Перерасчет ячеек с новыми значениями"""
 
     DER_1 = ER_1 / ER_0 - 1
+    # print(DER_1)
 
     DWP_CEL_1 = WP_1 / WP_0 - 1
+    # print(DWP_CEL_1)
 
     P_IXD_0 = P_IXD_USD_0 * ER_0
+    # print(P_IXD_0)
 
     Q_AID_0 = Q_IPD_0 - Q_IXD_0
+    # print(Q_AID_0)
 
     P_AID_0 = (P_IPD_0 * Q_IPD_0 - P_IXD_0 * Q_IXD_0) / Q_AID_0
+    # print(P_AID_0)
 
     Q_AVD_0 = 100000
 
     P_AXD_0 = P_AXD_USD_0 * ER_0
+    # print(P_AXD_0)
 
     Q_AXW_0 = Q_ADW_0 - Q_AXD_0
+    # print(Q_AXW_0)
 
     P_ADW_0 = WP_0 * ER_0
+    # print(P_ADW_0)
 
     Q_ASD_0 = Q_APD_0 - Q_AXD_0
+    # print(Q_ASD_0)
 
     P_AXW_0 = (P_ADW_0 * Q_ADW_0 - P_AXD_0 * (1 + TAXD_0) * Q_AXD_0) / Q_AXW_0
+    # print(P_AXW_0)
 
     P_APD_0 = (P_ASD_0 * Q_ASD_0 + P_AXD_0 * Q_AXD_0) / (Q_AXD_0 + Q_ASD_0)
+    # print(P_APD_0)
 
     P_AVD_0 = (P_APD_0 * Q_APD_0 - P_AID_0 * Q_AID_0) / Q_AVD_0
+    # print(P_AVD_0)
 
     Q_ATD_0 = Q_ASD_0 + Q_AMD_0
+    # print(Q_ATD_0)
 
     P_AMD_0 = P_AMD_USD_0 * ER_0
+    # print(P_AMD_0)
 
     P_ATD_0 = (P_ASD_0 * Q_ASD_0 + P_AMD_0 * (1 + TAMD_0) * Q_AMD_0) / Q_ATD_0
+    # print(P_ATD_0)
 
     C36 = WP_1 / WP_0
+    # print(C36)
 
     """Параметры"""
 
@@ -162,46 +178,64 @@ def wood_market(input_data):
     ε_ATD = -0.5
 
     r_Ω_IPD = (Ω_IPD + 1) / Ω_IPD
+    # print(r_Ω_IPD)
 
     r_σ_APD = (σ_APD - 1) / σ_APD
+    # print(r_σ_APD)
 
     r_Ω_APD = (Ω_APD + 1) / Ω_APD
+    # print(r_Ω_APD)
 
     r_σ_ADW = (σ_ADW - 1) / σ_ADW
+    # print(r_σ_ADW)
 
     r_σ_ATD = (σ_ATD - 1) / σ_ATD
+    # print(r_σ_ATD)
 
     Z_IPD = Q_IPD_0 / (P_IPD_0 ** ε_IPD)
+    # print(Z_IPD)
 
     Z_IXD = Q_IXD_0 / ((P_IXD_0 * (1 + TIXD_0) / ER_0) ** ε_IXD)
+    # print(Z_IXD)
 
     Z_AVD = Q_AVD_0 / (P_AVD_0) ** ε_AVD
+    # print(Z_AVD)
 
     Z_ADW = Q_ADW_0 / (P_ADW_0 / ER_0) ** ε_ADW
+    # print(Z_ADW)
 
     Z_AXW = Q_AXW_0 / (P_AXW_0 / ER_0) ** ε_AXW
+    # print(Z_AXW)
 
     Z_AMD = Q_AMD_0 / stepen(P_AMD_0 / ER_0, ε_AMD)
+    # print(Z_AMD)
 
     Z_ATD = Q_ATD_0 / (P_ATD_0) ** ε_ATD
+    # print(Z_ATD)
 
     """Относительное качество"""
 
     K_IXD = ((Q_IXD_0 / Q_AID_0) ** (1 - r_Ω_IPD)) * (P_IXD_0 / P_AID_0)
+    # print(K_IXD)
 
     K_AID = 1.0
 
     K_AVD = (Q_AVD_0 / Q_AID_0) ** (1 - r_σ_APD) * (P_AVD_0 / P_AID_0)
+    # print(K_AVD)
 
     A_APD = Q_APD_0 / (K_AID * Q_AID_0 ** r_σ_APD + K_AVD * Q_AVD_0 ** r_σ_APD) ** (1 / r_σ_APD)
+    # print(A_APD)
 
     K_AXD = (Q_AXD_0 / Q_ASD_0) ** (1 - r_Ω_APD) * (P_AXD_0 / P_ASD_0)
+    # print(K_AXD)
 
     K_AXW = (Q_AXW_0 / Q_AXD_0) ** (1 - r_σ_ADW) * (P_AXW_0 / (P_AXD_0 * (1 + TAXD_0))) * K_AXD
+    # print(K_AXW)
 
     K_ASD = 1.0
 
     K_AMD = (Q_AMD_0 / Q_ASD_0) ** (1 - r_σ_ATD) * (P_AMD_0 * (1 + TAMD_0) / P_ASD_0)
+    # print(K_AMD)
 
     def func(z):
         Q_IPD_1 = z[0]
@@ -319,6 +353,7 @@ def wood_market(input_data):
     solved = root(func, z0, method='lm')
     solved_value = solved.x
     accuracy = solved.fun
+    print(accuracy)
 
     Q_IPD_1 = np.abs(solved_value[0])
     P_IPD_1 = np.abs(solved_value[1])
@@ -361,7 +396,7 @@ def wood_market(input_data):
         solution = False
 
     solution = solution
-
+    print(solution)
     # if solution == False:
 
 
