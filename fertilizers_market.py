@@ -5,10 +5,12 @@ from scipy.optimize import fsolve, root
 
 example_data = {'ER_before': 73.65,
                 'ER_after': 73.65,
-                'WPK_before': 997.0345963756178,
                 'WPK_after': 997.0345963756178,
-                'WPN_before': 1615.058823529412,
+                'DWPK_after': 0.0,
+                'E_WPK_before': 997.0345963756178,
                 'WPN_after': 1615.058823529412,
+                'DWPN_after': 0.0,
+                'E_WPN_before': 1615.058823529412,
                 'P_KXD_USD_before': 779.0,
                 'P_NXD_USD_before': 1717.0,
                 'TKXD_before': 0.0,
@@ -28,10 +30,12 @@ class InputDataBase:
     def __init__(self, dict_from_frontend):
         self.ER_before = float(dict_from_frontend.get('ER_before'))
         self.ER_after = float(dict_from_frontend.get('ER_after'))
-        self.WPK_before = float(dict_from_frontend.get('WPK_before'))
         self.WPK_after = float(dict_from_frontend.get('WPK_after'))
-        self.WPN_before = float(dict_from_frontend.get('WPN_before'))
+        self.DWPK_after = float(dict_from_frontend.get('DWPK_after'))
+        self.E_WPK_before = float(dict_from_frontend.get('E_WPK_before'))
         self.WPN_after = float(dict_from_frontend.get('WPN_after'))
+        self.DWPN_after = float(dict_from_frontend.get('DWPN_after'))
+        self.E_WPN_before = float(dict_from_frontend.get('E_WPN_before'))
         self.P_KXD_USD_before = float(dict_from_frontend.get('P_KXD_USD_before'))
         self.P_NXD_USD_before = float(dict_from_frontend.get('P_NXD_USD_before'))
         self.TKXD_before = float(dict_from_frontend.get('TKXD_before'))
@@ -62,10 +66,12 @@ def fertilizers_market(input_data):
 
     ER_0 = input_data.ER_before
     ER_1 = input_data.ER_after
-    WPK_0 = input_data.WPK_before
     WPK_1 = input_data.WPK_after
-    WPN_0 = input_data.WPN_before
+    DWPK_1 = input_data.DWPK_after
+    E_WPK_0 = input_data.E_WPK_before
     WPN_1 = input_data.WPN_after
+    DWPN_1 = input_data.DWPN_after
+    E_WPN_0 = input_data.E_WPN_before
     P_KXD_USD_0 = input_data.P_KXD_USD_before
     P_NXD_USD_0 = input_data.P_NXD_USD_before
     TKXD_0 = input_data.TKXD_before
@@ -107,8 +113,6 @@ def fertilizers_market(input_data):
     DS_FCW_DEMAND_0 = 0.0
 
     DER_0 = 0.0
-    DWPK_0 = 0.0
-    DWPN_0 = 0.0
     B_KXD = 1.0
     B_KCD = 1.0
     B_NXD = 1.0
@@ -117,6 +121,7 @@ def fertilizers_market(input_data):
     K_NCD = 1.0
 
     """Переводим значения, введенные пользователем, в проценты"""
+
     TKXD_0 = TKXD_0 / 100
     TKXD_1 = TKXD_1 / 100
     TNXD_0 = TNXD_0 / 100
@@ -126,13 +131,31 @@ def fertilizers_market(input_data):
 
     DER_1 = ER_1 / ER_0 - 1
 
-    WPK_0 =
+    WPK_0 = E_WPK_0
 
-    DWPK_1 = WPK_1/WPK_0-1
+    # если значение WPK_1 введено - рассчитываем % сдвига
+    try:
+        if WPK_1 != 0:
+            DWPK_1 = WPK_1 / WPK_0 - 1
+    except ZeroDivisionError:
+        print("Ошибка деления на ноль.")
+    # если введен % - находим WPK_1
+    if WPK_1 == 0:
+        WPK_1 = E_WPK_0 / 100 * DWPK_1 + WPK_0
+
+    WPN_0 = E_WPN_0
+
+    # если значение WPN_1 введено - рассчитываем % сдвига
+    try:
+        if WPN_1 != 0:
+            DWPN_1 = WPN_1 / WPN_0 - 1
+    except ZeroDivisionError:
+        print("Ошибка деления на ноль.")
+    # если введен % - находим WPN_1
+    if WPN_1 == 0:
+        WPN_1 = E_WPN_0 / 100 * DWPN_1 + WPN_0
 
     SS_KXW_SUPPLY_1 = (1 + DWPK_1) ** -ε_KXW - 1
-
-    DWPN_1 = WPN_1 / WPN_0 - 1
 
     SS_NXW_SUPPLY_1 = (1 + DWPN_1) ** -ε_NXW - 1
 
@@ -447,6 +470,14 @@ def fertilizers_market(input_data):
         P_FCW_1 = 97653.96051599646
         Q_FCW_1 = 73954000
 
+    E_WPK_1 = P_KSW_1/ER_1
+
+    E_DWPK_1 = E_WPK_1/E_WPK_0-1
+
+    E_WPN_1 = P_NSW_1 / ER_1
+
+    E_DWPN_1 = E_WPN_1/E_WPN_0-1
+
     P_KXD_USD_1 = P_KXD_1 / ER_1
 
     P_NXD_USD_1 = P_NXD_1 / ER_1
@@ -521,43 +552,79 @@ def fertilizers_market(input_data):
             },
             {
                 'id': '3',
-                'title': 'Мировая цена калийных удобрений, USD за тонну',
+                'title': 'Первоначальный сдвиг мировой цены на калийные удобрения, USD за тонну п.в.',
                 'params': 'WPK',
                 'basebalance': round(WPK_0),
                 'newbalance': round(WPK_1),
-                "editBase": 'true',
+                "editBase": 'false',
                 "editNew": 'true'
             },
             {
                 'id': '4',
-                'title': 'Изменение мировой цены калийных удобрений, USD за тонну, %',
+                'title': 'Первоначальный сдвиг мировой цены на калийные удобрения, %',
                 'params': 'DWPK',
-                'basebalance': round(DWPK_0 * 100, 2),
+                'basebalance': ' ',
                 'newbalance': round(DWPK_1 * 100, 2),
                 "editBase": 'false',
                 "editNew": 'false'
             },
             {
                 'id': '5',
-                'title': 'Мировая цена азотных удобрений, USD за тонну',
-                'params': 'WPN',
-                'basebalance': round(WPN_0),
-                'newbalance': round(WPN_1),
+                'title': 'Равновесная мировая цена калийных удобрений, USD за тонну п.в.',
+                'params': 'E_WPK',
+                'basebalance': round(E_WPK_0),
+                'newbalance': round(E_WPK_1),
                 "editBase": 'true',
-                "editNew": 'true'
+                "editNew": 'false'
             },
             {
                 'id': '6',
-                'title': 'Изменение мировой цены азотных удобрений, USD за тонну, %',
-                'params': 'DWPN',
-                'basebalance': round(DWPN_0 * 100),
-                'newbalance': round(DWPN_1 * 100),
+                'title': 'Изменение равновесной мировой цены калийных удобрений, USD за тонну п.в., %',
+                'params': 'E_DWPK',
+                'basebalance': ' ',
+                'newbalance': round(E_DWPK_1),
                 "editBase": 'false',
                 "editNew": 'false'
             },
             {
                 'id': '7',
-                'title': 'Цена экспорта калийных удобрений (без тарифа), USD за тонну',
+                'title': 'Первоначальный сдвиг мировой цены на азотные удобрения, USD за тонну п.в.',
+                'params': 'WPN',
+                'basebalance': round(WPN_0),
+                'newbalance': round(WPN_1),
+                "editBase": 'false',
+                "editNew": 'true'
+            },
+            {
+                'id': '8',
+                'title': 'Первоначальный сдвиг мировой цены на азотные удобрения, %',
+                'params': 'DWPN',
+                'basebalance': ' ',
+                'newbalance': round(DWPN_1 * 100),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '9',
+                'title': 'Равновесная мировая цена азотных удобрений, USD за тонну п.в.',
+                'params': 'E_WPN',
+                'basebalance': round(E_WPN_0),
+                'newbalance': round(E_WPN_1),
+                "editBase": 'true',
+                "editNew": 'false'
+            },
+            {
+                'id': '10',
+                'title': 'Изменение равновесной мировой цены азотных удобрений, USD за тонну п.в., %',
+                'params': 'E_DWPN',
+                'basebalance': ' ',
+                'newbalance': round(E_DWPN_1),
+                "editBase": 'false',
+                "editNew": 'false'
+            },
+            {
+                'id': '11',
+                'title': 'Цена экспорта калийных удобрений (без тарифа), USD за тонну п.в.',
                 'params': 'P_KXD_USD',
                 'basebalance': round(P_KXD_USD_0),
                 'newbalance': round(P_KXD_USD_1),
@@ -565,8 +632,8 @@ def fertilizers_market(input_data):
                 "editNew": 'false'
             },
             {
-                'id': '8',
-                'title': 'Цена экспорта азотных удобрений (без тарифа), USD за тонну',
+                'id': '12',
+                'title': 'Цена экспорта азотных удобрений (без тарифа), USD за тонну п.в.',
                 'params': 'P_NXD_USD',
                 'basebalance': round(P_NXD_USD_0, 2),
                 'newbalance': round(P_NXD_USD_1, 2),
@@ -574,7 +641,7 @@ def fertilizers_market(input_data):
                 "editNew": 'false'
             },
             {
-                'id': '9',
+                'id': '13',
                 'title': 'Экспортный тариф на калийные удобрения, %',
                 'params': 'TKXD',
                 'basebalance': round(TKXD_0 * 100, 2),
@@ -583,67 +650,13 @@ def fertilizers_market(input_data):
                 "editNew": 'true'
             },
             {
-                'id': '10',
+                'id': '14',
                 'title': 'Экспортный тариф на азотные удобрения, %',
                 'params': 'TNXD',
                 'basebalance': round(TNXD_0 * 100, 2),
                 'newbalance': round(TNXD_1 * 100, 2),
                 "editBase": 'true',
                 "editNew": 'true'
-            },
-            {
-                'id': '11',
-                'title': 'Шок предложения на внутреннем рынке калийных удобрений, %',
-                'params': 'SS_KPD_SUPPLY',
-                'basebalance': 0,
-                'newbalance': round(SS_KPD_SUPPLY_1 * 100, 2),
-                "editBase": 'false',
-                "editNew": 'true'
-            },
-            {
-                'id': '12',
-                'title': 'Шок предложения на внутреннем рынке азотных удобрений, %',
-                'params': 'SS_NPD_SUPPLY',
-                'basebalance': 0,
-                'newbalance': round(SS_NPD_SUPPLY_1 * 100, 2),
-                "editBase": 'false',
-                "editNew": 'true'
-            },
-            {
-                'id': '13',
-                'title': 'Шок предложения на мировом рынке калийных удобрений, %',
-                'params': 'SS_KXW_SUPPLY',
-                'basebalance': 0,
-                'newbalance': round(SS_KXW_SUPPLY_1 * 100, 2),
-                "editBase": 'false',
-                "editNew": 'false'
-            },
-            {
-                'id': '14',
-                'title': 'Шок предложения на мировом рынке азотных удобрений, %',
-                'params': 'SS_NXW_SUPPLY',
-                'basebalance': 0,
-                'newbalance': round(SS_NXW_SUPPLY_1 * 100, 2),
-                "editBase": 'false',
-                "editNew": 'false'
-            },
-            {
-                'id': '15',
-                'title': 'Шок спроса на удобрения на внутреннем рынке, %',
-                'params': 'DS_FCD_DEMAND',
-                'basebalance': 0,
-                'newbalance': round(DS_FCD_DEMAND_1 * 100, 2),
-                "editBase": 'false',
-                "editNew": 'true'
-            },
-            {
-                'id': '16',
-                'title': 'Шок спроса на удобрения на мировом рынке, %',
-                'params': 'DS_FCW_DEMAND',
-                'basebalance': 0,
-                'newbalance': round(DS_FCW_DEMAND_1 * 100, 2),
-                "editBase": 'false',
-                "editNew": 'false'
             }
         ],
         'finding_solution': solution,
@@ -663,7 +676,7 @@ def fertilizers_market(input_data):
             },
             {
                 'id': '2',
-                'title': 'Российский экспорт калийных удобрений',
+                'title': 'Экспорт калийных удобрений',
                 'params': 'KXD',
                 'basebalance_pr': round(P_KXD_0, 2),
                 'basebalance_quan': round(Q_KXD_0, 2),
@@ -702,7 +715,7 @@ def fertilizers_market(input_data):
             },
             {
                 'id': '5',
-                'title': 'Российский экспорт азотных удобрений',
+                'title': 'Экспорт азотных удобрений',
                 'params': 'NXD',
                 'basebalance_pr': round(P_NXD_0, 2),
                 'basebalance_quan': round(Q_NXD_0, 2),
@@ -728,7 +741,7 @@ def fertilizers_market(input_data):
             },
             {
                 'id': '7',
-                'title': 'Российское совокупное потребление двух типов удобрений',
+                'title': 'Внутреннее потребление удобрений (двух типов)',
                 'params': 'FCD',
                 'basebalance_pr': round(P_FCD_0, 2),
                 'basebalance_quan': round(Q_FCD_0, 2),
@@ -793,7 +806,7 @@ def fertilizers_market(input_data):
             },
             {
                 'id': '12',
-                'title': 'Мировое потребление двух типов удобрений ',
+                'title': 'Мировое потребление удобрений (двух типов)',
                 'params': 'FCW',
                 'basebalance_pr': round(P_FCW_0, 2),
                 'basebalance_quan': round(Q_FCW_0, 2),
@@ -896,3 +909,7 @@ def fertilizers_market(input_data):
     }
 
     return result_to_front
+
+input_data = InputDataBase(example_data)
+result = fertilizers_market(input_data)
+print(result)
